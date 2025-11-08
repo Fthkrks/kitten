@@ -1,0 +1,67 @@
+{
+  "collectionName": "components_basic_heroes",
+  "info": {
+    "displayName": "Hero",
+    "description": "Ana sayfanızın kahraman bölümü için verileri saklar."
+  },
+  "options": {},
+  "attributes": {
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "welcomeText": {
+      "type": "string",
+      "default": "Welcome!"
+    },
+    "title": {
+      "type": "string",
+      "default": "A Great Title"
+    },
+    "motto": {
+      "type": "string",
+      "default": "Unleash Your Imagination"
+    },
+    "description": {
+      "type": "richtext",
+      "default": "This is a great description for your hero section."
+    },
+    "collageImage1": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "collageImage2": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "collageImage3": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "aboutSection": {
+      "type": "component",
+      "component": "basic.card-context",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

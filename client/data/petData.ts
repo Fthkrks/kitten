@@ -1,0 +1,156 @@
+import type { Pet } from "../app/_components/PetCards";
+
+export interface PetDetail extends Pet {
+  dob?: string;
+  coatType?: string;
+  faceType?: string;
+  weight?: string;
+  coatColor?: string;
+  eyeColor?: string;
+  shading?: string;
+  breed?: string;
+  albumImages?: string[];
+  detailBg?: string; // Detay sayfası arka plan rengi
+}
+
+export const petsData: PetDetail[] = [
+  {
+    id: "1",
+    name: "QUEEN | CRYSTAL",
+    age: "",
+    gender: "",
+    image: "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?auto=format&fit=crop&q=80&w=800",
+    reserved: false,
+    detailBg: "#E0F2F7",
+    dob: "June 30, 2024",
+    coatType: "Extreme & Mostly Cotton",
+    faceType: "Extreme",
+    weight: "Currently 5 lbs",
+    coatColor: "Seal Lynx Point Himalayan",
+    eyeColor: "Deep Blue",
+    shading: "None",
+    breed: "Persian",
+    albumImages: [
+      "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1513366208864-87536b8bd7b4?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1571566882372-1598d88abd90?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=600",
+    ],
+  },
+  {
+    id: "2",
+    name: "KING | TITAN",
+    age: "",
+    gender: "",
+    image: "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800",
+    reserved: false,
+    detailBg: "#E0F2F7",
+    dob: "March 15, 2023",
+    coatType: "Traditional & Cotton",
+    faceType: "Traditional",
+    weight: "Currently 12 lbs",
+    coatColor: "Orange Tabby",
+    eyeColor: "Green",
+    shading: "None",
+    breed: "Persian",
+    albumImages: [
+      "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=600",
+    ],
+  },
+  {
+    id: "3",
+    name: "GLISH",
+    age: "",
+    gender: "Male | Chinchilla Silver | Extreme | $3500",
+    image: "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?auto=format&fit=crop&q=80&w=800",
+    reserved: true,
+    detailBg: "#E0F2F7",
+    dob: "August 10, 2024",
+    coatType: "Extreme & Mostly Cotton",
+    faceType: "Extreme",
+    weight: "Currently 3 lbs",
+    coatColor: "Chinchilla Silver",
+    eyeColor: "Deep Blue",
+    shading: "None",
+    breed: "Persian",
+    albumImages: [
+      "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&q=80&w=600",
+    ],
+  },
+  {
+    id: "4",
+    name: "ILIYA",
+    age: "",
+    gender: "Female | Shaded Golden | Doll Face | $4500",
+    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=800",
+    reserved: false,
+    detailBg: "#E0F2F7",
+    dob: "July 20, 2024",
+    coatType: "Traditional & Cotton",
+    faceType: "Doll Face",
+    weight: "Currently 2.5 lbs",
+    coatColor: "Shaded Golden",
+    eyeColor: "Green",
+    shading: "Light",
+    breed: "Persian",
+    albumImages: [
+      "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?auto=format&fit=crop&q=80&w=600",
+    ],
+  },
+  {
+    id: "5",
+    name: "TRENITY",
+    age: "",
+    gender: "Female | Silver Shaded | Doll Face | $3000",
+    image: "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&q=80&w=800",
+    reserved: false,
+    detailBg: "#E0F2F7",
+    dob: "September 5, 2024",
+    coatType: "Traditional & Cotton",
+    faceType: "Doll Face",
+    weight: "Currently 2 lbs",
+    coatColor: "Silver Shaded",
+    eyeColor: "Blue-Green",
+    shading: "Medium",
+    breed: "Persian",
+    albumImages: [
+      "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1513366208864-87536b8bd7b4?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?auto=format&fit=crop&q=80&w=600",
+    ],
+  },
+  {
+    id: "6",
+    name: "VELIO",
+    age: "",
+    gender: "Male | Silver Shaded | Flat Face | $3000",
+    image: "https://images.unsplash.com/photo-1513366208864-87536b8bd7b4?auto=format&fit=crop&q=80&w=800",
+    reserved: false,
+    detailBg: "#E0F2F7",
+    dob: "September 12, 2024",
+    coatType: "Extreme & Cotton",
+    faceType: "Flat Face",
+    weight: "Currently 2.2 lbs",
+    coatColor: "Silver Shaded",
+    eyeColor: "Deep Blue",
+    shading: "Medium",
+    breed: "Persian",
+    albumImages: [
+      "https://images.unsplash.com/photo-1513366208864-87536b8bd7b4?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1517331156700-3c241d2b4d83?auto=format&fit=crop&q=80&w=600",
+    ],
+  },
+];
+

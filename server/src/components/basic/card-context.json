@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_basic_card_contexts",
+  "info": {
+    "displayName": "Card Context",
+    "description": "Hero bileşeni içindeki hakkımızda bölümü için verileri saklar."
+  },
+  "options": {},
+  "attributes": {
+    "greeting": {
+      "type": "string",
+      "default": "Hello there!"
+    },
+    "introduction": {
+      "type": "text",
+      "default": "We are a team dedicated to creating amazing experiences."
+    },
+    "listItems": {
+      "type": "text",
+      "default": "- Innovation- Quality- Customer Satisfaction"
+    },
+    "conclusion": {
+      "type": "richtext",
+      "default": "Feel free to explore our work and get in touch with us."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Learn More"
+    }
+  },
+  "config": {}
+}

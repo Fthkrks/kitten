@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+body {
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.font-lora {
+  font-family: var(--font-lora), serif;
+}
+
