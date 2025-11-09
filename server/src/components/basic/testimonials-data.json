@@ -1,0 +1,42 @@
+{
+  "collectionName": "components_basic_testimonials_data",
+  "info": {
+    "displayName": "testimonialsData"
+  },
+  "options": {},
+  "attributes": {
+    "titleLines": {
+      "type": "string",
+      "default": "Thank you, thank you, thank you,\", \"you!"
+    },
+    "body": {
+      "type": "richtext",
+      "default": "I ADORE my ethereal kittens. I am sooo blessed to have them in my life! I got Moshi first and a year later, I got Bambi. I just couldn't keep away. I know I can rely on you to answer all my questions and produce exceptional Persians. They are the sweetest cats and are so beautiful with the most loving personalities. I will always recommend you to my friends looking for a kitten!"
+    },
+    "author": {
+      "type": "string",
+      "default": "Catherine F."
+    },
+    "location": {
+      "type": "string",
+      "default": "Miami, FL"
+    },
+    "cats": {
+      "type": "string",
+      "default": "Moshi and Bambi"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "avatarImage": {
+      "type": "component",
+      "component": "basic.image-single",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

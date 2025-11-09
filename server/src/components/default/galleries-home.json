@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_default_galleries_homes",
+  "info": {
+    "displayName": "GalleriesHome"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "CHECK OUT OUR PHOTO ALBUMS"
+    },
+    "description": {
+      "type": "component",
+      "component": "basic.description-galleri-home",
+      "repeatable": false
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "VIEW GALLERIES"
+    },
+    "image": {
+      "type": "component",
+      "component": "basic.image",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

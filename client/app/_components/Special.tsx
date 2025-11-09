@@ -1,22 +1,7 @@
 import Image from "next/image";
+import { TransformedSpecialData } from "@/types/api";
 
-interface SpecialFeature {
-  id: string;
-  number: string;
-  title: string;
-  description: string;
-  buttonText: string;
-  image: {
-    src: string;
-    alt: string;
-  };
-  imagePosition: "left" | "right"; // Determines if image is on left or right side
-}
-
-interface SpecialProps {
-  title: string;
-  features: SpecialFeature[];
-}
+type SpecialProps = TransformedSpecialData;
 
 export default function Special({ title, features }: SpecialProps) {
   return (

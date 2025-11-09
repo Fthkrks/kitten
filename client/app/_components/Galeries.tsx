@@ -1,22 +1,7 @@
 import Image from "next/image";
+import { TransformedGaleriesData } from "@/types/api";
 
-interface GalleryImage {
-  id: string;
-  src: string;
-  alt: string;
-  position: "main" | "top-right" | "bottom-right"; // Position in the collage
-}
-
-interface GaleriesProps {
-  title: string;
-  description: {
-    mainText: string;
-    browsingText: string;
-    eyeCandyText: string;
-  };
-  buttonText: string;
-  images: GalleryImage[];
-}
+type GaleriesProps = TransformedGaleriesData;
 
 export default function Galeries({ title, description, buttonText, images }: GaleriesProps) {
   return (
@@ -46,46 +31,44 @@ export default function Galeries({ title, description, buttonText, images }: Gal
             </div>
           </div>
 
-          {/* Right collage */}
+          {/* Right collage - Fixed positions */}
           <div className="grid grid-cols-2 gap-6 p-6">
-            {images.map((image) => {
-              if (image.position === "main") {
-                return (
-                  <div key={image.id} className="relative col-span-1 row-span-2 aspect-3/4 overflow-hidden">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-                );
-              } else if (image.position === "top-right") {
-                return (
-                  <div key={image.id} className="relative aspect-square overflow-hidden">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                );
-              } else if (image.position === "bottom-right") {
-                return (
-                  <div key={image.id} className="relative col-span-1 aspect-4/3 overflow-hidden">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                );
-              }
-              return null;
-            })}
+            {/* Main portrait (left side, spans 2 rows) */}
+            {images[0] && (
+              <div className="relative col-span-1 row-span-2 aspect-3/4 overflow-hidden">
+                <Image
+                  src={images[0].src}
+                  alt={images[0].alt}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            )}
+            
+            {/* Top right square */}
+            {images[1] && (
+              <div className="relative aspect-square overflow-hidden">
+                <Image
+                  src={images[1].src}
+                  alt={images[1].alt}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
+            
+            {/* Bottom right wide */}
+            {images[2] && (
+              <div className="relative col-span-1 aspect-4/3 overflow-hidden">
+                <Image
+                  src={images[2].src}
+                  alt={images[2].alt}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

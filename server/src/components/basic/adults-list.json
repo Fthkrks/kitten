@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_basic_adults_lists",
+  "info": {
+    "displayName": "AdultsList"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "The Dads"
+    },
+    "image": {
+      "type": "component",
+      "component": "basic.image",
+      "repeatable": false
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "MEET THE KINGS "
+    }
+  },
+  "config": {}
+}

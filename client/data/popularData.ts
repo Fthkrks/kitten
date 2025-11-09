@@ -1,6 +1,5 @@
 export const popularData = {
   title: "POPULAR DESTINATIONS",
-  decorativeSquares: 20,
   items: [
     {
       id: "application-tablet",

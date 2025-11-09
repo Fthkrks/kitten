@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_default_kittens",
+  "info": {
+    "displayName": "Kitten"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "MEET THE KITTENS"
+    },
+    "Kittens": {
+      "type": "component",
+      "component": "basic.kitten-list",
+      "repeatable": false
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "I WANT A KITTEN"
+    }
+  },
+  "config": {}
+}

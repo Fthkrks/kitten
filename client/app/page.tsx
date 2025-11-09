@@ -1,11 +1,4 @@
-import { kittenData } from "@/data/kittenData";
-import { adultsData } from "@/data/adultsData";
-import { commentsData } from "@/data/commentsData";
-import { specialData } from "@/data/specialData";
-import { galeriesData } from "@/data/galeriesData";
 import { popularData } from "@/data/popularData";
-import { testimonialData } from "@/data/testimonialData";
-import { mediaData } from "@/data/mediaData";
 import { videoData } from "@/data/videoData";
 import Adults from "./_components/Adults";
 import Comments from "./_components/Comments";
@@ -20,8 +13,17 @@ import Popular from "./_components/Popular";
 import Special from "./_components/Special";
 import Testimontal from "./_components/Testimontal";
 import VideoGallery from "./_components/Video";
+import { fetchKittenData, fetchAdultsData, fetchCommentsData, fetchSpecialData, fetchGaleriesData, fetchTestimonialData, fetchMediaData } from "@/services/api";
 
-export default function Home() {
+export default async function Home() {
+  const kittenData = await fetchKittenData();
+  const adultsData = await fetchAdultsData();
+  const commentsData = await fetchCommentsData();
+  const specialData = await fetchSpecialData();
+  const galeriesData = await fetchGaleriesData();
+  const testimonialData = await fetchTestimonialData();
+  const mediaData = await fetchMediaData();
+  
   return (
     <>
       <Hero />

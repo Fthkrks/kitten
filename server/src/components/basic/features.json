@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_basic_features",
+  "info": {
+    "displayName": "features"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "component",
+      "component": "basic.image-single",
+      "repeatable": false
+    },
+    "title": {
+      "type": "string",
+      "default": "fea1"
+    }
+  },
+  "config": {}
+}

@@ -19,6 +19,76 @@
       "type": "component",
       "component": "default.hero",
       "repeatable": false
+    },
+    "KittenSection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "default.kitten",
+      "repeatable": false
+    },
+    "AdultsSection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "default.adults",
+      "repeatable": false
+    },
+    "CommentSection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "default.comment",
+      "repeatable": false
+    },
+    "SpecialSection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "default.special",
+      "repeatable": false
+    },
+    "GalleriesSection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "default.galleries-home",
+      "repeatable": false
+    },
+    "PopularSection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "default.popular",
+      "repeatable": false
+    },
+    "TestiomonialSection": {
+      "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "component": "default.testiomonial-home",
+      "repeatable": false
     }
   }
 }

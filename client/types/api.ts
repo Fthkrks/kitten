@@ -5,6 +5,36 @@ interface StrapiImage {
   url: string;
 }
 
+// Full Strapi Image (with all fields)
+interface StrapiImageFull {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: string;
+  caption: string;
+  width: number;
+  height: number;
+  formats: {
+    thumbnail?: {
+      url: string;
+    };
+    small?: {
+      url: string;
+    };
+  };
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: string | null;
+  provider: string;
+  provider_metadata: null;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
 // About Section
 interface AboutSection {
   id: number;
@@ -30,6 +60,100 @@ interface HeroContent {
   aboutSection: AboutSection;
 }
 
+// Kitten Section (for Homepage API)
+interface KittenImageData {
+  id: number;
+  alt: string;
+  src: StrapiImageFull;
+}
+
+interface KittensDataHomepage {
+  id: number;
+  title: string | null;
+  image: KittenImageData;
+}
+
+interface KittenSectionHomepage {
+  id: number;
+  title: string;
+  buttonText: string;
+  Kittens: KittensDataHomepage;
+}
+
+// Adults Section (for Homepage API)
+interface AdultCatItemHomepage {
+  id: number;
+  title: string;
+  buttonText: string;
+  image: {
+    id: number;
+    alt: string;
+    src: StrapiImageFull;
+  };
+}
+
+interface AdultsSectionHomepage {
+  id: number;
+  title: string;
+  cats: AdultCatItemHomepage[];
+}
+
+// Comment Section (for Homepage API)
+interface CommentFeatureItemHomepage {
+  id: number;
+  title: string;
+  image: {
+    id: number;
+    alt: string;
+    src: StrapiImageFull;
+  };
+}
+
+interface CommentSectionHomepage {
+  id: number;
+  title: string;
+  description: string;
+  features: CommentFeatureItemHomepage[];
+}
+
+// Special Section (for Homepage API)
+interface SpecialFeatureItemHomepage {
+  id: number;
+  number: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  imagePosition: "left" | "right";
+  image: {
+    id: number;
+    alt: string;
+    src: StrapiImageFull;
+  };
+}
+
+interface SpecialSectionHomepage {
+  id: number;
+  title: string;
+  features: SpecialFeatureItemHomepage[];
+}
+
+// Galeries Section (for Homepage API)
+interface GaleriesImageHomepage {
+  id: number;
+  alt: string;
+  src: StrapiImageFull;
+}
+
+interface GaleriesSectionHomepage {
+  id: number;
+  title: string;
+  mainText: string;
+  browsingText: string;
+  eyeCandyText: string;
+  buttonText: string;
+  images: GaleriesImageHomepage[];
+}
+
 // Main API Response
 export interface HomepageApiResponse {
   data: {
@@ -39,7 +163,13 @@ export interface HomepageApiResponse {
     updatedAt: string;
     publishedAt: string;
     locale: string;
-    heroContent: HeroContent;
+    heroContent?: HeroContent;
+    KittenSection?: KittenSectionHomepage;
+    AdultsSection?: AdultsSectionHomepage;
+    CommentSection?: CommentSectionHomepage;
+    SpecialSection?: SpecialSectionHomepage;
+    GaleriesSection?: GaleriesSectionHomepage;
+    TestiomonialSection?: TestimonialSectionHomepage;
   };
   meta: {};
 }
@@ -70,4 +200,171 @@ export interface TransformedHeroData {
     conclusion: string;
     buttonText: string;
   };
+}
+
+// Transformed data for Kitten component
+export interface TransformedKittenData {
+  title: string;
+  kittens: {
+    id: string;
+    name: string;
+    mobileTitle?: string;
+    image: {
+      src: string;
+      alt: string;
+    };
+  }[];
+  buttonText: string;
+}
+
+// Transformed data for Adults component
+export interface TransformedAdultsData {
+  title: string;
+  cats: {
+    id: string;
+    title: string;
+    image: {
+      src: string;
+      alt: string;
+    };
+    buttonText: string;
+  }[];
+}
+
+// Transformed data for Comments component
+export interface TransformedCommentsData {
+  title: string;
+  description: string;
+  features: {
+    id: string;
+    title: string;
+    icon: {
+      src: string;
+      alt: string;
+    };
+  }[];
+}
+
+// Transformed data for Special component
+export interface TransformedSpecialData {
+  title: string;
+  features: {
+    id: string;
+    number: string;
+    title: string;
+    description: string;
+    buttonText: string;
+    image: {
+      src: string;
+      alt: string;
+    };
+    imagePosition: "left" | "right";
+  }[];
+}
+
+// Transformed data for Galeries component
+export interface TransformedGaleriesData {
+  title: string;
+  description: {
+    mainText: string;
+    browsingText: string;
+    eyeCandyText: string;
+  };
+  buttonText: string;
+  images: {
+    id: string;
+    src: string;
+    alt: string;
+  }[];
+}
+
+// Testimonial Section (for Homepage API)
+interface TestimonialItemHomepage {
+  id: number;
+  titleLines: string;
+  body: string;
+  author: string;
+  location: string;
+  cats: string;
+  image: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+  avatarImage: {
+    id: number;
+    alt: string;
+    src: {
+      id: number;
+      documentId: string;
+      url: string;
+    };
+  };
+}
+
+interface TestimonialSectionHomepage {
+  id: number;
+  subtitle: string;
+  title: string;
+  testimonials: TestimonialItemHomepage[];
+}
+
+// Transformed data for Testimonial component
+export interface TransformedTestimonialData {
+  subtitle: string;
+  title: string;
+  testimonials: {
+    id: string;
+    titleLines: string[];
+    body: string;
+    author: string;
+    location: string;
+    cats: string;
+    image: string;
+    avatarImage: {
+      src: string;
+      alt: string;
+    };
+  }[];
+}
+
+// Media Links API Response
+interface MediaSocialLink {
+  id: number;
+  name: string;
+  href: string;
+  icon: StrapiImageFull;
+}
+
+interface MediaLinkItem {
+  id: number;
+  documentId: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  SocialLinks: MediaSocialLink[];
+}
+
+export interface MediaLinksApiResponse {
+  data: MediaLinkItem[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
+// Transformed data for Media component
+export interface TransformedMediaData {
+  title: string;
+  socialLinks: {
+    id: string;
+    name: string;
+    href: string;
+    icon: string;
+  }[];
 }

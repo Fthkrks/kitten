@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_default_adults",
+  "info": {
+    "displayName": "Adults"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "MEET THE KINGS AND QUEENS"
+    },
+    "cats": {
+      "type": "component",
+      "component": "basic.adults-list",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

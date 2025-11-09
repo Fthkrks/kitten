@@ -7,9 +7,7 @@ export const commentsData = {
       title: "Breeding Happy, Healthy<br />Purebred Persians",
       icon: {
         src: "/window.svg",
-        alt: "Health icon",
-        width: 44,
-        height: 44
+        alt: "Health icon"
       }
     },
     {
@@ -17,9 +15,7 @@ export const commentsData = {
       title: "Raised Underfoot for<br />Exceptional Purrsonality",
       icon: {
         src: "/globe.svg",
-        alt: "Raised underfoot icon",
-        width: 44,
-        height: 44
+        alt: "Raised underfoot icon"
       }
     },
     {
@@ -27,9 +23,7 @@ export const commentsData = {
       title: "Health Guarantee and Expert<br />Support Provided",
       icon: {
         src: "/file.svg",
-        alt: "Support icon",
-        width: 44,
-        height: 44
+        alt: "Support icon"
       }
     }
   ]

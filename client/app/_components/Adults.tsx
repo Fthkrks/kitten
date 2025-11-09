@@ -1,19 +1,7 @@
 import Image from "next/image";
+import { TransformedAdultsData } from "@/types/api";
 
-interface AdultCat {
-  id: string;
-  title: string;
-  image: {
-    src: string;
-    alt: string;
-  };
-  buttonText: string;
-}
-
-interface AdultsProps {
-  title: string;
-  cats: AdultCat[];
-}
+type AdultsProps = TransformedAdultsData;
 
 export default function Adults({ title, cats }: AdultsProps) {
   return (

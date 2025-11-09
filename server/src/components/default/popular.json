@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_default_populars",
+  "info": {
+    "displayName": "Popular"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "regex": "POPULAR DESTINATIONS"
+    },
+    "item": {
+      "type": "component",
+      "component": "basic.image",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

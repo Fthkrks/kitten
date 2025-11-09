@@ -1,21 +1,7 @@
 import Image from "next/image";
+import { TransformedCommentsData } from "@/types/api";
 
-interface CommitmentFeature {
-  id: string;
-  title: string;
-  icon: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  };
-}
-
-interface CommentsProps {
-  title: string;
-  description: string;
-  features: CommitmentFeature[];
-}
+type CommentsProps = TransformedCommentsData;
 
 export default function Comments({ title, description, features }: CommentsProps) {
   return (
@@ -40,8 +26,8 @@ export default function Comments({ title, description, features }: CommentsProps
                 <Image
                   src={feature.icon.src}
                   alt={feature.icon.alt}
-                  width={feature.icon.width}
-                  height={feature.icon.height}
+                  width={44}
+                  height={44}
                   className="opacity-90"
                 />
               </div>

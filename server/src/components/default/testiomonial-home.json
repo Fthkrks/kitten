@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_default_testiomonial_homes",
+  "info": {
+    "displayName": "testiomonialHome"
+  },
+  "options": {},
+  "attributes": {
+    "subtitle": {
+      "type": "string",
+      "default": "READ REVIEWS FROM OUR"
+    },
+    "title": {
+      "type": "string",
+      "default": "PAWSOME PERSIAN PARENTS"
+    },
+    "testimonials": {
+      "type": "component",
+      "component": "basic.testimonials-data",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

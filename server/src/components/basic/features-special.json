@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_basic_features_specials",
+  "info": {
+    "displayName": "featuresSpecial"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "BREEDING FOR HEALTH"
+    },
+    "description": {
+      "type": "richtext",
+      "default": "Health is our top priority. Without good health, heartbreak inevitably ensues. For this reason, we follow strict protocols to ensure the health of our kittens and the happiness of your family."
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "HEALTH"
+    },
+    "image": {
+      "type": "component",
+      "component": "basic.image-single",
+      "repeatable": false
+    },
+    "imagePosition": {
+      "type": "string",
+      "default": "right"
+    }
+  },
+  "config": {}
+}

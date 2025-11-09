@@ -1,18 +1,14 @@
 import Image from "next/image";
+import { TransformedMediaData } from "@/types/api";
 
-interface SocialLink {
-  id: string;
-  name: string;
-  href: string;
-  icon: string;
-}
-
-interface MediaProps {
-  title: string;
-  socialLinks: SocialLink[];
-}
+type MediaProps = TransformedMediaData;
 
 export default function Media({ title, socialLinks }: MediaProps) {
+  // Safety check
+  if (!socialLinks || socialLinks.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-20 bg-[#FAF9F6]">
       <div className="max-w-4xl mx-auto px-6">
@@ -28,6 +24,8 @@ export default function Media({ title, socialLinks }: MediaProps) {
             <a
               key={link.id}
               href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex flex-col items-center group hover:opacity-80 transition-opacity"
             >
               {/* Icon */}

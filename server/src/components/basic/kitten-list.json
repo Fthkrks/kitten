@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_basic_kitten_lists",
+  "info": {
+    "displayName": "KittenList"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Breeding Happy, Healthy<br />Purebred Persians"
+    },
+    "image": {
+      "type": "component",
+      "component": "basic.image",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

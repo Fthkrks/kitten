@@ -1,4 +1,22 @@
-export const kittenData = {
+export interface KittenImage {
+  src: string;
+  alt: string;
+}
+
+export interface Kitten {
+  id: string;
+  name: string;
+  mobileTitle?: string;
+  image: KittenImage;
+}
+
+export interface KittenData {
+  title: string;
+  kittens: Kitten[];
+  buttonText: string; 
+}
+
+export const kittenData: KittenData = {
   title: "MEET THE KITTENS",
   kittens: [
     {

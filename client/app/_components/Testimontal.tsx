@@ -1,41 +1,11 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import { TransformedTestimonialData } from "@/types/api";
 
-interface Testimonial {
-  id: string;
-  titleLines: [string, string];
-  body: string;
-  author: string;
-  location: string;
-  cats: string;
-  image: string;
-}
+type TestimonialProps = TransformedTestimonialData;
 
-interface TestimonialProps {
-  sectionTitle: {
-    subtitle: string;
-    title: string;
-  };
-  testimonials: Testimonial[];
-  avatarImage: {
-    src: string;
-    alt: string;
-  };
-  navigation: {
-    prevText: string;
-    nextText: string;
-  };
-  readMoreText: string;
-}
-
-export default function Testimonial({ 
-  sectionTitle, 
-  testimonials, 
-  avatarImage, 
-  navigation, 
-  readMoreText 
-}: TestimonialProps) {
+export default function Testimonial({ subtitle, title, testimonials }: TestimonialProps) {
   const [index, setIndex] = useState(0);
 
   const goPrev = () => setIndex((i) => (i - 1 + testimonials.length) % testimonials.length);
@@ -54,9 +24,12 @@ export default function Testimonial({
               {testimonials.map((t, idx) => (
                 <div key={t.id} className="basis-full w-full shrink-0 pr-0 md:pr-8 flex flex-col h-full">
                   <h3 className="font-lora text-lg md:text-[28px] text-[#5A5A5A]">
-                    {t.titleLines[0]}
-                    <br />
-                    {t.titleLines[1]}
+                    {t.titleLines.map((line, idx) => (
+                      <span key={idx}>
+                        {line}
+                        {idx < t.titleLines.length - 1 && <br />}
+                      </span>
+                    ))}
                   </h3>
                   <div className="mt-6 text-sm leading-7 text-[#5A5A5A]/80 md:w-[400px] w-[300px] hyphens-auto overflow-auto flex-1 pr-2">
                     {t.body}
@@ -64,8 +37,8 @@ export default function Testimonial({
                   <div className="mt-6 flex items-center gap-4">
                     <div className="h-12 w-12 rounded-full overflow-hidden bg-white/60">
                       <Image
-                        src={avatarImage.src}
-                        alt={avatarImage.alt}
+                        src={t.avatarImage.src}
+                        alt={t.avatarImage.alt}
                         width={48}
                         height={48}
                       />
@@ -84,8 +57,8 @@ export default function Testimonial({
           {/* Right: Image slider with titles and controls */}
           <div className="flex flex-col items-center">
             <div className="text-center mb-6">
-              <div className="text-xs tracking-wider text-gray-400">{sectionTitle.subtitle}</div>
-              <h2 className="mt-1 font-serif text-[#5A5A5A] text-xl md:text-2xl">{sectionTitle.title}</h2>
+              <div className="text-xs tracking-wider text-gray-400">{subtitle}</div>
+              <h2 className="mt-1 font-serif text-[#5A5A5A] text-xl md:text-2xl">{title}</h2>
             </div>
 
             {/* Image slider */}
@@ -95,7 +68,7 @@ export default function Testimonial({
                 style={{ transform: `translateX(-${index * 100}%)` }}
               >
                 {testimonials.map((t, idx) => (
-                  <div key={t.id} className="min-w-full h-full relative bg-[#F7F7F7] flex-shrink-0">
+                  <div key={t.id} className="min-w-full h-full relative bg-[#F7F7F7] shrink-0">
                     <Image 
                       src={t.image} 
                       alt={t.author} 
@@ -115,13 +88,13 @@ export default function Testimonial({
                 onClick={goPrev} 
                 className="px-6 py-2 border border-gray-300 text-[#5A5A5A] text-sm hover:bg-gray-50 transition-colors"
               >
-                {navigation.prevText}
+                PREV
               </button>
               <button 
                 onClick={goNext} 
                 className="px-6 py-2 border border-gray-300 text-[#5A5A5A] text-sm hover:bg-gray-50 transition-colors"
               >
-                {navigation.nextText}
+                NEXT
               </button>
             </div>
 
@@ -140,7 +113,7 @@ export default function Testimonial({
             </div>
 
             <button className="mt-6 text-xs tracking-wide text-[#5A5A5A]/70 hover:text-[#5A5A5A] transition-colors">
-              {readMoreText}
+              READ MORE REVIEWS →
             </button>
           </div>
         </div>

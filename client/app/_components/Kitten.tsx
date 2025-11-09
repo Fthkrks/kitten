@@ -1,20 +1,7 @@
 import Image from "next/image";
+import { TransformedKittenData } from "@/types/api";
 
-interface KittenItem {
-  id: string;
-  name: string;
-  image: {
-    src: string;
-    alt: string;
-  };
-  mobileTitle?: string; // For mobile display (shorter titles)
-}
-
-interface KittenProps {
-  title: string;
-  kittens: KittenItem[];
-  buttonText: string;
-}
+type KittenProps = TransformedKittenData;
 
 export default function Kitten({ title, kittens, buttonText }: KittenProps) {
   return (

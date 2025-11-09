@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_default_specials",
+  "info": {
+    "displayName": "Special"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "WHAT MAKES US SPECIAL"
+    },
+    "features": {
+      "type": "component",
+      "component": "basic.features-special",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

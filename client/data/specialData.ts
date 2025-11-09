@@ -11,19 +11,19 @@ export const specialData = {
         src: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=1600&h=1000&fit=crop",
         alt: "Breeding for health"
       },
-      imagePosition: "right" as const
+      imagePosition: "right" 
     },
     {
       id: "disposition",
       number: "02",
       title: "BREEDING FOR DISPOSITION",
       description: "Purrsonality is what keeps us charmed with our kittens. Raising kittens to be confident and affection-seeking is fundamentally important. This process starts before birth and evolves for years to come.",
-      buttonText: "DISPOSITION",
+      buttonText: " ",
       image: {
         src: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=1600&h=1000&fit=crop",
         alt: "Breeding for disposition"
       },
-      imagePosition: "left" as const
+      imagePosition: "left"
     },
     {
       id: "longevity",
@@ -35,7 +35,7 @@ export const specialData = {
         src: "https://images.unsplash.com/photo-1511044568932-338cba0ad803?w=1600&h=1000&fit=crop",
         alt: "Feeding for longevity"
       },
-      imagePosition: "right" as const
+      imagePosition: "right" 
     }
   ]
 };

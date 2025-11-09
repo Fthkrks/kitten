@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_basic_description_galleri_homes",
+  "info": {
+    "displayName": "descriptionGalleriHome"
+  },
+  "options": {},
+  "attributes": {
+    "mainText": {
+      "type": "string",
+      "default": "View kittens by color, location, groups and more. Familiarize yourself with the variations so you can help us narrow down your preferences."
+    },
+    "browsingText": {
+      "type": "string",
+      "default": "Just browsing?"
+    },
+    "eyeCandyText": {
+      "type": "string",
+      "default": "We hope our kittens serve as eye candy to make you smile and laugh!"
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "VIEW GALLERIES"
+    }
+  },
+  "config": {}
+}

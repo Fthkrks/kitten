@@ -20,6 +20,11 @@ interface VideoGalleryProps {
 }
 
 export default function VideoGallery({ backgroundColor = '#f5f5f5', items }: VideoGalleryProps) {
+  // Safety check
+  if (!items || items.length === 0) {
+    return null;
+  }
+
   return (
     <div className="w-full py-4" style={{ background: backgroundColor }}>
       <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
