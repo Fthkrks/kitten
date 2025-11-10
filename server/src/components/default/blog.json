@@ -1,0 +1,44 @@
+{
+  "collectionName": "components_default_blogs",
+  "info": {
+    "displayName": "Blog"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "categories": {
+      "type": "string",
+      "default": "GROOMING, UNCATEGORIZED"
+    },
+    "title": {
+      "type": "string",
+      "default": "A Breeders Guide For Reducing Tearing in a Cattery"
+    },
+    "description": {
+      "type": "text",
+      "default": "A Breeders Guide For Reducing Tearing in a Cattery A Guideline for Feline Breeders Are you tired of tearing problems in your cattery? Learn proven techniques to minimize tearing in Persian cats through proper care, diet, and environmental management."
+    },
+    "author": {
+      "type": "string",
+      "default": "Roxy Geers"
+    },
+    "date": {
+      "type": "string",
+      "default": "March 15, 2024"
+    },
+    "features": {
+      "type": "boolean"
+    },
+    "fullContent": {
+      "type": "richtext",
+      "default": "<p>Tearing is one of the most common concerns among Persian cat breeders. If you're experiencing excessive tearing in your cattery, this comprehensive guide will help you understand the causes and implement effective solutions.</p>          <h2>Understanding the Causes</h2>     <p>Several factors can contribute to excessive tearing in Persian cats:</p>     <ul>       <li><strong>Facial Structure:</strong> The flat-faced (brachycephalic) structure of Persians can cause tear ducts to be compressed, leading to overflow.</li>       <li><strong>Environmental Factors:</strong> Allergens, dust, and irritants can trigger excessive tear production.</li>       <li><strong>Health Issues:</strong> Eye infections, blocked tear ducts, or underlying health conditions can cause persistent tearing.</li>       <li><strong>Diet:</strong> Poor nutrition can affect overall eye health.</li>     </ul>      <h2>Practical Solutions</h2>     <p>Here are proven strategies we've implemented at Ethereal Persians:</p>     <ol>       <li><strong>Regular Grooming:</strong> Clean around the eyes daily with a soft, damp cloth to prevent tear staining.</li>       <li><strong>Air Quality:</strong> Use air purifiers and maintain low humidity levels to reduce allergens.</li>       <li><strong>Nutrition:</strong> Feed high-quality, species-appropriate diets rich in essential nutrients.</li>       <li><strong>Veterinary Care:</strong> Regular check-ups to catch and address eye issues early.</li>       <li><strong>Breeding Selection:</strong> Choose breeding pairs with healthy eye structures and minimal tearing history.</li>     </ol>      <h2>Our Experience</h2>     <p>Through years of breeding, we've learned that consistent care, proper nutrition, and selective breeding can significantly reduce tearing issues. Remember, some tearing is normal, but excessive tearing requires attention and management.</p>      <p>If you're struggling with tearing in your cattery, don't lose hope. With the right approach and dedication, you can minimize this challenge and focus on producing healthy, happy Persian cats.</p>"
+    }
+  },
+  "config": {}
+}

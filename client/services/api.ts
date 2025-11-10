@@ -1,4 +1,4 @@
-import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData } from '@/types/api';
+import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:1337';
 
@@ -1486,5 +1486,141 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
     console.error('❌ Error fetching queens page data:', error);
     console.warn('⚠️ Using fallback data');
     return { cardImage: fallbackCardImage, queens: fallbackQueens };
+  }
+}
+
+export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardImageData; whyBlogData: TransformedWhyBlogData; blogs: TransformedBlogPost[] }> {
+  const url = `${API_BASE_URL}/api/blog-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[BlogSection][populate][image][fields][0]=url&populate[whyBlogData][populate][imageTop][fields][0]=url&populate[whyBlogData][populate][aboutItems][populate]=*&populate[whyBlogData][populate][imageBottom][fields][0]=url`;
+  
+  console.log('🔍 Fetching blog page data from:', url);
+  
+  // Default fallback data
+  const fallbackCardImage: TransformedCardImageData = {
+    heroImage: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800",
+    heading: "BLOG",
+    cardTitle: "WELCOME TO OUR BLOG",
+    cardText: "Discover insights, tips, and stories from our cattery.",
+    overlayColor: "rgba(0,0,0,0.10)",
+    parallaxSpeed: 0.3,
+    backgroundColor: "#f9f111",
+  };
+  
+  const fallbackWhyBlogData: TransformedWhyBlogData = {
+    imageTop: "https://images.unsplash.com/photo-1513366208864-87536b8bd7b4?auto=format&fit=crop&q=80&w=800",
+    imageTopAlt: "Roxy with cat",
+    aboutTitle: "About Roxy",
+    aboutItems: [
+      { text: "Mother, wife, and prior vet tech" },
+      { text: "Cattery owner since 2015" },
+      { text: "Practices holistic medicine" },
+      { text: "Crazy cat lady!" }
+    ],
+    whyBlogTitle: "Why I Blog?",
+    whyBlogText: "When I was a newbie breeder, I struggled to make the right decisions. I did not have a mentor and learned many lessons the hard way. I blog to help other breeders and pet parents overcome challenges without the need to make as many mistakes. Hopefully, this enables your kitty to live their best life.",
+    whyBlogBg: "#d48888",
+    imageBottom: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1600",
+    imageBottomAlt: "Three Persian cats",
+    topBandColor: "#d8ebf0",
+  };
+  
+  const fallbackBlogs: TransformedBlogPost[] = [];
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Blog page API returned status: ${response.status}`);
+      console.warn('⚠️ Using fallback data');
+      return { cardImage: fallbackCardImage, whyBlogData: fallbackWhyBlogData, blogs: fallbackBlogs };
+    }
+
+    const data: BlogPageApiResponse = await response.json();
+    console.log('📦 Raw Blog Page API data:', JSON.stringify(data, null, 2));
+    
+    // Transform cardImageSection
+    let cardImage = fallbackCardImage;
+    if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
+      cardImage = {
+        heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+        heading: data.data.cardImageSection.heading,
+        cardTitle: data.data.cardImageSection.cardTitle,
+        cardText: data.data.cardImageSection.cardText,
+        overlayColor: data.data.cardImageSection.overlayColor,
+        parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed),
+        backgroundColor: data.data.cardImageSection.backgroundColor,
+      };
+    } else {
+      console.warn('⚠️ cardImageSection not found in API, using fallback card image');
+    }
+    
+    // Transform whyBlogData
+    let whyBlogData = fallbackWhyBlogData;
+    if (data.data.whyBlogData) {
+      whyBlogData = {
+        imageTop: getImageUrl(data.data.whyBlogData.imageTop.url),
+        imageTopAlt: data.data.whyBlogData.imageTopAlt,
+        aboutTitle: data.data.whyBlogData.aboutTitle,
+        aboutItems: data.data.whyBlogData.aboutItems.map(item => ({ text: item.text })),
+        whyBlogTitle: data.data.whyBlogData.whyBlogTitle,
+        whyBlogText: data.data.whyBlogData.whyBlogText,
+        whyBlogBg: data.data.whyBlogData.whyBlogBg,
+        imageBottom: getImageUrl(data.data.whyBlogData.imageBottom.url),
+        imageBottomAlt: data.data.whyBlogData.imageBottomAlt,
+        topBandColor: data.data.whyBlogData.topBandColor,
+      };
+    } else {
+      console.warn('⚠️ whyBlogData not found in API, using fallback why blog data');
+    }
+    
+    // Transform BlogSection
+    let blogs = fallbackBlogs;
+    if (data.data.BlogSection && data.data.BlogSection.length > 0) {
+      blogs = data.data.BlogSection.map(blog => {
+        // Handle null or missing image
+        const imageUrl = blog.image && blog.image.url 
+          ? getImageUrl(blog.image.url)
+          : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=800';
+        
+        // Parse categories - handle string format "GROOMING, UNCATEGORIZED"
+        let categoriesArray: string[] = [];
+        if (blog.categories) {
+          if (typeof blog.categories === 'string') {
+            categoriesArray = blog.categories
+              .split(',')
+              .map(cat => cat.trim().toUpperCase())
+              .filter(cat => cat.length > 0);
+          } else if (Array.isArray(blog.categories)) {
+            categoriesArray = blog.categories.map(cat => String(cat).trim().toUpperCase());
+          }
+        }
+        
+        console.log(`🏷️ Blog ${blog.id} categories:`, blog.categories, '→', categoriesArray);
+        
+        return {
+          id: blog.id.toString(),
+          categories: categoriesArray,
+          title: blog.title,
+          description: blog.description,
+          author: blog.author,
+          date: blog.date,
+          features: blog.features ?? false, // Convert null to false
+          fullContent: blog.fullContent,
+          image: imageUrl,
+        };
+      });
+    } else {
+      console.warn('⚠️ BlogSection not found in API, using fallback blogs');
+    }
+    
+    console.log('🔄 Transformed blog page data:', JSON.stringify({ cardImage, whyBlogData, blogs }, null, 2));
+    return { cardImage, whyBlogData, blogs };
+  } catch (error) {
+    console.error('❌ Error fetching blog page data:', error);
+    console.warn('⚠️ Using fallback data');
+    return { cardImage: fallbackCardImage, whyBlogData: fallbackWhyBlogData, blogs: fallbackBlogs };
   }
 }

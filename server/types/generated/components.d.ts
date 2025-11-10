@@ -1,5 +1,16 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BasicAboutItemsBlog extends Struct.ComponentSchema {
+  collectionName: 'components_basic_about_items_blogs';
+  info: {
+    displayName: 'aboutItemsBlog';
+  };
+  attributes: {
+    text: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Mother, wife, and prior vet tech'>;
+  };
+}
+
 export interface BasicAdultsList extends Struct.ComponentSchema {
   collectionName: 'components_basic_adults_lists';
   info: {
@@ -284,6 +295,28 @@ export interface DefaultAdults extends Struct.ComponentSchema {
   };
 }
 
+export interface DefaultBlog extends Struct.ComponentSchema {
+  collectionName: 'components_default_blogs';
+  info: {
+    displayName: 'Blog';
+  };
+  attributes: {
+    author: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Roxy Geers'>;
+    categories: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'GROOMING, UNCATEGORIZED'>;
+    date: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'March 15, 2024'>;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'A Breeders Guide For Reducing Tearing in a Cattery A Guideline for Feline Breeders Are you tired of tearing problems in your cattery? Learn proven techniques to minimize tearing in Persian cats through proper care, diet, and environmental management.'>;
+    features: Schema.Attribute.Boolean;
+    fullContent: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<"<p>Tearing is one of the most common concerns among Persian cat breeders. If you're experiencing excessive tearing in your cattery, this comprehensive guide will help you understand the causes and implement effective solutions.</p>          <h2>Understanding the Causes</h2>     <p>Several factors can contribute to excessive tearing in Persian cats:</p>     <ul>       <li><strong>Facial Structure:</strong> The flat-faced (brachycephalic) structure of Persians can cause tear ducts to be compressed, leading to overflow.</li>       <li><strong>Environmental Factors:</strong> Allergens, dust, and irritants can trigger excessive tear production.</li>       <li><strong>Health Issues:</strong> Eye infections, blocked tear ducts, or underlying health conditions can cause persistent tearing.</li>       <li><strong>Diet:</strong> Poor nutrition can affect overall eye health.</li>     </ul>      <h2>Practical Solutions</h2>     <p>Here are proven strategies we've implemented at Ethereal Persians:</p>     <ol>       <li><strong>Regular Grooming:</strong> Clean around the eyes daily with a soft, damp cloth to prevent tear staining.</li>       <li><strong>Air Quality:</strong> Use air purifiers and maintain low humidity levels to reduce allergens.</li>       <li><strong>Nutrition:</strong> Feed high-quality, species-appropriate diets rich in essential nutrients.</li>       <li><strong>Veterinary Care:</strong> Regular check-ups to catch and address eye issues early.</li>       <li><strong>Breeding Selection:</strong> Choose breeding pairs with healthy eye structures and minimal tearing history.</li>     </ol>      <h2>Our Experience</h2>     <p>Through years of breeding, we've learned that consistent care, proper nutrition, and selective breeding can significantly reduce tearing issues. Remember, some tearing is normal, but excessive tearing requires attention and management.</p>      <p>If you're struggling with tearing in your cattery, don't lose hope. With the right approach and dedication, you can minimize this challenge and focus on producing healthy, happy Persian cats.</p>">;
+    image: Schema.Attribute.Media<'images'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'A Breeders Guide For Reducing Tearing in a Cattery'>;
+  };
+}
+
 export interface DefaultComment extends Struct.ComponentSchema {
   collectionName: 'components_default_comments';
   info: {
@@ -403,9 +436,35 @@ export interface DefaultTestiomonialHome extends Struct.ComponentSchema {
   };
 }
 
+export interface DefaultWhyBlogData extends Struct.ComponentSchema {
+  collectionName: 'components_default_why_blog_data';
+  info: {
+    displayName: 'whyBlogData';
+  };
+  attributes: {
+    aboutItems: Schema.Attribute.Component<'basic.about-items-blog', true>;
+    aboutTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'About Roxy'>;
+    imageBottom: Schema.Attribute.Media<'images'>;
+    imageBottomAlt: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Three Persian cats'>;
+    imageTop: Schema.Attribute.Media<'images'>;
+    imageTopAlt: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Roxy with cat'>;
+    topBandColor: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'#d8ebf0'>;
+    whyBlogBg: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#d48888'>;
+    whyBlogText: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'When I was a newbie breeder, I struggled to make the right decisions. I did not have a mentor and learned many lessons the hard way. I blog to help other breeders and pet parents overcome challenges without the need to make as many mistakes. Hopefully, this enables your kitty to live their best life.'>;
+    whyBlogTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Why I Blog?'>;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'basic.about-items-blog': BasicAboutItemsBlog;
       'basic.adults-list': BasicAdultsList;
       'basic.card-context': BasicCardContext;
       'basic.card-image': BasicCardImage;
@@ -425,6 +484,7 @@ declare module '@strapi/strapi' {
       'basic.testimonials-data': BasicTestimonialsData;
       'basic.text-component': BasicTextComponent;
       'default.adults': DefaultAdults;
+      'default.blog': DefaultBlog;
       'default.comment': DefaultComment;
       'default.galleries-home': DefaultGalleriesHome;
       'default.hero': DefaultHero;
@@ -433,6 +493,7 @@ declare module '@strapi/strapi' {
       'default.special': DefaultSpecial;
       'default.terms': DefaultTerms;
       'default.testiomonial-home': DefaultTestiomonialHome;
+      'default.why-blog-data': DefaultWhyBlogData;
     }
   }
 }

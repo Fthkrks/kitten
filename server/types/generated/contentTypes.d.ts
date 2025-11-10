@@ -498,6 +498,36 @@ export interface ApiAvaibleKittenPageAvaibleKittenPage
   };
 }
 
+export interface ApiBlogPageBlogPage extends Struct.SingleTypeSchema {
+  collectionName: 'blog_pages';
+  info: {
+    displayName: 'BlogPage';
+    pluralName: 'blog-pages';
+    singularName: 'blog-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    BlogSection: Schema.Attribute.Component<'default.blog', true>;
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::blog-page.blog-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    whyBlogData: Schema.Attribute.Component<'default.why-blog-data', false>;
+  };
+}
+
 export interface ApiFaqPageFaqPage extends Struct.SingleTypeSchema {
   collectionName: 'faq_pages';
   info: {
@@ -1264,6 +1294,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::avaible-kitten-page.avaible-kitten-page': ApiAvaibleKittenPageAvaibleKittenPage;
+      'api::blog-page.blog-page': ApiBlogPageBlogPage;
       'api::faq-page.faq-page': ApiFaqPageFaqPage;
       'api::homepage.homepage': ApiHomepageHomepage;
       'api::kings-page.kings-page': ApiKingsPageKingsPage;

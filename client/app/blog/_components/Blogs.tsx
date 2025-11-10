@@ -1,18 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { defaultPosts, type BlogPost } from "../../../data/blogData";
+
+export interface BlogPostSimple {
+  id: string;
+  categories: string[];
+  title: string;
+  description: string;
+  image: string;
+  author?: string;
+  date?: string;
+  featured?: boolean;
+}
 
 interface BlogsProps {
   categories?: string[];
-  posts?: BlogPost[];
+  posts: BlogPostSimple[];
   defaultCategory?: string;
 }
 
 export default function Blogs({
   categories = ["ALL", "FEATURED", "GROOMING", "MISCELLANEOUS", "NUTRITION", "REARING", "UNCATEGORIZED"],
-  posts = defaultPosts,
+  posts,
   defaultCategory = "ALL",
 }: BlogsProps) {
   const [activeCategory, setActiveCategory] = useState(defaultCategory);
@@ -20,14 +30,31 @@ export default function Blogs({
   const [selectedDropdown, setSelectedDropdown] = useState("All Posts");
   const [displayCount, setDisplayCount] = useState(8);
 
+  // Reset display count when category changes
+  useEffect(() => {
+    setDisplayCount(8);
+  }, [activeCategory, searchTerm]);
+
   // Filter posts
   const filteredPosts = posts.filter((post) => {
+    // Ensure categories is an array
+    if (!Array.isArray(post.categories)) {
+      console.warn('⚠️ Post categories is not an array:', post.id, post.categories);
+      return false;
+    }
+
+    // Category matching: categories are already uppercase from API
     const matchesCategory =
-      activeCategory === "ALL" || post.categories.includes(activeCategory);
+      activeCategory === "ALL" || 
+      post.categories.some(cat => 
+        String(cat).trim().toUpperCase() === String(activeCategory).trim().toUpperCase()
+      );
+    
     const matchesSearch =
       !searchTerm ||
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
     return matchesCategory && matchesSearch;
   });
 

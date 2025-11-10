@@ -1,10 +1,14 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { defaultPosts, type BlogPost } from "../../../data/blogData";
+import type { BlogPostSimple } from "./Blogs";
 
-export default function Featured() {
-  const featuredPosts = defaultPosts.filter((post) => post.featured === true);
+interface FeaturedProps {
+  posts: BlogPostSimple[];
+}
+
+export default function Featured({ posts }: FeaturedProps) {
+  const featuredPosts = posts.filter((post) => post.featured === true);
 
   if (featuredPosts.length === 0) {
     return null;

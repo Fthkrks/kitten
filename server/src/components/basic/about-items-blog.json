@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_basic_about_items_blogs",
+  "info": {
+    "displayName": "aboutItemsBlog"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "default": "Mother, wife, and prior vet tech"
+    }
+  },
+  "config": {}
+}

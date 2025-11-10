@@ -1,0 +1,30 @@
+{
+  "kind": "singleType",
+  "collectionName": "blog_pages",
+  "info": {
+    "singularName": "blog-page",
+    "pluralName": "blog-pages",
+    "displayName": "BlogPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "BlogSection": {
+      "type": "component",
+      "component": "default.blog",
+      "repeatable": true
+    },
+    "whyBlogData": {
+      "type": "component",
+      "component": "default.why-blog-data",
+      "repeatable": false
+    }
+  }
+}

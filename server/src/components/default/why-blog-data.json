@@ -1,0 +1,57 @@
+{
+  "collectionName": "components_default_why_blog_data",
+  "info": {
+    "displayName": "whyBlogData"
+  },
+  "options": {},
+  "attributes": {
+    "imageTop": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "imageTopAlt": {
+      "type": "string",
+      "default": "Roxy with cat"
+    },
+    "aboutTitle": {
+      "type": "string",
+      "default": "About Roxy"
+    },
+    "aboutItems": {
+      "type": "component",
+      "component": "basic.about-items-blog",
+      "repeatable": true
+    },
+    "whyBlogTitle": {
+      "type": "string",
+      "default": "Why I Blog?"
+    },
+    "whyBlogText": {
+      "type": "text",
+      "default": "When I was a newbie breeder, I struggled to make the right decisions. I did not have a mentor and learned many lessons the hard way. I blog to help other breeders and pet parents overcome challenges without the need to make as many mistakes. Hopefully, this enables your kitty to live their best life."
+    },
+    "whyBlogBg": {
+      "type": "string",
+      "default": "#d48888"
+    },
+    "imageBottom": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "imageBottomAlt": {
+      "type": "string",
+      "default": "Three Persian cats"
+    },
+    "topBandColor": {
+      "type": "string",
+      "default": "#d8ebf0"
+    }
+  },
+  "config": {}
+}

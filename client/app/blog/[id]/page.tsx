@@ -1,35 +1,45 @@
 import BlogDetail from "../_components/BlogDetail";
 import { defaultPosts } from "../../../data/blogData";
 import type { BlogPost } from "../../../data/blogData";
+import { fetchBlogPageData } from "@/services/api";
+import type { TransformedBlogPost } from "@/types/api";
 
 // Generate static params for all blog posts
 export async function generateStaticParams() {
+  try {
+    const { blogs } = await fetchBlogPageData();
+    if (blogs.length > 0) {
+      return blogs.map((post) => ({
+        id: post.id,
+      }));
+    }
+  } catch (error) {
+    console.error('Error generating static params:', error);
+  }
+  
+  // Fallback to local data
   return defaultPosts.map((post) => ({
     id: post.id,
   }));
 }
 
-// In a real app, this would fetch from an API or database
-function getPostById(id: string): BlogPost | null {
-  const post = defaultPosts.find((post) => post.id === id);
-  if (!post) return null;
-  
-  // Ensure all detail fields are present with fake data if missing
+// Convert TransformedBlogPost to BlogPost format
+function convertToBlogPost(transformedPost: TransformedBlogPost): BlogPost {
   return {
-    ...post,
-    author: post.author || "Ethereal Persians",
-    date: post.date || new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }),
-    fullContent: post.fullContent || `<p>${post.description}</p><p>This is a comprehensive guide covering all aspects of this important topic. Our years of experience at Ethereal Persians have taught us valuable lessons that we're excited to share with you.</p><p>Continue reading to discover detailed insights, practical tips, and proven strategies that will help you on your journey with Persian cats.</p>`,
+    id: transformedPost.id,
+    categories: transformedPost.categories,
+    title: transformedPost.title,
+    description: transformedPost.description,
+    image: transformedPost.image,
+    author: transformedPost.author,
+    date: transformedPost.date,
+    fullContent: transformedPost.fullContent,
   };
 }
 
-function getRelatedPosts(currentPost: BlogPost, limit = 3): BlogPost[] {
+function getRelatedPosts(currentPost: BlogPost, allPosts: BlogPost[], limit = 3): BlogPost[] {
   // First, try to find posts with matching categories
-  const categoryMatches = defaultPosts
+  const categoryMatches = allPosts
     .filter((post) => {
       if (post.id === currentPost.id) return false;
       return post.categories.some((cat) => currentPost.categories.includes(cat));
@@ -38,7 +48,7 @@ function getRelatedPosts(currentPost: BlogPost, limit = 3): BlogPost[] {
 
   // If we don't have enough matches, fill with any other posts
   if (categoryMatches.length < limit) {
-    const remaining = defaultPosts
+    const remaining = allPosts
       .filter((post) => post.id !== currentPost.id && !categoryMatches.find((p) => p.id === post.id))
       .slice(0, limit - categoryMatches.length);
     return [...categoryMatches, ...remaining];
@@ -49,7 +59,27 @@ function getRelatedPosts(currentPost: BlogPost, limit = 3): BlogPost[] {
 
 export default async function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const post = getPostById(id);
+  
+  // Try to fetch from API first
+  let post: BlogPost | null = null;
+  let allPosts: BlogPost[] = [];
+  
+  try {
+    const { blogs } = await fetchBlogPageData();
+    allPosts = blogs.map(convertToBlogPost);
+    const apiPost = blogs.find((p) => p.id === id);
+    if (apiPost) {
+      post = convertToBlogPost(apiPost);
+    }
+  } catch (error) {
+    console.error('Error fetching blog data:', error);
+  }
+  
+  // Fallback to local data if API fails
+  if (!post) {
+    post = defaultPosts.find((p) => p.id === id) || null;
+    allPosts = defaultPosts;
+  }
 
   if (!post) {
     return (
@@ -68,7 +98,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
     );
   }
 
-  const relatedPosts = getRelatedPosts(post);
+  const relatedPosts = getRelatedPosts(post, allPosts);
 
   return <BlogDetail post={post} relatedPosts={relatedPosts} />;
 }

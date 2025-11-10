@@ -722,6 +722,105 @@ export interface TransformedQueensCardData {
   descriptionTextColor: string;
 }
 
+// Blog Page API Response
+interface BlogAboutItem {
+  id: number;
+  text: string;
+}
+
+interface WhyBlogDataSection {
+  id: number;
+  imageTopAlt: string;
+  aboutTitle: string;
+  whyBlogTitle: string;
+  whyBlogText: string;
+  whyBlogBg: string;
+  imageBottomAlt: string;
+  topBandColor: string;
+  imageTop: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+  aboutItems: BlogAboutItem[];
+  imageBottom: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+interface BlogSectionItem {
+  id: number;
+  categories: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  features: boolean | null;
+  fullContent: string;
+  image: {
+    id: number;
+    documentId: string;
+    url: string;
+  } | null;
+}
+
+interface BlogCardImageSection {
+  id: number;
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: string;
+  backgroundColor: string;
+  heroImage: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+export interface BlogPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    cardImageSection?: BlogCardImageSection;
+    BlogSection?: BlogSectionItem[];
+    whyBlogData?: WhyBlogDataSection;
+  };
+  meta: {};
+}
+
+// Transformed data for Blog page
+export interface TransformedWhyBlogData {
+  imageTop: string;
+  imageTopAlt: string;
+  aboutTitle: string;
+  aboutItems: Array<{ text: string }>;
+  whyBlogTitle: string;
+  whyBlogText: string;
+  whyBlogBg: string;
+  imageBottom: string;
+  imageBottomAlt: string;
+  topBandColor: string;
+}
+
+export interface TransformedBlogPost {
+  id: string;
+  categories: string[];
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  features: boolean;
+  fullContent: string;
+  image: string;
+}
+
 // Transformed data for CardImage component
 export interface TransformedCardImageData {
   heroImage: string;
