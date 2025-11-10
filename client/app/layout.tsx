@@ -3,6 +3,7 @@ import { Poppins, Lora } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
+import { mediaData } from "@/data/mediaData";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -32,7 +33,7 @@ export default function RootLayout({
       >
         <Header />
         {children}
-        <Footer />
+        <Footer socialLinks={mediaData.socialLinks} />
       </body>
     </html>
   );

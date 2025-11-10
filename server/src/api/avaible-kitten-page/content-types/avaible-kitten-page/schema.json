@@ -1,0 +1,30 @@
+{
+  "kind": "singleType",
+  "collectionName": "avaible_kitten_pages",
+  "info": {
+    "singularName": "avaible-kitten-page",
+    "pluralName": "avaible-kitten-pages",
+    "displayName": "AvaibleKittenPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "PetCards": {
+      "type": "component",
+      "component": "basic.pets-data",
+      "repeatable": true
+    },
+    "AdultsAvaible": {
+      "type": "component",
+      "component": "basic.text-component",
+      "repeatable": false
+    }
+  }
+}

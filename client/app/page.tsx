@@ -1,5 +1,4 @@
 import { popularData } from "@/data/popularData";
-import { videoData } from "@/data/videoData";
 import Adults from "./_components/Adults";
 import Comments from "./_components/Comments";
 import Footer from "./_components/Footer";
@@ -13,7 +12,7 @@ import Popular from "./_components/Popular";
 import Special from "./_components/Special";
 import Testimontal from "./_components/Testimontal";
 import VideoGallery from "./_components/Video";
-import { fetchKittenData, fetchAdultsData, fetchCommentsData, fetchSpecialData, fetchGaleriesData, fetchTestimonialData, fetchMediaData } from "@/services/api";
+import { fetchKittenData, fetchAdultsData, fetchCommentsData, fetchSpecialData, fetchGaleriesData, fetchTestimonialData, fetchMediaData, fetchVideoData } from "@/services/api";
 
 export default async function Home() {
   const kittenData = await fetchKittenData();
@@ -23,6 +22,7 @@ export default async function Home() {
   const galeriesData = await fetchGaleriesData();
   const testimonialData = await fetchTestimonialData();
   const mediaData = await fetchMediaData();
+  const videoData = await fetchVideoData();
   
   return (
     <>
@@ -37,6 +37,7 @@ export default async function Home() {
       <Testimontal {...testimonialData} />
       <Media {...mediaData} />
       <VideoGallery {...videoData} />
+      <Footer socialLinks={mediaData.socialLinks} />
     </>
   );
 }

@@ -33,6 +33,27 @@ export interface BasicCardContext extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicCardImage extends Struct.ComponentSchema {
+  collectionName: 'components_basic_card_images';
+  info: {
+    displayName: 'CardImage';
+  };
+  attributes: {
+    backgroundColor: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'#f9f1f1'>;
+    cardText: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Discover our adorable Persian kittens ready for their forever homes. Each kitten is lovingly raised with care, socialized, and comes from our champion bloodlines.'>;
+    cardTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'AVAILABLE KITTENS'>;
+    heading: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'AVAILABLE KITTEN'>;
+    heroImage: Schema.Attribute.Media<'images'>;
+    overlayColor: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'rgba(0,0,0,0.15)'>;
+    parallaxSpeed: Schema.Attribute.String & Schema.Attribute.DefaultTo<'0.3'>;
+  };
+}
+
 export interface BasicDescriptionGalleriHome extends Struct.ComponentSchema {
   collectionName: 'components_basic_description_galleri_homes';
   info: {
@@ -100,6 +121,14 @@ export interface BasicImageSingle extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicImagesnotAlt extends Struct.ComponentSchema {
+  collectionName: 'components_basic_imagesnot_alts';
+  info: {
+    displayName: 'ImagesnotAlt';
+  };
+  attributes: {};
+}
+
 export interface BasicKittenList extends Struct.ComponentSchema {
   collectionName: 'components_basic_kitten_lists';
   info: {
@@ -109,6 +138,48 @@ export interface BasicKittenList extends Struct.ComponentSchema {
     image: Schema.Attribute.Component<'basic.image', true>;
     title: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Breeding Happy, Healthy<br />Purebred Persians'>;
+  };
+}
+
+export interface BasicMarketingLinksdata extends Struct.ComponentSchema {
+  collectionName: 'components_basic_marketing_linksdata';
+  info: {
+    displayName: 'MarketingLinksdata';
+  };
+  attributes: {
+    alt: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Xena Ming Girl'>;
+    href: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#'>;
+    label: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Xena, Ming, Girl, Boy1'>;
+    src: Schema.Attribute.Media<'images'>;
+  };
+}
+
+export interface BasicPetsData extends Struct.ComponentSchema {
+  collectionName: 'components_basic_pets_data';
+  info: {
+    displayName: 'PetsData';
+  };
+  attributes: {
+    age: Schema.Attribute.String & Schema.Attribute.DefaultTo<'5'>;
+    albumImages: Schema.Attribute.Component<'basic.image', true>;
+    breed: Schema.Attribute.String & Schema.Attribute.DefaultTo<'breed'>;
+    coatColor: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Seal Lynx Point Himalayan'>;
+    coatType: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Extreme & Mostly Cotton'>;
+    detailBg: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#E0F2F7'>;
+    dob: Schema.Attribute.String & Schema.Attribute.DefaultTo<'June 30, 2024'>;
+    eyeColor: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Deep Blue'>;
+    faceType: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Extreme'>;
+    gender: Schema.Attribute.String & Schema.Attribute.DefaultTo<'female'>;
+    image: Schema.Attribute.Media<'images', true>;
+    name: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'QUEEN | CRYSTAL'>;
+    reserved: Schema.Attribute.Boolean;
+    shading: Schema.Attribute.String & Schema.Attribute.DefaultTo<'None'>;
+    weight: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Currently 5 lbs'>;
   };
 }
 
@@ -141,6 +212,21 @@ export interface BasicTestimonialsData extends Struct.ComponentSchema {
     location: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Miami, FL'>;
     titleLines: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Thank you, thank you, thank you,", "you!'>;
+  };
+}
+
+export interface BasicTextComponent extends Struct.ComponentSchema {
+  collectionName: 'components_basic_text_components';
+  info: {
+    displayName: 'TextComponent';
+  };
+  attributes: {
+    buttonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'SUBMIT A APPLICATION'>;
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'The cats in this section are near and dear to our hearts. They are adults that have served a huge part in our cattery and occasionally some younger cats that we considered keeping to breed but for whatever reason, decided to place as beloved pets. Some may be discounted due to age. Nevertheless, these are our top kitties \u2013 the ones we consider most aesthetically pleasing and with great temperament.'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'RETIRING ADULTS'>;
   };
 }
 
@@ -268,14 +354,19 @@ declare module '@strapi/strapi' {
     export interface ComponentSchemas {
       'basic.adults-list': BasicAdultsList;
       'basic.card-context': BasicCardContext;
+      'basic.card-image': BasicCardImage;
       'basic.description-galleri-home': BasicDescriptionGalleriHome;
       'basic.features': BasicFeatures;
       'basic.features-special': BasicFeaturesSpecial;
       'basic.image': BasicImage;
       'basic.image-single': BasicImageSingle;
+      'basic.imagesnot-alt': BasicImagesnotAlt;
       'basic.kitten-list': BasicKittenList;
+      'basic.marketing-linksdata': BasicMarketingLinksdata;
+      'basic.pets-data': BasicPetsData;
       'basic.social-links': BasicSocialLinks;
       'basic.testimonials-data': BasicTestimonialsData;
+      'basic.text-component': BasicTextComponent;
       'default.adults': DefaultAdults;
       'default.comment': DefaultComment;
       'default.galleries-home': DefaultGalleriesHome;

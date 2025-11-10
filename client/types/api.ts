@@ -368,3 +368,151 @@ export interface TransformedMediaData {
     icon: string;
   }[];
 }
+
+// Marketing Links (Video Gallery) API Response
+interface MarketingLinkItem {
+  id: number;
+  alt: string;
+  label: string;
+  href: string;
+  src: StrapiImageFull | null;
+}
+
+interface MarketingLinkData {
+  id: number;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  items: MarketingLinkItem[];
+}
+
+export interface MarketingLinksApiResponse {
+  data: MarketingLinkData[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
+// Transformed data for Video Gallery component
+export interface TransformedVideoData {
+  items: {
+    id: string;
+    src: string;
+    alt: string;
+    href: string;
+    labels?: string[];
+  }[];
+}
+
+// Available Kitten Page API Response
+interface CardImageSection {
+  id: number;
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: string;
+  backgroundColor: string;
+  heroImage: StrapiImageFull;
+}
+
+interface PetCardAlbumImage {
+  id: number;
+  alt: string;
+  src: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+interface PetCardItem {
+  id: number;
+  name: string;
+  age: string;
+  gender: string;
+  reserved: boolean | null;
+  detailBg: string;
+  dob: string;
+  coatType: string;
+  faceType: string;
+  weight: string;
+  coatColor: string;
+  eyeColor: string;
+  shading: string;
+  breed: string;
+  image: Array<{
+    id: number;
+    documentId: string;
+    url: string;
+  }>;
+  albumImages: PetCardAlbumImage[];
+}
+
+interface AdultsAvaibleSection {
+  id: number;
+  title: string;
+  description: string;
+  buttonText: string;
+}
+
+export interface AvailableKittenPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    cardImageSection?: CardImageSection;
+    PetCards?: PetCardItem[];
+    AdultsAvaible?: AdultsAvaibleSection;
+  };
+  meta: {};
+}
+
+// Transformed data for AdultsAvaible component
+export interface TransformedAdultsAvaibleData {
+  title: string;
+  description: string;
+  buttonText: string;
+}
+
+// Transformed data for CardImage component
+export interface TransformedCardImageData {
+  heroImage: string;
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: number;
+  backgroundColor: string;
+}
+
+// Transformed data for PetCards component
+export interface TransformedPetCardData {
+  id: string;
+  name: string;
+  age: string;
+  gender: string;
+  reserved: boolean;
+  image: string;
+  detailBg: string;
+  dob: string;
+  coatType: string;
+  faceType: string;
+  weight: string;
+  coatColor: string;
+  eyeColor: string;
+  shading: string;
+  breed: string;
+  albumImages: Array<{
+    src: string;
+    alt: string;
+  }>;
+}

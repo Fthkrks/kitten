@@ -1,7 +1,18 @@
 "use client";
 import Image from "next/image";
 
-export default function Footer() {
+interface SocialLink {
+  id: string;
+  name: string;
+  href: string;
+  icon: string;
+}
+
+interface FooterProps {
+  socialLinks?: SocialLink[];
+}
+
+export default function Footer({ socialLinks = [] }: FooterProps) {
   return (
     <footer className="bg-[#F9F1F1] pt-12 pb-0">
       <div className="max-w-7xl mx-auto px-6">
@@ -18,32 +29,55 @@ export default function Footer() {
               1(941) 822-4016
             </div>
             <div className="flex gap-4 pt-2">
-              <a 
-                href="#" 
-                aria-label="Instagram"
-                className="hover:opacity-70 transition-opacity"
-              >
-                <Image 
-                  src="/images/instagram.png" 
-                  alt="Instagram" 
-                  width={28} 
-                  height={28}
-                  className="w-7 h-7"
-                />
-              </a>
-              <a 
-                href="#" 
-                aria-label="Facebook"
-                className="hover:opacity-70 transition-opacity"
-              >
-                <Image 
-                  src="/images/facebook.png" 
-                  alt="Facebook" 
-                  width={28} 
-                  height={28}
-                  className="w-7 h-7"
-                />
-              </a>
+              {socialLinks.length > 0 ? (
+                socialLinks.map((link) => (
+                  <a 
+                    key={link.id}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={link.name}
+                    className="hover:opacity-70 transition-opacity"
+                  >
+                    <Image 
+                      src={link.icon} 
+                      alt={link.name} 
+                      width={28} 
+                      height={28}
+                      className="w-7 h-7 object-cover"
+                    />
+                  </a>
+                ))
+              ) : (
+                <>
+                  <a 
+                    href="#" 
+                    aria-label="Instagram"
+                    className="hover:opacity-70 transition-opacity"
+                  >
+                    <Image 
+                      src="/images/instagram.png" 
+                      alt="Instagram" 
+                      width={28} 
+                      height={28}
+                      className="w-7 h-7"
+                    />
+                  </a>
+                  <a 
+                    href="#" 
+                    aria-label="Facebook"
+                    className="hover:opacity-70 transition-opacity"
+                  >
+                    <Image 
+                      src="/images/facebook.png" 
+                      alt="Facebook" 
+                      width={28} 
+                      height={28}
+                      className="w-7 h-7"
+                    />
+                  </a>
+                </>
+              )}
             </div>
           </div>
 

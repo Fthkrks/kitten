@@ -1,4 +1,4 @@
-import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData } from '@/types/api';
+import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:1337';
 
@@ -727,4 +727,343 @@ function transformMediaData(apiData: MediaLinksApiResponse): TransformedMediaDat
     title: mediaItem.title,
     socialLinks
   };
+}
+
+export async function fetchVideoData(): Promise<TransformedVideoData> {
+  const url = `${API_BASE_URL}/api/marketing-links?populate[items][populate]=src`;
+  
+  console.log('🔍 Fetching video data from:', url);
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Marketing links API returned status: ${response.status}`);
+      console.warn('⚠️ Using fallback data from videoData.ts');
+      console.info('💡 To fix: Add marketing-links content type in Strapi');
+      const { videoData } = require('@/data/videoData');
+      return videoData;
+    }
+
+    const data: MarketingLinksApiResponse = await response.json();
+    console.log('📦 Raw Video API data:', JSON.stringify(data, null, 2));
+    
+    // Transform API data to match Video component props
+    const transformedData = transformVideoData(data);
+    console.log('🔄 Transformed video data:', JSON.stringify(transformedData, null, 2));
+    
+    return transformedData;
+  } catch (error) {
+    console.error('❌ Error fetching video data:', error);
+    console.warn('⚠️ Using fallback data from videoData.ts');
+    const { videoData } = require('@/data/videoData');
+    return videoData;
+  }
+}
+
+function transformVideoData(apiData: MarketingLinksApiResponse): TransformedVideoData {
+  // Check if data array exists and has items
+  if (!apiData.data || !Array.isArray(apiData.data) || apiData.data.length === 0) {
+    console.warn('⚠️ No marketing links found in API, using fallback data');
+    const { videoData } = require('@/data/videoData');
+    return videoData;
+  }
+  
+  // Get the first item (should only be one)
+  const marketingItem = apiData.data[0];
+  
+  // Check if items exists
+  if (!Array.isArray(marketingItem.items)) {
+    console.warn('⚠️ items is not an array, using fallback data');
+    const { videoData } = require('@/data/videoData');
+    return videoData;
+  }
+  
+  // Transform items array
+  const items = marketingItem.items
+    .filter(item => item.src !== null) // Filter out items without src
+    .map((item, index) => {
+      // Check if src exists
+      if (!item.src || !item.src.url) {
+        console.warn(`⚠️ Item ${index} src not populated, skipping`);
+        return null;
+      }
+      
+      // Parse label string into array
+      // API returns: "Xena, Ming, Girl, Boy1"
+      // We need to split by ", " and trim
+      let labelsArray: string[] | undefined = undefined;
+      if (item.label && item.label.trim()) {
+        try {
+          labelsArray = item.label.split(',').map(label => label.trim()).filter(label => label.length > 0);
+        } catch (error) {
+          console.warn(`⚠️ Error parsing labels for item ${index}:`, error);
+        }
+      }
+      
+      return {
+        id: item.id.toString(),
+        src: getImageUrl(item.src.url),
+        alt: item.alt,
+        href: item.href,
+        labels: labelsArray
+      };
+    })
+    .filter(item => item !== null) as TransformedVideoData['items'];
+
+  return {
+    items
+  };
+}
+
+export async function fetchAvailableKittenCardImage(): Promise<TransformedCardImageData> {
+  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[cardImageSection][populate]=heroImage`;
+  
+  console.log('🔍 Fetching available kitten card image from:', url);
+  
+  // Default fallback data
+  const fallbackData: TransformedCardImageData = {
+    heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
+    heading: "AVAILABLE KITTEN",
+    cardTitle: "AVAILABLE KITTENS",
+    cardText: "Discover our adorable Persian kittens ready for their forever homes. Each kitten is lovingly raised with care, socialized, and comes from our champion bloodlines.",
+    overlayColor: "rgba(0,0,0,0.15)",
+    parallaxSpeed: 0.3,
+    backgroundColor: "#f9f1f1",
+  };
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Available kitten page API returned status: ${response.status}`);
+      console.warn('⚠️ Using fallback data');
+      console.info('💡 To fix: Add avaible-kitten-page content type in Strapi');
+      return fallbackData;
+    }
+
+    const data: AvailableKittenPageApiResponse = await response.json();
+    console.log('📦 Raw Available Kitten Card Image API data:', JSON.stringify(data, null, 2));
+    
+    // Transform API data
+    const transformedData = transformAvailableKittenCardImage(data, fallbackData);
+    console.log('🔄 Transformed card image data:', JSON.stringify(transformedData, null, 2));
+    
+    return transformedData;
+  } catch (error) {
+    console.error('❌ Error fetching available kitten card image:', error);
+    console.warn('⚠️ Using fallback data');
+    return fallbackData;
+  }
+}
+
+function transformAvailableKittenCardImage(
+  apiData: AvailableKittenPageApiResponse,
+  fallbackData: TransformedCardImageData
+): TransformedCardImageData {
+  // Check if cardImageSection exists
+  if (!apiData.data.cardImageSection) {
+    console.warn('⚠️ cardImageSection not found in API, using fallback data');
+    return fallbackData;
+  }
+  
+  const section = apiData.data.cardImageSection;
+  
+  // Check if heroImage exists
+  if (!section.heroImage || !section.heroImage.url) {
+    console.warn('⚠️ heroImage not populated, using fallback data');
+    return fallbackData;
+  }
+  
+  // Parse parallaxSpeed to number
+  let parallaxSpeed = 0.3;
+  try {
+    parallaxSpeed = parseFloat(section.parallaxSpeed);
+  } catch (error) {
+    console.warn('⚠️ Error parsing parallaxSpeed, using default 0.3');
+  }
+  
+  return {
+    heroImage: getImageUrl(section.heroImage.url),
+    heading: section.heading,
+    cardTitle: section.cardTitle,
+    cardText: section.cardText,
+    overlayColor: section.overlayColor,
+    parallaxSpeed: parallaxSpeed,
+    backgroundColor: section.backgroundColor,
+  };
+}
+
+export async function fetchAvailableKittenPetCards(): Promise<TransformedPetCardData[]> {
+  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url`;
+  
+  console.log('🔍 Fetching available kitten pet cards from:', url);
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Available kitten pet cards API returned status: ${response.status}`);
+      console.warn('⚠️ Using empty array');
+      console.info('💡 To fix: Add PetCards to your avaible-kitten-page content type in Strapi');
+      return [];
+    }
+
+    const data: AvailableKittenPageApiResponse = await response.json();
+    console.log('📦 Raw Pet Cards API data:', JSON.stringify(data, null, 2));
+    
+    // Transform API data
+    const transformedData = transformAvailableKittenPetCards(data);
+    console.log('🔄 Transformed pet cards data:', JSON.stringify(transformedData, null, 2));
+    
+    return transformedData;
+  } catch (error) {
+    console.error('❌ Error fetching available kitten pet cards:', error);
+    console.warn('⚠️ Using empty array');
+    return [];
+  }
+}
+
+function transformAvailableKittenPetCards(apiData: AvailableKittenPageApiResponse): TransformedPetCardData[] {
+  // Check if PetCards exists
+  if (!apiData.data.PetCards || !Array.isArray(apiData.data.PetCards)) {
+    console.warn('⚠️ PetCards not found in API or not an array');
+    return [];
+  }
+  
+  // Transform pet cards array
+  const petCards = apiData.data.PetCards.map((pet, index) => {
+    // Check if image exists
+    if (!pet.image || !Array.isArray(pet.image) || pet.image.length === 0 || !pet.image[0].url) {
+      console.warn(`⚠️ Pet ${index} image not populated, skipping`);
+      return null;
+    }
+    
+    // Transform album images
+    const albumImages = pet.albumImages
+      .filter(albumImg => albumImg.src && albumImg.src.url)
+      .map(albumImg => ({
+        src: getImageUrl(albumImg.src.url),
+        alt: albumImg.alt
+      }));
+    
+    return {
+      id: pet.id.toString(),
+      name: pet.name,
+      age: pet.age,
+      gender: pet.gender,
+      reserved: pet.reserved,
+      image: getImageUrl(pet.image[0].url),
+      detailBg: pet.detailBg,
+      dob: pet.dob,
+      coatType: pet.coatType,
+      faceType: pet.faceType,
+      weight: pet.weight,
+      coatColor: pet.coatColor,
+      eyeColor: pet.eyeColor,
+      shading: pet.shading,
+      breed: pet.breed,
+      albumImages: albumImages
+    };
+  }).filter(pet => pet !== null) as TransformedPetCardData[];
+
+  return petCards;
+}
+
+export async function fetchPetById(id: string): Promise<TransformedPetCardData | null> {
+  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url`;
+  
+  console.log(`🔍 Fetching pet with ID ${id} from:`, url);
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Pet API returned status: ${response.status}`);
+      return null;
+    }
+
+    const data: AvailableKittenPageApiResponse = await response.json();
+    console.log('📦 Raw Pet API data:', JSON.stringify(data, null, 2));
+    
+    // Transform all pets and find the one with matching ID
+    const allPets = transformAvailableKittenPetCards(data);
+    const pet = allPets.find(p => p.id === id);
+    
+    if (!pet) {
+      console.warn(`⚠️ Pet with ID ${id} not found in API data`);
+      return null;
+    }
+    
+    console.log('🔄 Found pet:', JSON.stringify(pet, null, 2));
+    return pet;
+  } catch (error) {
+    console.error('❌ Error fetching pet by ID:', error);
+    return null;
+  }
+}
+
+export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaibleData> {
+  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[AdultsAvaible][populate]=*`;
+  
+  console.log('🔍 Fetching adults available data from:', url);
+  
+  // Default fallback data
+  const fallbackData: TransformedAdultsAvaibleData = {
+    title: "RETIRING ADULTS",
+    description: "The cats in this section are near and dear to our hearts. They are adults that have served a huge part in our cattery and occasionally some younger cats that we considered keeping to breed but for whatever reason, decided to place as beloved pets. Some may be discounted due to age. Nevertheless, these are our top kitties – the ones we consider most aesthetically pleasing and with great temperament.",
+    buttonText: "SUBMIT A APPLICATION"
+  };
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Adults available API returned status: ${response.status}`);
+      console.warn('⚠️ Using fallback data');
+      return fallbackData;
+    }
+
+    const data: AvailableKittenPageApiResponse = await response.json();
+    console.log('📦 Raw Adults Available API data:', JSON.stringify(data, null, 2));
+    
+    // Check if AdultsAvaible exists
+    if (!data.data.AdultsAvaible) {
+      console.warn('⚠️ AdultsAvaible not found in API, using fallback data');
+      return fallbackData;
+    }
+    
+    const transformedData: TransformedAdultsAvaibleData = {
+      title: data.data.AdultsAvaible.title,
+      description: data.data.AdultsAvaible.description,
+      buttonText: data.data.AdultsAvaible.buttonText
+    };
+    
+    console.log('🔄 Transformed adults available data:', JSON.stringify(transformedData, null, 2));
+    return transformedData;
+  } catch (error) {
+    console.error('❌ Error fetching adults available data:', error);
+    console.warn('⚠️ Using fallback data');
+    return fallbackData;
+  }
 }

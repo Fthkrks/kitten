@@ -1,0 +1,20 @@
+{
+  "kind": "collectionType",
+  "collectionName": "marketing_links",
+  "info": {
+    "singularName": "marketing-link",
+    "pluralName": "marketing-links",
+    "displayName": "MarketingLinks"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "items": {
+      "type": "component",
+      "component": "basic.marketing-linksdata",
+      "repeatable": true
+    }
+  }
+}

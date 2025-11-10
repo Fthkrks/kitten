@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_basic_marketing_linksdata",
+  "info": {
+    "displayName": "MarketingLinksdata"
+  },
+  "options": {},
+  "attributes": {
+    "src": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "alt": {
+      "type": "string",
+      "default": "Xena Ming Girl"
+    },
+    "label": {
+      "type": "string",
+      "default": "Xena, Ming, Girl, Boy1"
+    },
+    "href": {
+      "type": "string",
+      "default": "#"
+    }
+  },
+  "config": {}
+}

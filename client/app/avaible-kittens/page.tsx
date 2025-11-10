@@ -5,20 +5,16 @@ import PetCards from '../_components/PetCards'
 import AdultsAvaible from './_components/AdultsAvaible'
 import VideoGallery from '../_components/Video'
 import { petsData } from '../../data/petData'
+import { fetchAvailableKittenCardImage, fetchVideoData, fetchAvailableKittenPetCards, fetchAdultsAvaibleData } from '@/services/api'
 
-function page() {
-    const cardImage = {
-        heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
-        heading: "AVAILABLE KITTEN",
-        cardTitle: "AVAILABLE KITTENS",
-        cardText: "Discover our adorable Persian kittens ready for their forever homes. Each kitten is lovingly raised with care, socialized, and comes from our champion bloodlines.",
-        overlayColor: "rgba(0,0,0,0.15)",
-        parallaxSpeed: 0.3,
-        backgroundColor: "#f9f1f1",
-    }
+async function page() {
+    const cardImage = await fetchAvailableKittenCardImage();
+    const videoData = await fetchVideoData();
+    const apiPets = await fetchAvailableKittenPetCards();
+    const adultsAvaibleData = await fetchAdultsAvaibleData();
     
-    // Use petsData from petData.ts to ensure consistency with detail pages
-    const pets = petsData.slice(0, 6)
+    // Use API pets if available, otherwise fallback to local data
+    const allPets = apiPets.length > 0 ? apiPets : petsData.slice(0, 6)
 
     // Bottom hearts component
     const BottomHearts = () => (
@@ -40,86 +36,57 @@ function page() {
         </div>
     )
 
+    // Split pets into groups of 2
+    const petGroups = [];
+    for (let i = 0; i < allPets.length; i += 2) {
+        petGroups.push(allPets.slice(i, i + 2));
+    }
+
   return (
     <div>
         <CardImage {...cardImage} />
         <Soon />
-        <PetCards 
-            pets={pets}
-            backgroundColor="#f9f1f1"
-            mobileCols={2}
-            desktopCols={2}
-            gap={8}
-            cardBorderColor="white"
-            cardBorderWidth="1px"
-            showHearts={false}
-            overlayGradient="from-transparent via-transparent to-transparent"
-            overlayPadding="p-0"
-
-            bottomSectionPadding="p-4"
-        />
-        <BottomHearts />
-        <PetCards 
-            pets={pets}
-            backgroundColor="#f9f1f1"
-            mobileCols={2}
-            desktopCols={2}
-            gap={8}
-            cardBorderColor="white"
-            cardBorderWidth="1px"
-            showHearts={false}
-            overlayGradient="from-transparent via-transparent to-transparent"
-            overlayPadding="p-0"
-
-            bottomSectionPadding="p-4"
-        />
-        <BottomHearts />
-        <PetCards 
-            pets={pets}
-            backgroundColor="#f9f1f1"
-            mobileCols={2}
-            desktopCols={2}
-            gap={8}
-            cardBorderColor="white"
-            cardBorderWidth="1px"
-            showHearts={false}
-            overlayGradient="from-transparent via-transparent to-transparent"
-            overlayPadding="p-0"
-
-            bottomSectionPadding="p-4"
-        />
-        <BottomHearts />
-        <PetCards 
-            pets={pets}
-            backgroundColor="#f9f1f1"
-            mobileCols={2}
-            desktopCols={2}
-            gap={8}
-            cardBorderColor="white"
-            cardBorderWidth="1px"
-            showHearts={false}
-            overlayGradient="from-transparent via-transparent to-transparent"
-            overlayPadding="p-0"
-
-            bottomSectionPadding="p-4"
-        />
-        <AdultsAvaible />
-        <PetCards 
-            pets={pets}
-            backgroundColor="#D1ECF1"
-            mobileCols={2}
-            desktopCols={2}
-            gap={8}
-            cardBorderColor="white"
-            cardBorderWidth="1px"
-            showHearts={false}
-            overlayGradient="from-transparent via-transparent to-transparent"
-            overlayPadding="p-0"
-
-            bottomSectionPadding="p-4"
-        />
-        <VideoGallery/>
-
+        
+        {/* Dynamically render PetCards based on API data */}
+        {petGroups.map((pets, index) => (
+            <React.Fragment key={index}>
+                <PetCards 
+                    pets={pets}
+                    backgroundColor="#f9f1f1"
+                    mobileCols={2}
+                    desktopCols={2}
+                    gap={8}
+                    cardBorderColor="white"
+                    cardBorderWidth="1px"
+                    showHearts={false}
+                    overlayGradient="from-transparent via-transparent to-transparent"
+                    overlayPadding="p-0"
+                    bottomSectionPadding="p-4"
+                />
+                <BottomHearts />
+            </React.Fragment>
+        ))}
+        
+        <AdultsAvaible {...adultsAvaibleData} />
+        
+        {/* Show last group with different background color */}
+        {petGroups.length > 0 && (
+            <PetCards 
+                pets={petGroups[petGroups.length - 1]}
+                backgroundColor="#D1ECF1"
+                mobileCols={2}
+                desktopCols={2}
+                gap={8}
+                cardBorderColor="white"
+                cardBorderWidth="1px"
+                showHearts={false}
+                overlayGradient="from-transparent via-transparent to-transparent"
+                overlayPadding="p-0"
+                bottomSectionPadding="p-4"
+            />
+        )}
+        
+        <VideoGallery {...videoData} />
     </div>
   )
 }

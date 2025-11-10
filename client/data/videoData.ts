@@ -1,5 +1,4 @@
 export const videoData = {
-  backgroundColor: '#f5f5f5',
   items: [
     {
       id: "xena-ming-girl",

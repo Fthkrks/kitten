@@ -1,0 +1,73 @@
+{
+  "collectionName": "components_basic_pets_data",
+  "info": {
+    "displayName": "PetsData"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "default": "QUEEN | CRYSTAL"
+    },
+    "age": {
+      "type": "string",
+      "default": "5"
+    },
+    "gender": {
+      "type": "string",
+      "default": "female"
+    },
+    "image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "reserved": {
+      "type": "boolean"
+    },
+    "detailBg": {
+      "type": "string",
+      "default": "#E0F2F7"
+    },
+    "dob": {
+      "type": "string",
+      "default": "June 30, 2024"
+    },
+    "coatType": {
+      "type": "string",
+      "default": "Extreme & Mostly Cotton"
+    },
+    "faceType": {
+      "type": "string",
+      "default": "Extreme"
+    },
+    "weight": {
+      "type": "string",
+      "default": "Currently 5 lbs"
+    },
+    "coatColor": {
+      "type": "string",
+      "default": "Seal Lynx Point Himalayan"
+    },
+    "eyeColor": {
+      "type": "string",
+      "default": "Deep Blue"
+    },
+    "shading": {
+      "type": "string",
+      "default": "None"
+    },
+    "breed": {
+      "type": "string",
+      "default": "breed"
+    },
+    "albumImages": {
+      "type": "component",
+      "component": "basic.image",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

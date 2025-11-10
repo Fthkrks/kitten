@@ -467,6 +467,37 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAvaibleKittenPageAvaibleKittenPage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'avaible_kitten_pages';
+  info: {
+    displayName: 'AvaibleKittenPage';
+    pluralName: 'avaible-kitten-pages';
+    singularName: 'avaible-kitten-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    AdultsAvaible: Schema.Attribute.Component<'basic.text-component', false>;
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::avaible-kitten-page.avaible-kitten-page'
+    > &
+      Schema.Attribute.Private;
+    PetCards: Schema.Attribute.Component<'basic.pets-data', true>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
   collectionName: 'homepages';
   info: {
@@ -541,6 +572,35 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
           localized: true;
         };
       }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiMarketingLinkMarketingLink
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'marketing_links';
+  info: {
+    displayName: 'MarketingLinks';
+    pluralName: 'marketing-links';
+    singularName: 'marketing-link';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    items: Schema.Attribute.Component<'basic.marketing-linksdata', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::marketing-link.marketing-link'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1088,7 +1148,9 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::avaible-kitten-page.avaible-kitten-page': ApiAvaibleKittenPageAvaibleKittenPage;
       'api::homepage.homepage': ApiHomepageHomepage;
+      'api::marketing-link.marketing-link': ApiMarketingLinkMarketingLink;
       'api::media-link.media-link': ApiMediaLinkMediaLink;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

@@ -2,23 +2,44 @@ import CardImage from "../../_components/CardImage";
 import PetDetail from "../../_components/PetDetail";
 import { petsData } from "../../../data/petData";
 import type { PetDetail as PetDetailType } from "../../../data/petData";
+import { fetchPetById, fetchAvailableKittenPetCards } from "@/services/api";
 
-// Generate static params for all pets
+// Generate static params for all pets from API
 export async function generateStaticParams() {
+  try {
+    const apiPets = await fetchAvailableKittenPetCards();
+    if (apiPets.length > 0) {
+      return apiPets.map((pet) => ({
+        id: pet.id,
+      }));
+    }
+  } catch (error) {
+    console.error('Error generating static params:', error);
+  }
+  
+  // Fallback to local data
   return petsData.map((pet) => ({
     id: pet.id,
   }));
 }
 
-// Get pet by id
-function getPetById(id: string): PetDetailType | null {
-  const pet = petsData.find((pet) => pet.id === id);
-  return pet || null;
-}
-
 export default async function PetPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const pet = getPetById(id);
+  
+  // Try to fetch from API first
+  const apiPet = await fetchPetById(id);
+  
+  // Convert API pet format to local pet format
+  let pet: PetDetailType | null = null;
+  if (apiPet) {
+    pet = {
+      ...apiPet,
+      albumImages: apiPet.albumImages.map(img => img.src)
+    };
+  } else {
+    // Fallback to local data if API fails
+    pet = petsData.find((pet) => pet.id === id) || null;
+  }
 
   if (!pet) {
     const availableIds = petsData.map(p => p.id).join(", ");

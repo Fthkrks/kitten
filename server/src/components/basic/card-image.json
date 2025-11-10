@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_basic_card_images",
+  "info": {
+    "displayName": "CardImage"
+  },
+  "options": {},
+  "attributes": {
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "heading": {
+      "type": "string",
+      "default": "AVAILABLE KITTEN"
+    },
+    "cardTitle": {
+      "type": "string",
+      "default": "AVAILABLE KITTENS"
+    },
+    "cardText": {
+      "type": "text",
+      "default": "Discover our adorable Persian kittens ready for their forever homes. Each kitten is lovingly raised with care, socialized, and comes from our champion bloodlines."
+    },
+    "overlayColor": {
+      "type": "string",
+      "default": "rgba(0,0,0,0.15)"
+    },
+    "parallaxSpeed": {
+      "type": "string",
+      "default": "0.3"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "#f9f1f1"
+    }
+  },
+  "config": {}
+}

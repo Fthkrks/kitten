@@ -1,0 +1,6 @@
+export const adultsAvaibleData = {
+  title: "RETIRING ADULTS",
+  description: "The cats in this section are near and dear to our hearts. They are adults that have served a huge part in our cattery and occasionally some younger cats that we considered keeping to breed but for whatever reason, decided to place as beloved pets. Some may be discounted due to age. Nevertheless, these are our top kitties – the ones we consider most aesthetically pleasing and with great temperament.",
+  buttonText: "SUBMIT A APPLICATION"
+};
+
