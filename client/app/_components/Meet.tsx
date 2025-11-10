@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 
 export interface MeetCard {
+  id?: string;
   name: string;
   description: string;
   imageSrc: string;
@@ -165,15 +167,28 @@ export default function Meet({
                     </p>
 
                     {/* Button */}
-                    <button
-                      className="self-start px-6 cursor-pointer md:px-8 py-3 md:py-4 rounded-lg font-bold uppercase tracking-wide shadow-md hover:shadow-lg transition-shadow"
-                      style={{
-                        backgroundColor: buttonBg,
-                        color: buttonTextClr,
-                      }}
-                    >
-                      {card.buttonText}
-                    </button>
+                    {card.id ? (
+                      <Link
+                        href={`/pet/${card.id}`}
+                        className="self-start px-6 cursor-pointer md:px-8 py-3 md:py-4 rounded-lg font-bold uppercase tracking-wide  shadow-2xl hover:shadow-lg transition-shadow inline-block text-center"
+                          style={{
+                            backgroundColor: buttonBg,
+                            color: buttonTextClr,
+                          }}
+                      >
+                        {card.buttonText}
+                      </Link>
+                    ) : (
+                      <button
+                        className="self-start px-6 cursor-pointer md:px-8 py-3 md:py-4 rounded-lg  font-bold uppercase tracking-wide shadow-2xl  transition-shadow"
+                        style={{
+                          backgroundColor: buttonBg,
+                          color: buttonTextClr,
+                        }}
+                      >
+                        {card.buttonText}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

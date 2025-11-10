@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_basic_faq_components",
+  "info": {
+    "displayName": "faqComponent"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "General Questions"
+    },
+    "questions": {
+      "type": "component",
+      "component": "basic.question-faq",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

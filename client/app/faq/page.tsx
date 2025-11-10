@@ -1,48 +1,21 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CardImage from "../_components/CardImage";
-
-// FAQ Data Structure
-interface FaqQuestions {
-  [key: string]: string; // Question as key, Answer as value
-}
-
-interface FaqSection {
-  title: string;
-  questions: FaqQuestions;
-}
-
-// FAQ Data - Kullanıcı buraya kendi sorularını ekleyebilir
-const faq: FaqSection[] = [
-  {
-    title: "General Questions",
-    questions: {
-      "What is your return policy?": "Our return policy allows returns within 30 days of purchase.",
-      "How can I contact support?": "You can contact us through email or phone during business hours.",
-      "Do you offer shipping?": "Yes, we offer shipping to most locations worldwide.",
-    },
-  },
-  {
-    title: "About Our Products",
-    questions: {
-      "What materials are used?": "We use only the finest materials in our products.",
-      "Are your products eco-friendly?": "Yes, all our products are environmentally friendly and sustainably sourced.",
-      "Do you have a warranty?": "Yes, all products come with a 1-year warranty.",
-    },
-  },
-  {
-    title: "Shipping & Delivery",
-    questions: {
-      "How long does shipping take?": "Standard shipping takes 5-7 business days.",
-      "What are your shipping rates?": "Shipping rates vary by location and package weight.",
-      "Do you ship internationally?": "Yes, we ship to most countries worldwide.",
-    },
-  },
-];
+import { fetchFaqData } from "@/services/api";
+import { TransformedFaqSection } from "@/types/api";
 
 export default function FAQPage() {
+  const [faq, setFaq] = useState<TransformedFaqSection[]>([]);
   const [openSections, setOpenSections] = useState<Set<number>>(new Set());
   const [openQuestions, setOpenQuestions] = useState<Map<string, boolean>>(new Map());
+
+  useEffect(() => {
+    const loadFaqData = async () => {
+      const data = await fetchFaqData();
+      setFaq(data);
+    };
+    loadFaqData();
+  }, []);
 
   const toggleSection = (sectionIndex: number) => {
     const newOpenSections = new Set(openSections);

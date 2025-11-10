@@ -498,6 +498,34 @@ export interface ApiAvaibleKittenPageAvaibleKittenPage
   };
 }
 
+export interface ApiFaqPageFaqPage extends Struct.SingleTypeSchema {
+  collectionName: 'faq_pages';
+  info: {
+    displayName: 'FaqPage';
+    pluralName: 'faq-pages';
+    singularName: 'faq-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    FaqSection: Schema.Attribute.Component<'basic.faq-component', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::faq-page.faq-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
   collectionName: 'homepages';
   info: {
@@ -578,6 +606,35 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiKingsPageKingsPage extends Struct.SingleTypeSchema {
+  collectionName: 'kings_pages';
+  info: {
+    displayName: 'KingsPage';
+    pluralName: 'kings-pages';
+    singularName: 'kings-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    KingsSection: Schema.Attribute.Component<'basic.pets-data', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::kings-page.kings-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiMarketingLinkMarketingLink
   extends Struct.CollectionTypeSchema {
   collectionName: 'marketing_links';
@@ -631,6 +688,64 @@ export interface ApiMediaLinkMediaLink extends Struct.CollectionTypeSchema {
     SocialLinks: Schema.Attribute.Component<'basic.social-links', true>;
     title: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'CONNECT WITH ME ELSEWHERE'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiQueensPageQueensPage extends Struct.SingleTypeSchema {
+  collectionName: 'queens_pages';
+  info: {
+    displayName: 'QueensPage';
+    pluralName: 'queens-pages';
+    singularName: 'queens-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::queens-page.queens-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    QueensSection: Schema.Attribute.Component<'basic.pets-data', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTermsPageTermsPage extends Struct.SingleTypeSchema {
+  collectionName: 'terms_pages';
+  info: {
+    displayName: 'TermsPage';
+    pluralName: 'terms-pages';
+    singularName: 'terms-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::terms-page.terms-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    TermsSection: Schema.Attribute.Component<'default.terms', false>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1149,9 +1264,13 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::avaible-kitten-page.avaible-kitten-page': ApiAvaibleKittenPageAvaibleKittenPage;
+      'api::faq-page.faq-page': ApiFaqPageFaqPage;
       'api::homepage.homepage': ApiHomepageHomepage;
+      'api::kings-page.kings-page': ApiKingsPageKingsPage;
       'api::marketing-link.marketing-link': ApiMarketingLinkMarketingLink;
       'api::media-link.media-link': ApiMediaLinkMediaLink;
+      'api::queens-page.queens-page': ApiQueensPageQueensPage;
+      'api::terms-page.terms-page': ApiTermsPageTermsPage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

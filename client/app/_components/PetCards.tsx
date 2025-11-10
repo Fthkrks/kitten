@@ -9,6 +9,7 @@ export interface Pet {
   age: string;
   gender: string;
   reserved?: boolean;
+  price?: string;
 }
 
 interface PetCardsProps {
@@ -206,7 +207,7 @@ export default function PetCards({
                 </div>
 
                 {/* Gender and Icons Row */}
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mb-1">
                   {/* Gender */}
                   <div className="text-sm md:text-base font-lora font-semibold text-[#3a2b28]">
                     {renderGenderWithPrice(pet.gender)}
@@ -267,6 +268,13 @@ export default function PetCards({
                   </div>
                 )}
                 </div>
+
+                {/* Price */}
+                {pet.price && (
+                  <div className="text-lg md:text-xl font-lora font-bold text-green-600 mt-1">
+                    {pet.price}
+                  </div>
+                )}
               </div>
             </Link>
           ))}

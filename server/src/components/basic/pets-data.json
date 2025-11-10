@@ -63,6 +63,29 @@
       "type": "string",
       "default": "breed"
     },
+    "description": {
+      "type": "text",
+      "default": "Meet our magnificent Persian kings - the regal fathers of our bloodline. These distinguished gentlemen showcase exceptional breeding, majestic presence, and the noble characteristics that define our royal lineage. KING TITAN stands as a proud example of traditional Persian excellence with his impressive orange tabby coat and commanding presence."
+    },
+    "price": {
+      "type": "string",
+      "default": "$4000"
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "MEET TITAN"
+    },
+    "titleColor": {
+      "type": "string",
+      "default": "#84adac"
+    },
+    "imagePosition": {
+      "type": "enumeration",
+      "enum": [
+        "RIGHT",
+        "LEFT"
+      ]
+    },
     "albumImages": {
       "type": "component",
       "component": "basic.image",

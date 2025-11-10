@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "queens_pages",
+  "info": {
+    "singularName": "queens-page",
+    "pluralName": "queens-pages",
+    "displayName": "QueensPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "QueensSection": {
+      "type": "component",
+      "component": "basic.pets-data",
+      "repeatable": true
+    }
+  }
+}

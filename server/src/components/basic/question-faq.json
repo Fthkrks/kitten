@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_basic_question_faqs",
+  "info": {
+    "displayName": "QuestionFaq"
+  },
+  "options": {},
+  "attributes": {
+    "question": {
+      "type": "json"
+    }
+  },
+  "config": {}
+}

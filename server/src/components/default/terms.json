@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_default_terms",
+  "info": {
+    "displayName": "Terms"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Terms & Conditions"
+    },
+    "sections": {
+      "type": "component",
+      "component": "basic.terms-section",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

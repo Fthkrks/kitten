@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "kings_pages",
+  "info": {
+    "singularName": "kings-page",
+    "pluralName": "kings-pages",
+    "displayName": "KingsPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "KingsSection": {
+      "type": "component",
+      "component": "basic.pets-data",
+      "repeatable": true
+    }
+  }
+}

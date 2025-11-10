@@ -447,6 +447,7 @@ interface PetCardItem {
   eyeColor: string;
   shading: string;
   breed: string;
+  price?: string;
   image: Array<{
     id: number;
     documentId: string;
@@ -483,6 +484,244 @@ export interface TransformedAdultsAvaibleData {
   buttonText: string;
 }
 
+// Terms Page API Response
+interface TermsSection {
+  id: number;
+  heading: string;
+  content: string;
+}
+
+interface TermsContent {
+  id: number;
+  title: string;
+  sections: TermsSection[];
+}
+
+interface TermsCardImageSection {
+  id: number;
+  heroImage: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: number;
+  backgroundColor: string;
+}
+
+export interface TermsPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    cardImageSection?: TermsCardImageSection;
+    TermsSection?: TermsContent;
+  };
+  meta: {};
+}
+
+// Transformed data for Terms page
+export interface TransformedTermsCardImageData {
+  heroImage: string;
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: number;
+  backgroundColor: string;
+}
+
+export interface TransformedTermsData {
+  title: string;
+  sections: Array<{
+    heading: string;
+    content: string;
+  }>;
+}
+
+// FAQ Page API Response
+interface FaqQuestionsItem {
+  id: number;
+  question: {
+    [key: string]: string; // Question as key, Answer as value
+  };
+}
+
+interface FaqSectionItem {
+  id: number;
+  title: string;
+  questions: FaqQuestionsItem;
+}
+
+export interface FaqPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    FaqSection?: FaqSectionItem[];
+  };
+  meta: {};
+}
+
+// Transformed data for FAQ page
+export interface TransformedFaqSection {
+  title: string;
+  questions: {
+    [key: string]: string;
+  };
+}
+
+// Kings Page API Response
+interface KingSectionItem {
+  id: number;
+  name: string;
+  age: string;
+  gender: string;
+  reserved: boolean | null;
+  detailBg: string;
+  dob: string;
+  coatType: string;
+  faceType: string;
+  weight: string;
+  coatColor: string;
+  eyeColor: string;
+  shading: string;
+  breed: string;
+  price?: string;
+  description: string;
+  buttonText: string;
+  titleColor: string;
+  imagePosition: string;
+  image: Array<{
+    id: number;
+    documentId: string;
+    url: string;
+  }> | null;
+}
+
+interface KingsCardImageSection {
+  id: number;
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: string;
+  backgroundColor: string;
+  heroImage: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+export interface KingsPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    cardImageSection?: KingsCardImageSection;
+    KingsSection?: KingSectionItem[];
+  };
+  meta: {};
+}
+
+// Transformed data for Kings page
+export interface TransformedKingsCardData {
+  id: string;
+  name: string;
+  description: string;
+  imageSrc: string;
+  cardBackgroundColor: string;
+  buttonText: string;
+  imageOverlayText: string;
+  imagePosition: "left" | "right";
+  titleColor: string;
+  buttonBackgroundColor: string;
+  buttonTextColor: string;
+  descriptionTextColor: string;
+}
+
+// Queens Page API Response (same structure as Kings)
+interface QueenSectionItem {
+  id: number;
+  name: string;
+  age: string;
+  gender: string;
+  reserved: boolean | null;
+  detailBg: string;
+  dob: string;
+  coatType: string;
+  faceType: string;
+  weight: string;
+  coatColor: string;
+  eyeColor: string;
+  shading: string;
+  breed: string;
+  price?: string;
+  description: string;
+  buttonText: string;
+  titleColor: string;
+  imagePosition: string | null;
+  image: Array<{
+    id: number;
+    documentId: string;
+    url: string;
+  }> | null;
+}
+
+interface QueensCardImageSection {
+  id: number;
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: string;
+  backgroundColor: string;
+  heroImage: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+export interface QueensPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    cardImageSection?: QueensCardImageSection;
+    QueensSection?: QueenSectionItem[];
+  };
+  meta: {};
+}
+
+// Transformed data for Queens page (same as Kings)
+export interface TransformedQueensCardData {
+  id: string;
+  name: string;
+  description: string;
+  imageSrc: string;
+  cardBackgroundColor: string;
+  buttonText: string;
+  imageOverlayText: string;
+  imagePosition: "left" | "right";
+  titleColor: string;
+  buttonBackgroundColor: string;
+  buttonTextColor: string;
+  descriptionTextColor: string;
+}
+
 // Transformed data for CardImage component
 export interface TransformedCardImageData {
   heroImage: string;
@@ -511,6 +750,7 @@ export interface TransformedPetCardData {
   eyeColor: string;
   shading: string;
   breed: string;
+  price?: string;
   albumImages: Array<{
     src: string;
     alt: string;

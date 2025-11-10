@@ -71,6 +71,18 @@ export interface BasicDescriptionGalleriHome extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicFaqComponent extends Struct.ComponentSchema {
+  collectionName: 'components_basic_faq_components';
+  info: {
+    displayName: 'faqComponent';
+  };
+  attributes: {
+    questions: Schema.Attribute.Component<'basic.question-faq', false>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'General Questions'>;
+  };
+}
+
 export interface BasicFeatures extends Struct.ComponentSchema {
   collectionName: 'components_basic_features';
   info: {
@@ -164,22 +176,39 @@ export interface BasicPetsData extends Struct.ComponentSchema {
     age: Schema.Attribute.String & Schema.Attribute.DefaultTo<'5'>;
     albumImages: Schema.Attribute.Component<'basic.image', true>;
     breed: Schema.Attribute.String & Schema.Attribute.DefaultTo<'breed'>;
+    buttonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'MEET TITAN'>;
     coatColor: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Seal Lynx Point Himalayan'>;
     coatType: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Extreme & Mostly Cotton'>;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Meet our magnificent Persian kings - the regal fathers of our bloodline. These distinguished gentlemen showcase exceptional breeding, majestic presence, and the noble characteristics that define our royal lineage. KING TITAN stands as a proud example of traditional Persian excellence with his impressive orange tabby coat and commanding presence.'>;
     detailBg: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#E0F2F7'>;
     dob: Schema.Attribute.String & Schema.Attribute.DefaultTo<'June 30, 2024'>;
     eyeColor: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Deep Blue'>;
     faceType: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Extreme'>;
     gender: Schema.Attribute.String & Schema.Attribute.DefaultTo<'female'>;
     image: Schema.Attribute.Media<'images', true>;
+    imagePosition: Schema.Attribute.Enumeration<['RIGHT', 'LEFT']>;
     name: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'QUEEN | CRYSTAL'>;
+    price: Schema.Attribute.String & Schema.Attribute.DefaultTo<'$4000'>;
     reserved: Schema.Attribute.Boolean;
     shading: Schema.Attribute.String & Schema.Attribute.DefaultTo<'None'>;
+    titleColor: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#84adac'>;
     weight: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Currently 5 lbs'>;
+  };
+}
+
+export interface BasicQuestionFaq extends Struct.ComponentSchema {
+  collectionName: 'components_basic_question_faqs';
+  info: {
+    displayName: 'QuestionFaq';
+  };
+  attributes: {
+    question: Schema.Attribute.JSON;
   };
 }
 
@@ -192,6 +221,19 @@ export interface BasicSocialLinks extends Struct.ComponentSchema {
     href: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#'>;
     icon: Schema.Attribute.Media<'images'>;
     name: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Facebook'>;
+  };
+}
+
+export interface BasicTermsSection extends Struct.ComponentSchema {
+  collectionName: 'components_basic_terms_sections';
+  info: {
+    displayName: 'TermsSection';
+  };
+  attributes: {
+    content: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'Welcome to Ethereal Persians. These terms and conditions outline the rules and regulations for the use of our website and services. By accessing this website, we assume you accept these terms and conditions in full.'>;
+    heading: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Introduction'>;
   };
 }
 
@@ -335,6 +377,18 @@ export interface DefaultSpecial extends Struct.ComponentSchema {
   };
 }
 
+export interface DefaultTerms extends Struct.ComponentSchema {
+  collectionName: 'components_default_terms';
+  info: {
+    displayName: 'Terms';
+  };
+  attributes: {
+    sections: Schema.Attribute.Component<'basic.terms-section', true>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Terms & Conditions'>;
+  };
+}
+
 export interface DefaultTestiomonialHome extends Struct.ComponentSchema {
   collectionName: 'components_default_testiomonial_homes';
   info: {
@@ -356,6 +410,7 @@ declare module '@strapi/strapi' {
       'basic.card-context': BasicCardContext;
       'basic.card-image': BasicCardImage;
       'basic.description-galleri-home': BasicDescriptionGalleriHome;
+      'basic.faq-component': BasicFaqComponent;
       'basic.features': BasicFeatures;
       'basic.features-special': BasicFeaturesSpecial;
       'basic.image': BasicImage;
@@ -364,7 +419,9 @@ declare module '@strapi/strapi' {
       'basic.kitten-list': BasicKittenList;
       'basic.marketing-linksdata': BasicMarketingLinksdata;
       'basic.pets-data': BasicPetsData;
+      'basic.question-faq': BasicQuestionFaq;
       'basic.social-links': BasicSocialLinks;
+      'basic.terms-section': BasicTermsSection;
       'basic.testimonials-data': BasicTestimonialsData;
       'basic.text-component': BasicTextComponent;
       'default.adults': DefaultAdults;
@@ -374,6 +431,7 @@ declare module '@strapi/strapi' {
       'default.kitten': DefaultKitten;
       'default.popular': DefaultPopular;
       'default.special': DefaultSpecial;
+      'default.terms': DefaultTerms;
       'default.testiomonial-home': DefaultTestiomonialHome;
     }
   }

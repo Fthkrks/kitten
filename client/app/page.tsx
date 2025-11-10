@@ -37,7 +37,6 @@ export default async function Home() {
       <Testimontal {...testimonialData} />
       <Media {...mediaData} />
       <VideoGallery {...videoData} />
-      <Footer socialLinks={mediaData.socialLinks} />
     </>
   );
 }

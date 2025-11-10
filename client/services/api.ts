@@ -1,4 +1,4 @@
-import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData } from '@/types/api';
+import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:1337';
 
@@ -88,7 +88,10 @@ function transformHeroData(apiData: HomepageApiResponse): TransformedHeroData {
 }
 
 // Helper function to get full image URL
-const getImageUrl = (url: string) => {
+const getImageUrl = (url: string | undefined | null): string => {
+  if (!url) {
+    return 'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800';
+  }
   return url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
 };
 
@@ -821,7 +824,7 @@ function transformVideoData(apiData: MarketingLinksApiResponse): TransformedVide
 }
 
 export async function fetchAvailableKittenCardImage(): Promise<TransformedCardImageData> {
-  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[cardImageSection][populate]=heroImage`;
+  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
   
   console.log('🔍 Fetching available kitten card image from:', url);
   
@@ -903,7 +906,7 @@ function transformAvailableKittenCardImage(
 }
 
 export async function fetchAvailableKittenPetCards(): Promise<TransformedPetCardData[]> {
-  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url`;
+  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
   
   console.log('🔍 Fetching available kitten pet cards from:', url);
   
@@ -975,6 +978,7 @@ function transformAvailableKittenPetCards(apiData: AvailableKittenPageApiRespons
       eyeColor: pet.eyeColor,
       shading: pet.shading,
       breed: pet.breed,
+      price: pet.price,
       albumImages: albumImages
     };
   }).filter(pet => pet !== null) as TransformedPetCardData[];
@@ -983,7 +987,7 @@ function transformAvailableKittenPetCards(apiData: AvailableKittenPageApiRespons
 }
 
 export async function fetchPetById(id: string): Promise<TransformedPetCardData | null> {
-  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url`;
+  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
   
   console.log(`🔍 Fetching pet with ID ${id} from:`, url);
   
@@ -1020,7 +1024,7 @@ export async function fetchPetById(id: string): Promise<TransformedPetCardData |
 }
 
 export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaibleData> {
-  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[AdultsAvaible][populate]=*`;
+  const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
   
   console.log('🔍 Fetching adults available data from:', url);
   
@@ -1065,5 +1069,422 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
     console.error('❌ Error fetching adults available data:', error);
     console.warn('⚠️ Using fallback data');
     return fallbackData;
+  }
+}
+
+export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTermsCardImageData; termsContent: TransformedTermsData }> {
+  const url = `${API_BASE_URL}/api/terms-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[TermsSection][populate][sections][populate]=*`;
+  
+  console.log('🔍 Fetching terms page data from:', url);
+  
+  // Default fallback data
+  const fallbackCardImage: TransformedTermsCardImageData = {
+    heroImage: "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=1800",
+    heading: "TERMS",
+    cardTitle: "TERMS & CONDITIONS",
+    cardText: "Please read these terms and conditions carefully before using our services.",
+    overlayColor: "rgba(0,0,0,0.15)",
+    parallaxSpeed: 0.3,
+    backgroundColor: "#f9f1f1",
+  };
+  
+  const fallbackTermsContent: TransformedTermsData = {
+    title: "Terms & Conditions",
+    sections: [
+      {
+        heading: "Introduction",
+        content: `Welcome to Ethereal Persians. These terms and conditions outline the rules and regulations for the use of our website and services. By accessing this website, we assume you accept these terms and conditions in full.`,
+      },
+      {
+        heading: "Use License",
+        content: `Permission is granted to temporarily download one copy of the materials on Ethereal Persians' website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+      
+      - modify or copy the materials;
+      - use the materials for any commercial purpose, or for any public display (commercial or non-commercial);
+      - attempt to decompile or reverse engineer any software contained on Ethereal Persians' website;
+      - remove any copyright or other proprietary notations from the materials; or
+      - transfer the materials to another person or "mirror" the materials on any other server.`,
+      },
+      {
+        heading: "Disclaimer",
+        content: `The materials on Ethereal Persians' website are provided on an 'as is' basis. Ethereal Persians makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+
+      Further, Ethereal Persians does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating to such materials or on any sites linked to this site.`,
+      },
+      {
+        heading: "Privacy Policy",
+        content: `Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your personal information when you use our services. By using our website, you agree to the collection and use of information in accordance with this policy.`,
+      },
+      {
+        heading: "Limitations",
+        content: `In no event shall Ethereal Persians or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Ethereal Persians' website, even if Ethereal Persians or a Ethereal Persians authorized representative has been notified orally or in writing of the possibility of such damage.`,
+      },
+      {
+        heading: "Revisions",
+        content: `The materials appearing on Ethereal Persians' website could include technical, typographical, or photographic errors. Ethereal Persians does not warrant that any of the materials on its website are accurate, complete, or current. Ethereal Persians may make changes to the materials contained on its website at any time without notice.`,
+      },
+      {
+        heading: "Contact Information",
+        content: `If you have any questions about these Terms & Conditions, please contact us through our website's contact form or by email.`,
+      },
+    ],
+  };
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Terms page API returned status: ${response.status}`);
+      console.warn('⚠️ Using fallback data');
+      return { cardImage: fallbackCardImage, termsContent: fallbackTermsContent };
+    }
+
+    const data: TermsPageApiResponse = await response.json();
+    console.log('📦 Raw Terms Page API data:', JSON.stringify(data, null, 2));
+    
+    // Transform cardImageSection
+    let cardImage = fallbackCardImage;
+    if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
+      cardImage = {
+        heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+        heading: data.data.cardImageSection.heading,
+        cardTitle: data.data.cardImageSection.cardTitle,
+        cardText: data.data.cardImageSection.cardText,
+        overlayColor: data.data.cardImageSection.overlayColor,
+        parallaxSpeed: data.data.cardImageSection.parallaxSpeed,
+        backgroundColor: data.data.cardImageSection.backgroundColor,
+      };
+    } else {
+      console.warn('⚠️ cardImageSection not found in API, using fallback card image');
+    }
+    
+    // Transform termsContent
+    let termsContent = fallbackTermsContent;
+    if (data.data.TermsSection && data.data.TermsSection.sections) {
+      termsContent = {
+        title: data.data.TermsSection.title,
+        sections: data.data.TermsSection.sections.map(section => ({
+          heading: section.heading,
+          content: section.content,
+        })),
+      };
+    } else {
+      console.warn('⚠️ TermsSection not found in API, using fallback terms content');
+    }
+    
+    console.log('🔄 Transformed terms page data:', JSON.stringify({ cardImage, termsContent }, null, 2));
+    return { cardImage, termsContent };
+  } catch (error) {
+    console.error('❌ Error fetching terms page data:', error);
+    console.warn('⚠️ Using fallback data');
+    return { cardImage: fallbackCardImage, termsContent: fallbackTermsContent };
+  }
+}
+
+export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
+  const url = `${API_BASE_URL}/api/faq-page?populate[FaqSection][populate]=*`;
+  
+  console.log('🔍 Fetching FAQ data from:', url);
+  
+  // Default fallback data
+  const fallbackData: TransformedFaqSection[] = [
+    {
+      title: "General Questions",
+      questions: {
+        "What is your return policy?": "Our return policy allows returns within 30 days of purchase.",
+        "How can I contact support?": "You can contact us through email or phone during business hours.",
+        "Do you offer shipping?": "Yes, we offer shipping to most locations worldwide.",
+      },
+    },
+    {
+      title: "About Our Products",
+      questions: {
+        "What materials are used?": "We use only the finest materials in our products.",
+        "Are your products eco-friendly?": "Yes, all our products are environmentally friendly and sustainably sourced.",
+        "Do you have a warranty?": "Yes, all products come with a 1-year warranty.",
+      },
+    },
+    {
+      title: "Shipping & Delivery",
+      questions: {
+        "How long does shipping take?": "Standard shipping takes 5-7 business days.",
+        "What are your shipping rates?": "Shipping rates vary by location and package weight.",
+        "Do you ship internationally?": "Yes, we ship to most countries worldwide.",
+      },
+    },
+  ];
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ FAQ API returned status: ${response.status}`);
+      console.warn('⚠️ Using fallback data');
+      return fallbackData;
+    }
+
+    const data: FaqPageApiResponse = await response.json();
+    console.log('📦 Raw FAQ API data:', JSON.stringify(data, null, 2));
+    
+    // Check if FaqSection exists
+    if (!data.data.FaqSection || data.data.FaqSection.length === 0) {
+      console.warn('⚠️ FaqSection not found in API, using fallback data');
+      return fallbackData;
+    }
+    
+    // Transform FAQ sections
+    const transformedData: TransformedFaqSection[] = data.data.FaqSection.map(section => ({
+      title: section.title,
+      questions: section.questions.question,
+    }));
+    
+    console.log('🔄 Transformed FAQ data:', JSON.stringify(transformedData, null, 2));
+    return transformedData;
+  } catch (error) {
+    console.error('❌ Error fetching FAQ data:', error);
+    console.warn('⚠️ Using fallback data');
+    return fallbackData;
+  }
+}
+
+export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCardImageData; kings: TransformedKingsCardData[] }> {
+  const url = `${API_BASE_URL}/api/kings-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[KingsSection][populate][image][fields][0]=url`;
+  
+  console.log('🔍 Fetching kings page data from:', url);
+  
+  // Default fallback data
+  const fallbackCardImage: TransformedCardImageData = {
+    heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
+    heading: "KINGS",
+    cardTitle: "OUR KINGS",
+    cardText: "Meet our magnificent Persian kings - the regal fathers of our bloodline. These distinguished gentlemen showcase exceptional breeding, majestic presence, and the noble characteristics that define our royal lineage.",
+    overlayColor: "rgba(0,0,0,0.15)",
+    parallaxSpeed: 0.3,
+    backgroundColor: "#f9f1f1",
+  };
+  
+  const fallbackKings: TransformedKingsCardData[] = [
+    {
+      id: "2",
+      name: "KING | TITAN",
+      description: "Meet our magnificent Persian kings - the regal fathers of our bloodline. These distinguished gentlemen showcase exceptional breeding, majestic presence, and the noble characteristics that define our royal lineage. KING TITAN stands as a proud example of traditional Persian excellence with his impressive orange tabby coat and commanding presence.",
+      imageSrc: "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800",
+      cardBackgroundColor: "#E0F2F7",
+      buttonText: "MEET TITAN",
+      imageOverlayText: "EP ETHEREAL Persians TITAN",
+      imagePosition: "right",
+      titleColor: "#7DD3FC",
+      buttonBackgroundColor: "#E0F2F7",
+      buttonTextColor: "#3a2b28",
+      descriptionTextColor: "#5A5A5A",
+    },
+    {
+      id: "1",
+      name: "SKY",
+      description: "Sky is an exquisite Russian import, a seal lynx point Himalayan with stunning deep blue eyes and an extreme face. His personality is that of a dog-like-cat - overly needy, affectionate, demanding, vocal, and simply a joy to live with. He brings endless entertainment and love to his family.",
+      imageSrc: "https://images.unsplash.com/photo-1533743983669-94fa5c4338ec?auto=format&fit=crop&q=80&w=800",
+      cardBackgroundColor: "#D1ECF1",
+      buttonText: "MEET SKY",
+      imageOverlayText: "EP ETHEREAL Persians SKY",
+      imagePosition: "left",
+      titleColor: "#84adac",
+      buttonBackgroundColor: "#D1ECF1",
+      buttonTextColor: "#3a2b28",
+      descriptionTextColor: "#5A5A5A",
+    }
+  ];
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Kings page API returned status: ${response.status}`);
+      console.warn('⚠️ Using fallback data');
+      return { cardImage: fallbackCardImage, kings: fallbackKings };
+    }
+
+    const data: KingsPageApiResponse = await response.json();
+    console.log('📦 Raw Kings Page API data:', JSON.stringify(data, null, 2));
+    
+    // Transform cardImageSection
+    let cardImage = fallbackCardImage;
+    if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
+      cardImage = {
+        heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+        heading: data.data.cardImageSection.heading,
+        cardTitle: data.data.cardImageSection.cardTitle,
+        cardText: data.data.cardImageSection.cardText,
+        overlayColor: data.data.cardImageSection.overlayColor,
+        parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed),
+        backgroundColor: data.data.cardImageSection.backgroundColor,
+      };
+    } else {
+      console.warn('⚠️ cardImageSection not found in API, using fallback card image');
+    }
+    
+    // Transform KingsSection
+    let kings = fallbackKings;
+    if (data.data.KingsSection && data.data.KingsSection.length > 0) {
+      kings = data.data.KingsSection.map(king => {
+        // Normalize imagePosition to lowercase
+        const imagePosition = king.imagePosition.toLowerCase() as "left" | "right";
+        
+        // Use image from API if available, otherwise use a default
+        // Handle both array format and null
+        let imageSrc = "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800";
+        if (king.image && Array.isArray(king.image) && king.image.length > 0) {
+          imageSrc = getImageUrl(king.image[0].url);
+        }
+        
+        return {
+          id: king.id.toString(),
+          name: king.name,
+          description: king.description,
+          imageSrc: imageSrc,
+          cardBackgroundColor: king.detailBg,
+          buttonText: king.buttonText,
+          imageOverlayText: `EP ETHEREAL Persians ${king.name.split('|')[0].trim()}`,
+          imagePosition: imagePosition,
+          titleColor: king.titleColor,
+          buttonBackgroundColor: king.detailBg,
+          buttonTextColor: "#3a2b28",
+          descriptionTextColor: "#5A5A5A",
+        };
+      });
+    } else {
+      console.warn('⚠️ KingsSection not found in API, using fallback kings');
+    }
+    
+    console.log('🔄 Transformed kings page data:', JSON.stringify({ cardImage, kings }, null, 2));
+    return { cardImage, kings };
+  } catch (error) {
+    console.error('❌ Error fetching kings page data:', error);
+    console.warn('⚠️ Using fallback data');
+    return { cardImage: fallbackCardImage, kings: fallbackKings };
+  }
+}
+
+export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCardImageData; queens: TransformedQueensCardData[] }> {
+  const url = `${API_BASE_URL}/api/queens-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[QueensSection][populate][image][fields][0]=url`;
+  
+  console.log('🔍 Fetching queens page data from:', url);
+  
+  // Default fallback data
+  const fallbackCardImage: TransformedCardImageData = {
+    heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
+    heading: "QUEENS",
+    cardTitle: "OUR QUEENS",
+    cardText: "Meet our magnificent Persian queens - the regal mothers of our bloodline. These distinguished ladies showcase exceptional breeding, majestic presence, and the noble characteristics that define our royal lineage.",
+    overlayColor: "rgba(0,0,0,0.15)",
+    parallaxSpeed: 0.3,
+    backgroundColor: "#f9f1f1",
+  };
+  
+  const fallbackQueens: TransformedQueensCardData[] = [
+    {
+      id: "3",
+      name: "QUEEN | CRYSTAL",
+      description: "Meet our magnificent Persian queens - the elegant mothers of our bloodline. These distinguished ladies showcase exceptional breeding, graceful presence, and the noble characteristics that define our royal lineage.",
+      imageSrc: "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800",
+      cardBackgroundColor: "#E0F2F7",
+      buttonText: "MEET CRYSTAL",
+      imageOverlayText: "EP ETHEREAL Persians CRYSTAL",
+      imagePosition: "right",
+      titleColor: "#7DD3FC",
+      buttonBackgroundColor: "#E0F2F7",
+      buttonTextColor: "#3a2b28",
+      descriptionTextColor: "#5A5A5A",
+    },
+  ];
+  
+  try {
+    const response = await fetch(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    console.log('📡 Response status:', response.status);
+
+    if (!response.ok) {
+      console.warn(`⚠️ Queens page API returned status: ${response.status}`);
+      console.warn('⚠️ Using fallback data');
+      return { cardImage: fallbackCardImage, queens: fallbackQueens };
+    }
+
+    const data: QueensPageApiResponse = await response.json();
+    console.log('📦 Raw Queens Page API data:', JSON.stringify(data, null, 2));
+    
+    // Transform cardImageSection
+    let cardImage = fallbackCardImage;
+    if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
+      cardImage = {
+        heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+        heading: data.data.cardImageSection.heading,
+        cardTitle: data.data.cardImageSection.cardTitle,
+        cardText: data.data.cardImageSection.cardText,
+        overlayColor: data.data.cardImageSection.overlayColor,
+        parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed),
+        backgroundColor: data.data.cardImageSection.backgroundColor,
+      };
+    } else {
+      console.warn('⚠️ cardImageSection not found in API, using fallback card image');
+    }
+    
+    // Transform QueensSection
+    let queens = fallbackQueens;
+    if (data.data.QueensSection && data.data.QueensSection.length > 0) {
+      queens = data.data.QueensSection.map((queen, index) => {
+        // Normalize imagePosition to lowercase, handle null by alternating left/right
+        let imagePosition: "left" | "right" = "right";
+        if (queen.imagePosition) {
+          imagePosition = queen.imagePosition.toLowerCase() as "left" | "right";
+        } else {
+          // Alternate between right and left if imagePosition is null
+          imagePosition = index % 2 === 0 ? "right" : "left";
+        }
+        
+        // Use image from API if available, otherwise use a default
+        // Handle both array format and null
+        let imageSrc = "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800";
+        if (queen.image && Array.isArray(queen.image) && queen.image.length > 0) {
+          imageSrc = getImageUrl(queen.image[0].url);
+        }
+        
+        return {
+          id: queen.id.toString(),
+          name: queen.name,
+          description: queen.description,
+          imageSrc: imageSrc,
+          cardBackgroundColor: queen.detailBg,
+          buttonText: queen.buttonText,
+          imageOverlayText: `EP ETHEREAL Persians ${queen.name.split('|')[0].trim()}`,
+          imagePosition: imagePosition,
+          titleColor: queen.titleColor,
+          buttonBackgroundColor: queen.detailBg,
+          buttonTextColor: "#3a2b28",
+          descriptionTextColor: "#5A5A5A",
+        };
+      });
+    } else {
+      console.warn('⚠️ QueensSection not found in API, using fallback queens');
+    }
+    
+    console.log('🔄 Transformed queens page data:', JSON.stringify({ cardImage, queens }, null, 2));
+    return { cardImage, queens };
+  } catch (error) {
+    console.error('❌ Error fetching queens page data:', error);
+    console.warn('⚠️ Using fallback data');
+    return { cardImage: fallbackCardImage, queens: fallbackQueens };
   }
 }
