@@ -1,0 +1,33 @@
+{
+  "collectionName": "components_basic_terminoal_rewiews",
+  "info": {
+    "displayName": "TerminoalRewiew"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "default": "Ashley Scarpa"
+    },
+    "avatar": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "timeAgo": {
+      "type": "string",
+      "default": "8 months ago"
+    },
+    "rating": {
+      "type": "integer",
+      "default": 5
+    },
+    "text": {
+      "type": "text",
+      "default": "Roxy is such an AMAZING breeder!! I can't tell you how much I love my sweet little one, Violet. She has the best personality, beautiful features, and is the perfect..."
+    }
+  },
+  "config": {}
+}

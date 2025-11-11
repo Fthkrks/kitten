@@ -1,0 +1,40 @@
+{
+  "collectionName": "components_default_gallery_data",
+  "info": {
+    "displayName": "Gallery Datum"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "default": "TOO CUTE"
+    },
+    "src": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ]
+    },
+    "description": {
+      "type": "text",
+      "default": "Capturing the most adorable moments of our Persian kittens in their cutest poses."
+    },
+    "category": {
+      "type": "string",
+      "default": "Featured"
+    },
+    "fullContent": {
+      "type": "richtext",
+      "default": "<p>Welcome to our \"Too Cute\" gallery! This collection features our most precious moments with Persian kittens showcasing their undeniable charm and adorable personalities.</p>          <h2>About This Gallery</h2>     <p>Every photo in this gallery captures a moment of pure joy, innocence, and cuteness. From playful yawns to curious gazes, these images represent the heart and soul of what makes Persian kittens so special.</p>          <h2>What You'll See</h2>     <ul>       <li>Playful kitten antics</li>       <li>Adorable sleepy moments</li>       <li>Curious explorations</li>       <li>Heart-melting expressions</li>     </ul>"
+    },
+    "images": {
+      "type": "component",
+      "component": "basic.image",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

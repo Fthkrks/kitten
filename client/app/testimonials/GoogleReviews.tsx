@@ -12,7 +12,12 @@ interface Review {
   avatarColor?: string; // Color for initial avatar if no image
 }
 
-const reviews: Review[] = [
+interface GoogleReviewsProps {
+  title?: string;
+  reviews?: Review[];
+}
+
+const defaultReviews: Review[] = [
   {
     id: "1",
     name: "Ashley Scarpa",
@@ -95,7 +100,7 @@ const reviews: Review[] = [
   },
 ];
 
-export default function GoogleReviews() {
+export default function GoogleReviews({ title = "GOOGLE REVIEWS", reviews = defaultReviews }: GoogleReviewsProps) {
   const [expandedReviews, setExpandedReviews] = useState<Set<string>>(new Set());
 
   const toggleReview = (id: string) => {
@@ -136,7 +141,7 @@ export default function GoogleReviews() {
         {/* Title */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-lora text-[#6B6B6B] uppercase tracking-wide">
-            GOOGLE REVIEWS
+            {title}
           </h2>
         </div>
 

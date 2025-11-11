@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "galleries-pages",
+  "info": {
+    "singularName": "galleries-page",
+    "pluralName": "galleries-pages",
+    "displayName": "Galleries-pages"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": false
+    }
+  },
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "GalleriesData": {
+      "type": "component",
+      "component": "default.gallery-datum",
+      "repeatable": true
+    }
+  }
+}

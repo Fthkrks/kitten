@@ -1,0 +1,38 @@
+{
+  "collectionName": "components_basic_about_data",
+  "info": {
+    "displayName": "AboutData"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "imageAlt": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "paragraph1": {
+      "type": "richtext",
+      "default": "Our family is comprised of my hubby – Jason, our son – Julian, our german shepherd – Mishka, and plenty of beloved kitties. Our home is not large but it is very homey. In 2010, Jason and I began a romantic relationship. In 2012, we purchased our first home. In 2015, we began breeding persian cats."
+    },
+    "highlightText": {
+      "type": "text",
+      "default": "Breeding is more than a job and more than a career – it is a lifestyle."
+    },
+    "paragraph2": {
+      "type": "richtext",
+      "default": "Ethereal Persians Cattery operates in Sarasota, FL within our home. It is not a 9-5 job; it is an all day, every day choice. We choose to breed persian cats because their presence is profoundly therapeutic to our souls and the impact we have on families through our kittens is pawsitively life-altering. Here, cats grace us with their therapeutic presence and we return the favor by making sure they remain safe, happy, and healthy."
+    }
+  },
+  "config": {}
+}

@@ -1,7 +1,18 @@
 "use client";
 import { useState } from "react";
 
-const events = [
+interface TimelineEvent {
+  year: string;
+  title: string;
+  desc: string;
+  position: string;
+}
+
+interface TimeLineProps {
+  events?: TimelineEvent[];
+}
+
+const defaultEvents: TimelineEvent[] = [
   {
     year: "2010",
     title: "Jason and I Met",
@@ -72,7 +83,7 @@ const events = [
   }
 ];
 
-export default function TimeLine() {
+export default function TimeLine({ events = defaultEvents }: TimeLineProps) {
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
   return (
     <section className="w-full pt-12 pb-8 bg-white flex flex-col items-center min-h-[700px]">

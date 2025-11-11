@@ -12,7 +12,7 @@
     "questions": {
       "type": "component",
       "component": "basic.question-faq",
-      "repeatable": false
+      "repeatable": true
     }
   },
   "config": {}

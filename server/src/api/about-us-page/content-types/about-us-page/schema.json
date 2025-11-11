@@ -1,0 +1,45 @@
+{
+  "kind": "singleType",
+  "collectionName": "about_us_pages",
+  "info": {
+    "singularName": "about-us-page",
+    "pluralName": "about-us-pages",
+    "displayName": "AboutUsPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "AboutSection": {
+      "type": "component",
+      "component": "basic.about-data",
+      "repeatable": false
+    },
+    "ParaqSection": {
+      "type": "component",
+      "component": "basic.parag-data",
+      "repeatable": false
+    },
+    "timeLine": {
+      "type": "component",
+      "component": "basic.timeline-section",
+      "repeatable": true
+    },
+    "CardsSection": {
+      "type": "component",
+      "component": "basic.cards-about",
+      "repeatable": true
+    },
+    "FaqSection": {
+      "type": "component",
+      "component": "basic.faq-component",
+      "repeatable": true
+    }
+  }
+}

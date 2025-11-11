@@ -821,6 +821,224 @@ export interface TransformedBlogPost {
   image: string;
 }
 
+// Testimonial Page API Types
+interface TestimonialHeroSection {
+  id: number;
+  title: string;
+  heading: string;
+  description: string;
+  closingText: string;
+  mapUrl: string;
+}
+
+interface TestimonialReviewAvatar {
+  id: number;
+  documentId: string;
+  url: string;
+}
+
+interface TestimonialReviewItem {
+  id: number;
+  name: string;
+  timeAgo: string;
+  rating: number;
+  text: string;
+  avatar: TestimonialReviewAvatar | null;
+}
+
+interface TestimonialBaseSection {
+  id: number;
+  ReviewsTitle: string;
+  Reviews: TestimonialReviewItem[];
+}
+
+export interface TestimonialPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    HeroSection: TestimonialHeroSection;
+    Base: TestimonialBaseSection[];
+  };
+}
+
+export interface TransformedTestimonialHeroData {
+  title: string;
+  mapUrl: string;
+  mapTitle: string;
+  heading: string;
+  description: string;
+  closingText: string;
+}
+
+export interface TransformedTestimonialReview {
+  id: string;
+  name: string;
+  timeAgo: string;
+  rating: number;
+  text: string;
+  avatar?: string;
+}
+
+// Galleries Page API Types
+interface GalleryImageItem {
+  id: number;
+  alt: string;
+  src: {
+    id: number;
+    documentId: string;
+    url: string;
+    alternativeText?: string;
+  };
+}
+
+interface GalleryDataItem {
+  id: number;
+  label: string;
+  description: string;
+  category: string;
+  fullContent: string;
+  src: {
+    id: number;
+    documentId: string;
+    url: string;
+  } | null;
+  images: GalleryImageItem[];
+}
+
+interface GalleriesCardImageSection {
+  id: number;
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: string;
+  backgroundColor: string;
+  heroImage: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+export interface GalleriesPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    cardImageSection: GalleriesCardImageSection;
+    GalleriesData: GalleryDataItem[];
+  };
+}
+
+export interface TransformedGalleryItem {
+  id: string;
+  label: string;
+  description: string;
+  category: string;
+  fullContent: string;
+  coverImage: string;
+  images: Array<{
+    id: string;
+    src: string;
+    alt: string;
+  }>;
+}
+
+// About Us Page API Types
+interface AboutUsCardImageSection {
+  id: number;
+  heading: string;
+  cardTitle: string;
+  cardText: string;
+  overlayColor: string;
+  parallaxSpeed: string;
+  backgroundColor: string;
+  heroImage: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+interface AboutSection {
+  id: number;
+  imageAlt: string | null;
+  title: string | null;
+  paragraph1: string;
+  highlightText: string;
+  paragraph2: string;
+  image: {
+    id: number;
+    documentId: string;
+    url?: string;
+  };
+}
+
+interface ParaqListItem {
+  id: number;
+  school: string;
+  job: string;
+  job2: string;
+  job3: string;
+}
+
+interface ParaqSection {
+  id: number;
+  imageAlt: string;
+  title: string;
+  paragraphs: string;
+  listTitle: string;
+  image: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+  listItems: ParaqListItem[];
+}
+
+interface TimeLineEventItem {
+  id: number;
+  year: string;
+  title: string;
+  desc: string;
+  position: string;
+}
+
+interface CardsSectionItem {
+  id: number;
+  title: string;
+  text: string;
+  reserve: boolean;
+  img: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+interface FaqQuestionItem {
+  id: number;
+  question: Record<string, string>;
+}
+
+interface FaqSectionItem {
+  id: number;
+  title: string;
+  questions: FaqQuestionItem[];
+}
+
+export interface AboutUsPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    cardImageSection: AboutUsCardImageSection;
+    AboutSection: AboutSection;
+    ParaqSection: ParaqSection;
+    timeLine?: TimeLineEventItem[];
+    CardsSection?: CardsSectionItem[];
+    FaqSection?: FaqSectionItem[];
+  };
+}
+
 // Transformed data for CardImage component
 export interface TransformedCardImageData {
   heroImage: string;

@@ -3,24 +3,27 @@ import CardImage from '../_components/CardImage'
 import Media from '../_components/Media'
 import VideoGallery from '../_components/Video'
 import PhotoGrid from '../galleries/_components/PhotoGrid'
+import { fetchMediaData, fetchVideoData, fetchGalleriesPageData } from '@/services/api'
 
-function page() {
-    const galleryData = {
-        heroImage: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&q=80&w=1800",
-        heading: "GALLERIES",
-        cardTitle: "CHECK OUT OUR PHOTO ALBUMS",
-        cardText: "Browse through our collection of beautiful moments capturing the elegance, playfulness, and unique personalities of our Persian cats. Each photograph tells a story of love, care, and the special bond we share with our feline family members.",
-        overlayColor: "rgba(0,0,0,0.15)",
-        parallaxSpeed: 0.3,
-        backgroundColor: "#f9f1f1",
-    }
+async function page() {
+    const videoData = await fetchVideoData();
+    const mediaData = await fetchMediaData();
+    const { cardImage, galleries } = await fetchGalleriesPageData();
+
+    // Transform galleries to match PhotoGrid expected format
+    const photoGridData = galleries.map(gallery => ({
+      id: gallery.id,
+      label: gallery.label,
+      src: gallery.coverImage,
+      alt: gallery.description
+    }));
 
   return (
     <div>
-        <CardImage {...galleryData} />
-        <PhotoGrid />
-        <Media/>
-        <VideoGallery/>
+        <CardImage {...cardImage} />
+        <PhotoGrid galleries={photoGridData} />
+        <Media {...mediaData} />
+        <VideoGallery {...videoData} />
     </div>
   )
 }

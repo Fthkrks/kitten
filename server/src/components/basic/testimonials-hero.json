@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_basic_testimonials_heroes",
+  "info": {
+    "displayName": "TestimonialsHero"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "TESTIMONIALS"
+    },
+    "heading": {
+      "type": "string",
+      "default": "Our Customers Love Us... You Will Too!"
+    },
+    "description": {
+      "type": "richtext",
+      "default": "We're not just selling kittens, we're gaining new family members! Our hearts are filled with grateful meows for our kitten parents. They not only complete the life of our kittens, but they also become a part of our Ethereal family. We hope that if you're in the market for a new furry friend that you take a chance on us and are fortunate enough to experience the wonderful joy of an Ethereal Persian kitten."
+    },
+    "closingText": {
+      "type": "string",
+      "default": "You don't have to take our word for it, read below what our EP families have to say!"
+    },
+    "mapUrl": {
+      "type": "string",
+      "default": "https://www.google.com/maps/d/embed?mid=1YOUR_MAP_ID"
+    }
+  },
+  "config": {}
+}

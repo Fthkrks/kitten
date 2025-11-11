@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "testimonial_pages",
+  "info": {
+    "singularName": "testimonial-page",
+    "pluralName": "testimonial-pages",
+    "displayName": "TestimonialPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "HeroSection": {
+      "type": "component",
+      "component": "basic.testimonials-hero",
+      "repeatable": false
+    },
+    "Base": {
+      "type": "component",
+      "component": "basic.reviews-component",
+      "repeatable": true
+    }
+  }
+}

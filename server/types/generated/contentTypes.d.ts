@@ -467,6 +467,39 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAboutUsPageAboutUsPage extends Struct.SingleTypeSchema {
+  collectionName: 'about_us_pages';
+  info: {
+    displayName: 'AboutUsPage';
+    pluralName: 'about-us-pages';
+    singularName: 'about-us-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    AboutSection: Schema.Attribute.Component<'basic.about-data', false>;
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    CardsSection: Schema.Attribute.Component<'basic.cards-about', true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    FaqSection: Schema.Attribute.Component<'basic.faq-component', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::about-us-page.about-us-page'
+    > &
+      Schema.Attribute.Private;
+    ParaqSection: Schema.Attribute.Component<'basic.parag-data', false>;
+    publishedAt: Schema.Attribute.DateTime;
+    timeLine: Schema.Attribute.Component<'basic.timeline-section', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiAvaibleKittenPageAvaibleKittenPage
   extends Struct.SingleTypeSchema {
   collectionName: 'avaible_kitten_pages';
@@ -547,6 +580,40 @@ export interface ApiFaqPageFaqPage extends Struct.SingleTypeSchema {
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::faq-page.faq-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiGalleriesPageGalleriesPage extends Struct.SingleTypeSchema {
+  collectionName: 'galleries-pages';
+  info: {
+    displayName: 'Galleries-pages';
+    pluralName: 'galleries-pages';
+    singularName: 'galleries-page';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: false;
+    };
+  };
+  attributes: {
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    GalleriesData: Schema.Attribute.Component<'default.gallery-datum', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::galleries-page.galleries-page'
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
@@ -776,6 +843,36 @@ export interface ApiTermsPageTermsPage extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     TermsSection: Schema.Attribute.Component<'default.terms', false>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTestimonialPageTestimonialPage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'testimonial_pages';
+  info: {
+    displayName: 'TestimonialPage';
+    pluralName: 'testimonial-pages';
+    singularName: 'testimonial-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Base: Schema.Attribute.Component<'basic.reviews-component', true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    HeroSection: Schema.Attribute.Component<'basic.testimonials-hero', false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::testimonial-page.testimonial-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1293,15 +1390,18 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::about-us-page.about-us-page': ApiAboutUsPageAboutUsPage;
       'api::avaible-kitten-page.avaible-kitten-page': ApiAvaibleKittenPageAvaibleKittenPage;
       'api::blog-page.blog-page': ApiBlogPageBlogPage;
       'api::faq-page.faq-page': ApiFaqPageFaqPage;
+      'api::galleries-page.galleries-page': ApiGalleriesPageGalleriesPage;
       'api::homepage.homepage': ApiHomepageHomepage;
       'api::kings-page.kings-page': ApiKingsPageKingsPage;
       'api::marketing-link.marketing-link': ApiMarketingLinkMarketingLink;
       'api::media-link.media-link': ApiMediaLinkMediaLink;
       'api::queens-page.queens-page': ApiQueensPageQueensPage;
       'api::terms-page.terms-page': ApiTermsPageTermsPage;
+      'api::testimonial-page.testimonial-page': ApiTestimonialPageTestimonialPage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

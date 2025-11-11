@@ -1,5 +1,23 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BasicAboutData extends Struct.ComponentSchema {
+  collectionName: 'components_basic_about_data';
+  info: {
+    displayName: 'AboutData';
+  };
+  attributes: {
+    highlightText: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Breeding is more than a job and more than a career \u2013 it is a lifestyle.'>;
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    imageAlt: Schema.Attribute.String;
+    paragraph1: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'Our family is comprised of my hubby \u2013 Jason, our son \u2013 Julian, our german shepherd \u2013 Mishka, and plenty of beloved kitties. Our home is not large but it is very homey. In 2010, Jason and I began a romantic relationship. In 2012, we purchased our first home. In 2015, we began breeding persian cats.'>;
+    paragraph2: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'Ethereal Persians Cattery operates in Sarasota, FL within our home. It is not a 9-5 job; it is an all day, every day choice. We choose to breed persian cats because their presence is profoundly therapeutic to our souls and the impact we have on families through our kittens is pawsitively life-altering. Here, cats grace us with their therapeutic presence and we return the favor by making sure they remain safe, happy, and healthy.'>;
+    title: Schema.Attribute.String;
+  };
+}
+
 export interface BasicAboutItemsBlog extends Struct.ComponentSchema {
   collectionName: 'components_basic_about_items_blogs';
   info: {
@@ -65,6 +83,21 @@ export interface BasicCardImage extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicCardsAbout extends Struct.ComponentSchema {
+  collectionName: 'components_basic_cards_abouts';
+  info: {
+    displayName: 'CardsAbout';
+  };
+  attributes: {
+    img: Schema.Attribute.Media<'images'>;
+    reserve: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    text: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'This section is dedicated to my best friend, my confidant, my partner \u2013 Jason Geers. His support has been invaluable in my life and in the growth of Ethereal Persians.   Back in 2015 I imagined I could run Ethereal Persians all by myself. That was naive. There were moments of exhaustion, depression and financial crisis that I could not overcome on my own. Jason helped me overcome incredible challenges and over time it became apparent that running a cattery was a 2 person job (or more; at least for us). In 2022, our cattery became financially sustainable (not lucrative). In response, Jason gave up his career (and income) as a mailman to help grow our dream cattery.  You may recognize his hand in our cat photos or his voice in the background of our videos. What is not as obvious is his role behind the scene. He medicates, feeds and takes care of all physical and many online kitty chores when I am sick, overwhelmed or unable to for any reason. He also specializes in things I don\u2019t, like website management. Jasons encourages me like no ne else can.  He is the glue that keeps me together and the kerosene to my fire!   '>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'A Tribute To Jason: The Kerosene To My Fire'>;
+  };
+}
+
 export interface BasicDescriptionGalleriHome extends Struct.ComponentSchema {
   collectionName: 'components_basic_description_galleri_homes';
   info: {
@@ -88,7 +121,7 @@ export interface BasicFaqComponent extends Struct.ComponentSchema {
     displayName: 'faqComponent';
   };
   attributes: {
-    questions: Schema.Attribute.Component<'basic.question-faq', false>;
+    questions: Schema.Attribute.Component<'basic.question-faq', true>;
     title: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'General Questions'>;
   };
@@ -178,6 +211,25 @@ export interface BasicMarketingLinksdata extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicParagData extends Struct.ComponentSchema {
+  collectionName: 'components_basic_parag_data';
+  info: {
+    displayName: 'paragData';
+  };
+  attributes: {
+    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    imageAlt: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Roxy and Cat'>;
+    listItems: Schema.Attribute.Component<'basic.text-comp', true>;
+    listTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Before becoming a full-time cat breeder Roxy was a:'>;
+    paragraphs: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'A lot of \\"About Me\\" pages share how they wanted to be a ______ since they were young. That\'s not my story. I imagined I\'d be a surgeon for large predatory cats in the Africa, not a midwife to tiny fluffy felines in my own home.",       "My story starts in 2015. I had completed my bachelors in biology and planned to pursue a doctorate in veterinary medicine. I visited the Veterinary College at the University of Florida where my first dream shattered. I was quoted 42k a year to attend. I could not afford tuition, let alone moving expenses. So instead I focused on serving the animals closest to me \u2013 dogs and cats. I offered dog sitting services, becoming a pet photographer and eventually a vet tech at a local veterinary hospital. Most importantly, I focused on my deep fascination with breeding and the intricacies it entailed.",       "One of the first things I did after collage was purchase a persian cat for breeding. In December of 2015 I purchased my first persian cat for breeding \u2013 Milo \u2013 a white stud with copper eyes. In 2016 I purchased my first persian female for breeding \u2013 Shaila \u2013 a blue smoke with copper eyes. It didn\'t take long for me to purchase several more breeders; 3 in 2017. By 2018, I had several litters on the ground and had overcome many milestones and officially felt like a crazy cat lady.",       "Looking back at it now, becoming a breeder was a quick choice. The startup cost was attainable, I had the space required and I felt empowered with knowledge. I gathered skills and income as a photographer and dog sitter to purchase my first persians and to grow my cattery. Also, my hubby helped tremendously by keeping us financially afloat while I pursued new passions. Shortly after producing my first litters, I became a veterinary technician to advance my understanding of veterinary medicine; encouraged by heartbreaking medical crises with young kittens.",       "At my busiest point, I was a breeder, a vet tech, a professional photographer and a dogsitter. Juggling all of that and doing it all well was practically impossible. In 2017, I quit dog sitting. In 2019, I quit offering professional photography services. In 2021, I quit my job as a veterinary technician. I have since devoted my entire life to breeding cats. In 2022, my hubby quit his job as a mail man to best support our growing cattery.",       "Today, I am a midwife, nutritionist, groomer, photographer, videographer, animal trainer and CEO of Ethereal Persians; in addition to my personal roles as a devoted mother, wife, daughter and friend to those closest to me. My beloved partner, Jason, is an equal partner with complimentary roles. Over time, we have added team members such as pet nannies, groomers, nutritionists, website designers, and maids to keep up with our workload and to offer the best experience to our beloved owners.",       "Breeding has become a way of life for us. Our priority is first and foremost making sure that each kitten is happy, healthy and that the owners that entrust us do so confidently and are matched appropriately. We are unapologetic in our choice to breed and our goal has always been to lead by example. We cut no corners and we hope you see that, embrace it and support us.",       "If you are here in support, thank you. I hope you find useful content on my site or your next kitten in our hands.'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Roxy: The Crazy Cat Lady'>;
+  };
+}
+
 export interface BasicPetsData extends Struct.ComponentSchema {
   collectionName: 'components_basic_pets_data';
   info: {
@@ -223,6 +275,18 @@ export interface BasicQuestionFaq extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicReviewsComponent extends Struct.ComponentSchema {
+  collectionName: 'components_basic_reviews_components';
+  info: {
+    displayName: 'ReviewsComponent';
+  };
+  attributes: {
+    Reviews: Schema.Attribute.Component<'basic.terminoal-rewiew', true>;
+    ReviewsTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'GOOGLE REVIEWS'>;
+  };
+}
+
 export interface BasicSocialLinks extends Struct.ComponentSchema {
   collectionName: 'components_basic_social_links';
   info: {
@@ -232,6 +296,22 @@ export interface BasicSocialLinks extends Struct.ComponentSchema {
     href: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#'>;
     icon: Schema.Attribute.Media<'images'>;
     name: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Facebook'>;
+  };
+}
+
+export interface BasicTerminoalRewiew extends Struct.ComponentSchema {
+  collectionName: 'components_basic_terminoal_rewiews';
+  info: {
+    displayName: 'TerminoalRewiew';
+  };
+  attributes: {
+    avatar: Schema.Attribute.Media<'images'>;
+    name: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Ashley Scarpa'>;
+    rating: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<5>;
+    text: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<"Roxy is such an AMAZING breeder!! I can't tell you how much I love my sweet little one, Violet. She has the best personality, beautiful features, and is the perfect...">;
+    timeAgo: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'8 months ago'>;
   };
 }
 
@@ -268,6 +348,40 @@ export interface BasicTestimonialsData extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicTestimonialsHero extends Struct.ComponentSchema {
+  collectionName: 'components_basic_testimonials_heroes';
+  info: {
+    displayName: 'TestimonialsHero';
+  };
+  attributes: {
+    closingText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<"You don't have to take our word for it, read below what our EP families have to say!">;
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<"We're not just selling kittens, we're gaining new family members! Our hearts are filled with grateful meows for our kitten parents. They not only complete the life of our kittens, but they also become a part of our Ethereal family. We hope that if you're in the market for a new furry friend that you take a chance on us and are fortunate enough to experience the wonderful joy of an Ethereal Persian kitten.">;
+    heading: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Our Customers Love Us... You Will Too!'>;
+    mapUrl: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'https://www.google.com/maps/d/embed?mid=1YOUR_MAP_ID'>;
+    title: Schema.Attribute.String & Schema.Attribute.DefaultTo<'TESTIMONIALS'>;
+  };
+}
+
+export interface BasicTextComp extends Struct.ComponentSchema {
+  collectionName: 'components_basic_text_comps';
+  info: {
+    displayName: 'TextComp';
+  };
+  attributes: {
+    job: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Veterinary Technician'>;
+    job2: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Dog Sitter'>;
+    job3: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Photographer; families, weddings and pets'>;
+    school: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Student at the University of South Florida'>;
+  };
+}
+
 export interface BasicTextComponent extends Struct.ComponentSchema {
   collectionName: 'components_basic_text_components';
   info: {
@@ -280,6 +394,22 @@ export interface BasicTextComponent extends Struct.ComponentSchema {
       Schema.Attribute.DefaultTo<'The cats in this section are near and dear to our hearts. They are adults that have served a huge part in our cattery and occasionally some younger cats that we considered keeping to breed but for whatever reason, decided to place as beloved pets. Some may be discounted due to age. Nevertheless, these are our top kitties \u2013 the ones we consider most aesthetically pleasing and with great temperament.'>;
     title: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'RETIRING ADULTS'>;
+  };
+}
+
+export interface BasicTimelineSection extends Struct.ComponentSchema {
+  collectionName: 'components_basic_timeline_sections';
+  info: {
+    displayName: 'timelineSection';
+  };
+  attributes: {
+    desc: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'e were coworkers at Ace Hardware'>;
+    position: Schema.Attribute.Enumeration<['LEFT', 'RIGHT']> &
+      Schema.Attribute.Required;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Jason and I Met'>;
+    year: Schema.Attribute.String & Schema.Attribute.DefaultTo<'2010'>;
   };
 }
 
@@ -346,6 +476,23 @@ export interface DefaultGalleriesHome extends Struct.ComponentSchema {
     image: Schema.Attribute.Component<'basic.image', true>;
     title: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'CHECK OUT OUR PHOTO ALBUMS'>;
+  };
+}
+
+export interface DefaultGalleryDatum extends Struct.ComponentSchema {
+  collectionName: 'components_default_gallery_data';
+  info: {
+    displayName: 'Gallery Datum';
+  };
+  attributes: {
+    category: Schema.Attribute.String & Schema.Attribute.DefaultTo<'Featured'>;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Capturing the most adorable moments of our Persian kittens in their cutest poses.'>;
+    fullContent: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'<p>Welcome to our "Too Cute" gallery! This collection features our most precious moments with Persian kittens showcasing their undeniable charm and adorable personalities.</p>          <h2>About This Gallery</h2>     <p>Every photo in this gallery captures a moment of pure joy, innocence, and cuteness. From playful yawns to curious gazes, these images represent the heart and soul of what makes Persian kittens so special.</p>          <h2>What You\'ll See</h2>     <ul>       <li>Playful kitten antics</li>       <li>Adorable sleepy moments</li>       <li>Curious explorations</li>       <li>Heart-melting expressions</li>     </ul>'>;
+    images: Schema.Attribute.Component<'basic.image', true>;
+    label: Schema.Attribute.String & Schema.Attribute.DefaultTo<'TOO CUTE'>;
+    src: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
   };
 }
 
@@ -464,10 +611,12 @@ export interface DefaultWhyBlogData extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'basic.about-data': BasicAboutData;
       'basic.about-items-blog': BasicAboutItemsBlog;
       'basic.adults-list': BasicAdultsList;
       'basic.card-context': BasicCardContext;
       'basic.card-image': BasicCardImage;
+      'basic.cards-about': BasicCardsAbout;
       'basic.description-galleri-home': BasicDescriptionGalleriHome;
       'basic.faq-component': BasicFaqComponent;
       'basic.features': BasicFeatures;
@@ -477,16 +626,23 @@ declare module '@strapi/strapi' {
       'basic.imagesnot-alt': BasicImagesnotAlt;
       'basic.kitten-list': BasicKittenList;
       'basic.marketing-linksdata': BasicMarketingLinksdata;
+      'basic.parag-data': BasicParagData;
       'basic.pets-data': BasicPetsData;
       'basic.question-faq': BasicQuestionFaq;
+      'basic.reviews-component': BasicReviewsComponent;
       'basic.social-links': BasicSocialLinks;
+      'basic.terminoal-rewiew': BasicTerminoalRewiew;
       'basic.terms-section': BasicTermsSection;
       'basic.testimonials-data': BasicTestimonialsData;
+      'basic.testimonials-hero': BasicTestimonialsHero;
+      'basic.text-comp': BasicTextComp;
       'basic.text-component': BasicTextComponent;
+      'basic.timeline-section': BasicTimelineSection;
       'default.adults': DefaultAdults;
       'default.blog': DefaultBlog;
       'default.comment': DefaultComment;
       'default.galleries-home': DefaultGalleriesHome;
+      'default.gallery-datum': DefaultGalleryDatum;
       'default.hero': DefaultHero;
       'default.kitten': DefaultKitten;
       'default.popular': DefaultPopular;

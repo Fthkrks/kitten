@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_basic_reviews_components",
+  "info": {
+    "displayName": "ReviewsComponent"
+  },
+  "options": {},
+  "attributes": {
+    "ReviewsTitle": {
+      "type": "string",
+      "default": "GOOGLE REVIEWS"
+    },
+    "Reviews": {
+      "type": "component",
+      "component": "basic.terminoal-rewiew",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

@@ -3,8 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { galleryData } from "../../../data/galleryData";
 
-export default function PhotoGrid() {
-  const galleryItems = galleryData;
+interface GalleryItem {
+  id: string;
+  label: string;
+  src: string;
+  alt: string;
+}
+
+interface PhotoGridProps {
+  galleries?: GalleryItem[];
+}
+
+export default function PhotoGrid({ galleries = galleryData }: PhotoGridProps) {
+  const galleryItems = galleries;
 
   return (
     <section className="py-16 md:py-24 bg-white">

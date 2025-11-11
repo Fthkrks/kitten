@@ -1,44 +1,116 @@
 import GalleriesDetail from "../../galleries/_components/GalleriesDetail";
 import { galleryData } from "../../../data/galleryData";
 import type { GalleryItem } from "../../../data/galleryData";
+import { fetchGalleriesPageData } from "@/services/api";
 
 // Generate static params for all gallery items
 export async function generateStaticParams() {
-  return galleryData.map((item) => ({
-    id: item.id,
-  }));
+  try {
+    const { galleries } = await fetchGalleriesPageData();
+    return galleries.map((item) => ({
+      id: item.id,
+    }));
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error);
+    // Fallback to local data
+    return galleryData.map((item) => ({
+      id: item.id,
+    }));
+  }
 }
 
-// Get gallery item by id
-function getGalleryItemById(id: string): GalleryItem | null {
-  const item = galleryData.find((item) => item.id === id);
-  return item || null;
+// Get gallery item by id from API
+async function getGalleryItemById(id: string): Promise<GalleryItem | null> {
+  try {
+    const { galleries } = await fetchGalleriesPageData();
+    const apiGallery = galleries.find((item) => item.id === id);
+    
+    if (apiGallery) {
+      // Transform API gallery to match GalleryItem interface
+      return {
+        id: apiGallery.id,
+        label: apiGallery.label,
+        src: apiGallery.coverImage,
+        alt: apiGallery.description,
+        category: apiGallery.category,
+        description: apiGallery.description,
+        fullContent: apiGallery.fullContent,
+        images: apiGallery.images.map(img => ({
+          src: img.src,
+          alt: img.alt
+        }))
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching gallery item:', error);
+  }
+  
+  // Fallback to local data
+  const localItem = galleryData.find((item) => item.id === id);
+  return localItem || null;
 }
 
 // Get related gallery items
-function getRelatedItems(currentItem: GalleryItem, limit = 3): GalleryItem[] {
-  // First, try to find items with matching categories
-  const categoryMatches = galleryData
-    .filter((item) => {
-      if (item.id === currentItem.id) return false;
-      return item.category === currentItem.category;
-    })
-    .slice(0, limit);
+async function getRelatedItems(currentItem: GalleryItem, limit = 3): Promise<GalleryItem[]> {
+  try {
+    const { galleries } = await fetchGalleriesPageData();
+    
+    // Transform API galleries to match GalleryItem interface
+    const allItems: GalleryItem[] = galleries.map(gallery => ({
+      id: gallery.id,
+      label: gallery.label,
+      src: gallery.coverImage,
+      alt: gallery.description,
+      category: gallery.category,
+      description: gallery.description,
+      fullContent: gallery.fullContent,
+      images: gallery.images.map(img => ({
+        src: img.src,
+        alt: img.alt
+      }))
+    }));
 
-  // If we don't have enough matches, fill with any other items
-  if (categoryMatches.length < limit) {
-    const remaining = galleryData
-      .filter((item) => item.id !== currentItem.id && !categoryMatches.find((p) => p.id === item.id))
-      .slice(0, limit - categoryMatches.length);
-    return [...categoryMatches, ...remaining];
+    // First, try to find items with matching categories
+    const categoryMatches = allItems
+      .filter((item) => {
+        if (item.id === currentItem.id) return false;
+        return item.category === currentItem.category;
+      })
+      .slice(0, limit);
+
+    // If we don't have enough matches, fill with any other items
+    if (categoryMatches.length < limit) {
+      const remaining = allItems
+        .filter((item) => item.id !== currentItem.id && !categoryMatches.find((p) => p.id === item.id))
+        .slice(0, limit - categoryMatches.length);
+      return [...categoryMatches, ...remaining];
+    }
+
+    return categoryMatches;
+  } catch (error) {
+    console.error('Error fetching related items:', error);
+    // Fallback to local data
+    const categoryMatches = galleryData
+      .filter((item) => {
+        if (item.id === currentItem.id) return false;
+        return item.category === currentItem.category;
+      })
+      .slice(0, limit);
+
+    if (categoryMatches.length < limit) {
+      const remaining = galleryData
+        .filter((item) => item.id !== currentItem.id && !categoryMatches.find((p) => p.id === item.id))
+        .slice(0, limit - categoryMatches.length);
+      return [...categoryMatches, ...remaining];
+    }
+
+    return categoryMatches;
   }
-
-  return categoryMatches;
 }
 
 export default async function GalleryDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const galleryItem = getGalleryItemById(id);
+  const galleryItem = await getGalleryItemById(id);
 
   if (!galleryItem) {
     return (
@@ -57,7 +129,7 @@ export default async function GalleryDetailPage({ params }: { params: Promise<{ 
     );
   }
 
-  const relatedItems = getRelatedItems(galleryItem);
+  const relatedItems = await getRelatedItems(galleryItem);
 
   return <GalleriesDetail item={galleryItem} relatedItems={relatedItems} />;
 }

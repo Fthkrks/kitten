@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_basic_text_comps",
+  "info": {
+    "displayName": "TextComp"
+  },
+  "options": {},
+  "attributes": {
+    "school": {
+      "type": "string",
+      "default": "Student at the University of South Florida"
+    },
+    "job": {
+      "type": "string",
+      "default": "Veterinary Technician"
+    },
+    "job2": {
+      "type": "string",
+      "default": "Dog Sitter"
+    },
+    "job3": {
+      "type": "string",
+      "default": "Photographer; families, weddings and pets"
+    }
+  },
+  "config": {}
+}

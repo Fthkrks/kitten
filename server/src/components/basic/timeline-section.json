@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_basic_timeline_sections",
+  "info": {
+    "displayName": "timelineSection"
+  },
+  "options": {},
+  "attributes": {
+    "year": {
+      "type": "string",
+      "default": "2010"
+    },
+    "title": {
+      "type": "string",
+      "default": "Jason and I Met"
+    },
+    "desc": {
+      "type": "text",
+      "default": "e were coworkers at Ace Hardware"
+    },
+    "position": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "LEFT",
+        "RIGHT"
+      ]
+    }
+  },
+  "config": {}
+}

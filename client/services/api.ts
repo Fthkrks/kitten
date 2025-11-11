@@ -1,4 +1,4 @@
-import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost } from '@/types/api';
+import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:1337';
 
@@ -1622,5 +1622,340 @@ export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardI
     console.error('❌ Error fetching blog page data:', error);
     console.warn('⚠️ Using fallback data');
     return { cardImage: fallbackCardImage, whyBlogData: fallbackWhyBlogData, blogs: fallbackBlogs };
+  }
+}
+
+export interface TransformedReviewSection {
+  title: string;
+  reviews: TransformedTestimonialReview[];
+}
+
+export async function fetchTestimonialPageData(): Promise<{
+  heroData: TransformedTestimonialHeroData;
+  reviewSections: TransformedReviewSection[];
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
+    console.log('📡 Fetching testimonial page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: TestimonialPageApiResponse = await response.json();
+    console.log('📥 Raw testimonial page API response:', JSON.stringify(data, null, 2));
+
+    // Transform Hero Section
+    const heroData: TransformedTestimonialHeroData = {
+      title: data.data.HeroSection.title || "TESTIMONIALS",
+      mapUrl: data.data.HeroSection.mapUrl || "https://www.google.com/maps/d/embed?mid=1YOUR_MAP_ID",
+      mapTitle: "Ethereal Persian Homes Map",
+      heading: data.data.HeroSection.heading || "Our Customers Love Us... You Will Too!",
+      description: data.data.HeroSection.description || "",
+      closingText: data.data.HeroSection.closingText || "You don't have to take our word for it, read below what our EP families have to say!"
+    };
+
+    // Transform all Base sections to review sections
+    const reviewSections: TransformedReviewSection[] = [];
+
+    if (data.data.Base && data.data.Base.length > 0) {
+      data.data.Base.forEach(baseSection => {
+        const reviews: TransformedTestimonialReview[] = baseSection.Reviews.map(review => {
+          const avatarUrl = review.avatar && review.avatar.url 
+            ? getImageUrl(review.avatar.url)
+            : undefined;
+
+          return {
+            id: review.id.toString(),
+            name: review.name,
+            timeAgo: review.timeAgo,
+            rating: review.rating,
+            text: review.text,
+            avatar: avatarUrl
+          };
+        });
+
+        reviewSections.push({
+          title: baseSection.ReviewsTitle || "GOOGLE REVIEWS",
+          reviews
+        });
+      });
+    }
+
+    console.log('🔄 Transformed testimonial page data:', JSON.stringify({ heroData, reviewSections }, null, 2));
+    return { heroData, reviewSections };
+  } catch (error) {
+    console.error('❌ Error fetching testimonial page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const heroData: TransformedTestimonialHeroData = {
+      title: "TESTIMONIALS",
+      mapUrl: "https://www.google.com/maps/d/embed?mid=1YOUR_MAP_ID",
+      mapTitle: "Ethereal Persian Homes Map",
+      heading: "Our Customers Love Us... You Will Too!",
+      description: "We're not just selling kittens, we're gaining new family members! Our hearts are filled with grateful meows for our kitten parents. They not only complete the life of our kittens, but they also become a part of our Ethereal family. We hope that if you're in the market for a new furry friend that you take a chance on us and are fortunate enough to experience the wonderful joy of an Ethereal Persian kitten.",
+      closingText: "You don't have to take our word for it, read below what our EP families have to say!"
+    };
+
+    return { heroData, reviewSections: [] };
+  }
+}
+
+export async function fetchGalleriesPageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  galleries: TransformedGalleryItem[];
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate]=*`;
+    console.log('📡 Fetching galleries page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: GalleriesPageApiResponse = await response.json();
+    console.log('📥 Raw galleries page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "GALLERIES",
+      cardTitle: data.data.cardImageSection.cardTitle || "CHECK OUT OUR PHOTO ALBUMS",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.15)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.3,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#f9f1f1"
+    };
+
+    // Transform Galleries Data
+    const galleries: TransformedGalleryItem[] = data.data.GalleriesData.map(gallery => {
+      // Handle null or missing images
+      const images = gallery.images.map(img => {
+        const imageUrl = img.src && img.src.url 
+          ? getImageUrl(img.src.url) 
+          : 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&q=80&w=800';
+        
+        return {
+          id: img.id.toString(),
+          src: imageUrl,
+          alt: img.alt || (img.src && img.src.alternativeText) || gallery.label
+        };
+      });
+
+      // Handle null or missing cover image
+      const coverImage = gallery.src && gallery.src.url
+        ? getImageUrl(gallery.src.url)
+        : 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&q=80&w=800';
+
+      return {
+        id: gallery.id.toString(),
+        label: gallery.label,
+        description: gallery.description,
+        category: gallery.category,
+        fullContent: gallery.fullContent,
+        coverImage,
+        images
+      };
+    });
+
+    console.log('🔄 Transformed galleries page data:', JSON.stringify({ cardImage, galleries }, null, 2));
+    return { cardImage, galleries };
+  } catch (error) {
+    console.error('❌ Error fetching galleries page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&q=80&w=1800",
+      heading: "GALLERIES",
+      cardTitle: "CHECK OUT OUR PHOTO ALBUMS",
+      cardText: "Browse through our collection of beautiful moments capturing the elegance, playfulness, and unique personalities of our Persian cats.",
+      overlayColor: "rgba(0,0,0,0.15)",
+      parallaxSpeed: 0.3,
+      backgroundColor: "#f9f1f1"
+    };
+
+    return { cardImage, galleries: [] };
+  }
+}
+
+export async function fetchAboutUsPageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  aboutData: {
+    image: string;
+    imageAlt: string;
+    title: string;
+    paragraph1: string;
+    highlightText: string;
+    paragraph2: string;
+  };
+  paragData: {
+    image: string;
+    imageAlt: string;
+    title: string;
+    paragraphs: string[];
+    listTitle: string;
+    listItems: string[];
+  };
+  timelineEvents: Array<{
+    year: string;
+    title: string;
+    desc: string;
+    position: string;
+  }>;
+  cards: Array<{
+    title: string;
+    text: string;
+    img: string;
+    bg?: string;
+    reverse: boolean;
+  }>;
+  faqData: {
+    title: string;
+    questions: Array<{
+      question: string;
+      answer: string;
+    }>;
+  };
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate]=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*`;
+    console.log('📡 Fetching about us page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: AboutUsPageApiResponse = await response.json();
+    console.log('📥 Raw about us page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "ABOUT US",
+      cardTitle: data.data.cardImageSection.cardTitle || "OUR STORY",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.10)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.3,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#f9f1f1"
+    };
+
+    // Transform About Section
+    const aboutImageUrl = data.data.AboutSection.image?.url
+      ? getImageUrl(data.data.AboutSection.image.url)
+      : 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&q=80&w=500';
+
+    const aboutData = {
+      image: aboutImageUrl,
+      imageAlt: data.data.AboutSection.imageAlt || "Roxy and Jason with Persian cat",
+      title: data.data.AboutSection.title || "About Us",
+      paragraph1: data.data.AboutSection.paragraph1,
+      highlightText: data.data.AboutSection.highlightText,
+      paragraph2: data.data.AboutSection.paragraph2
+    };
+
+    // Transform Paraq Section
+    // Parse paragraphs from the string format (comma-separated)
+    const paragraphsArray = data.data.ParaqSection.paragraphs
+      .split('",')
+      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+
+    // Extract list items from the object
+    const listItemsData = data.data.ParaqSection.listItems[0];
+    const listItems = [
+      listItemsData.school,
+      listItemsData.job,
+      listItemsData.job2,
+      listItemsData.job3
+    ];
+
+    const paragData = {
+      image: getImageUrl(data.data.ParaqSection.image.url),
+      imageAlt: data.data.ParaqSection.imageAlt,
+      title: data.data.ParaqSection.title,
+      paragraphs: paragraphsArray,
+      listTitle: data.data.ParaqSection.listTitle,
+      listItems
+    };
+
+    // Transform Timeline Section
+    const timelineEvents = data.data.timeLine?.map(event => ({
+      year: event.year,
+      title: event.title,
+      desc: event.desc,
+      position: event.position.toLowerCase()
+    })) || [];
+
+    // Transform Cards Section
+    const cards = data.data.CardsSection?.map((card, index) => ({
+      title: card.title,
+      text: card.text,
+      img: getImageUrl(card.img.url),
+      bg: index === 1 ? "#fff" : undefined,
+      reverse: card.reserve
+    })) || [];
+
+    // Transform FAQ Section
+    const faqData = {
+      title: data.data.FaqSection?.[0]?.title || "FAQ",
+      questions: data.data.FaqSection?.[0]?.questions?.flatMap(q => {
+        // Convert the question object to array of {question, answer} pairs
+        return Object.entries(q.question).map(([question, answer]) => ({
+          question,
+          answer
+        }));
+      }) || []
+    };
+
+    console.log('🔄 Transformed about us page data:', JSON.stringify({ cardImage, aboutData, paragData, timelineEvents, cards, faqData }, null, 2));
+    return { cardImage, aboutData, paragData, timelineEvents, cards, faqData };
+  } catch (error) {
+    console.error('❌ Error fetching about us page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800",
+      heading: "ABOUT US",
+      cardTitle: "OUR STORY",
+      cardText: "Hey Friend! I'm glad you're here. My name is Roxy and my hubby is Jason.",
+      overlayColor: "rgba(0,0,0,0.10)",
+      parallaxSpeed: 0.3,
+      backgroundColor: "#f9f1f1"
+    };
+
+    const aboutData = {
+      image: "https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&q=80&w=500",
+      imageAlt: "Roxy and Jason with Persian cat",
+      title: "About Us",
+      paragraph1: "",
+      highlightText: "",
+      paragraph2: ""
+    };
+
+    const paragData = {
+      image: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500",
+      imageAlt: "Roxy and Cat",
+      title: "Roxy: The Crazy Cat Lady",
+      paragraphs: [],
+      listTitle: "",
+      listItems: []
+    };
+
+    const timelineEvents = [];
+    const cards = [];
+    const faqData = {
+      title: "FAQ",
+      questions: []
+    };
+
+    return { cardImage, aboutData, paragData, timelineEvents, cards, faqData };
   }
 }

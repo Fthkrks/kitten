@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_basic_cards_abouts",
+  "info": {
+    "displayName": "CardsAbout"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "A Tribute To Jason: The Kerosene To My Fire"
+    },
+    "text": {
+      "type": "richtext",
+      "default": "This section is dedicated to my best friend, my confidant, my partner – Jason Geers. His support has been invaluable in my life and in the growth of Ethereal Persians.   Back in 2015 I imagined I could run Ethereal Persians all by myself. That was naive. There were moments of exhaustion, depression and financial crisis that I could not overcome on my own. Jason helped me overcome incredible challenges and over time it became apparent that running a cattery was a 2 person job (or more; at least for us). In 2022, our cattery became financially sustainable (not lucrative). In response, Jason gave up his career (and income) as a mailman to help grow our dream cattery.  You may recognize his hand in our cat photos or his voice in the background of our videos. What is not as obvious is his role behind the scene. He medicates, feeds and takes care of all physical and many online kitty chores when I am sick, overwhelmed or unable to for any reason. He also specializes in things I don’t, like website management. Jasons encourages me like no ne else can.  He is the glue that keeps me together and the kerosene to my fire!   "
+    },
+    "img": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "reserve": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "config": {}
+}

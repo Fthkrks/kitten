@@ -1,12 +1,58 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function Header() {
   const [isKittensDropdownOpen, setIsKittensDropdownOpen] = useState(false);
   const [isAdultsDropdownOpen, setIsAdultsDropdownOpen] = useState(false);
   const [isInformationDropdownOpen, setIsInformationDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const kittensTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const adultsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const informationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleKittensMouseEnter = () => {
+    if (kittensTimeoutRef.current) clearTimeout(kittensTimeoutRef.current);
+    kittensTimeoutRef.current = setTimeout(() => {
+      setIsKittensDropdownOpen(true);
+    }, 150);
+  };
+
+  const handleKittensMouseLeave = () => {
+    if (kittensTimeoutRef.current) clearTimeout(kittensTimeoutRef.current);
+    kittensTimeoutRef.current = setTimeout(() => {
+      setIsKittensDropdownOpen(false);
+    }, 300);
+  };
+
+  const handleAdultsMouseEnter = () => {
+    if (adultsTimeoutRef.current) clearTimeout(adultsTimeoutRef.current);
+    adultsTimeoutRef.current = setTimeout(() => {
+      setIsAdultsDropdownOpen(true);
+    }, 150);
+  };
+
+  const handleAdultsMouseLeave = () => {
+    if (adultsTimeoutRef.current) clearTimeout(adultsTimeoutRef.current);
+    adultsTimeoutRef.current = setTimeout(() => {
+      setIsAdultsDropdownOpen(false);
+    }, 300);
+  };
+
+  const handleInformationMouseEnter = () => {
+    if (informationTimeoutRef.current) clearTimeout(informationTimeoutRef.current);
+    informationTimeoutRef.current = setTimeout(() => {
+      setIsInformationDropdownOpen(true);
+    }, 150);
+  };
+
+  const handleInformationMouseLeave = () => {
+    if (informationTimeoutRef.current) clearTimeout(informationTimeoutRef.current);
+    informationTimeoutRef.current = setTimeout(() => {
+      setIsInformationDropdownOpen(false);
+    }, 300);
+  };
 
   return (
     <header className="bg-white">
@@ -201,64 +247,93 @@ export default function Header() {
             Home
           </a>
           
-          <div
-            className="relative"
-            onMouseEnter={() => setIsKittensDropdownOpen(true)}
-            onMouseLeave={() => setIsKittensDropdownOpen(false)}
-          >
-            <a href="#" className="text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1 cursor-pointer">
+          <div className="relative">
+            <a 
+              href="#" 
+              className="text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1 cursor-pointer"
+              onMouseEnter={handleKittensMouseEnter}
+              onMouseLeave={handleKittensMouseLeave}
+            >
               Kittens
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </a>
             
-            <div className="absolute top-full left-0 pt-2 z-50" onMouseEnter={() => setIsKittensDropdownOpen(true)} onMouseLeave={() => setIsKittensDropdownOpen(false)}>
-              <div className={`bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out ${isKittensDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}>
-                <a href="avaible-kittens" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Available Kittens</a>
-                <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Kitten Application</a>
-                <a href="terms" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Terms of Sale</a>
-                <a href="faq" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">FAQ</a>
+            {isKittensDropdownOpen && (
+              <div 
+                className="absolute top-full left-0 pt-2 z-50"
+                onMouseEnter={handleKittensMouseEnter} 
+                onMouseLeave={handleKittensMouseLeave}
+              >
+                <div className="bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2">
+                  <a href="avaible-kittens" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Available Kittens</a>
+                  <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Kitten Application</a>
+                  <a href="terms" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Terms of Sale</a>
+                  <a href="faq" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">FAQ</a>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           
-          <div className="relative" onMouseEnter={() => setIsAdultsDropdownOpen(true)} onMouseLeave={() => setIsAdultsDropdownOpen(false)}>
-            <a href="#" className="text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1 cursor-pointer">
+          <div className="relative">
+            <a 
+              href="#" 
+              className="text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1 cursor-pointer"
+              onMouseEnter={handleAdultsMouseEnter}
+              onMouseLeave={handleAdultsMouseLeave}
+            >
               Adults
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </a>
             
-            <div className="absolute top-full left-0 pt-2 z-50" onMouseEnter={() => setIsAdultsDropdownOpen(true)} onMouseLeave={() => setIsAdultsDropdownOpen(false)}>
-              <div className={`bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out ${isAdultsDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}>
-                <a href="kings" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Kings</a>
-                <a href="queens" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">Queens</a>
+            {isAdultsDropdownOpen && (
+              <div 
+                className="absolute top-full left-0 pt-2 z-50"
+                onMouseEnter={handleAdultsMouseEnter} 
+                onMouseLeave={handleAdultsMouseLeave}
+              >
+                <div className="bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2">
+                  <a href="kings" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Kings</a>
+                  <a href="queens" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">Queens</a>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           
-          <div className="relative" onMouseEnter={() => setIsInformationDropdownOpen(true)} onMouseLeave={() => setIsInformationDropdownOpen(false)}>
-            <a href="#" className="text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1 cursor-pointer">
+          <div className="relative">
+            <a 
+              href="#" 
+              className="text-gray-700 hover:text-gray-900 transition-colors flex items-center gap-1 cursor-pointer"
+              onMouseEnter={handleInformationMouseEnter}
+              onMouseLeave={handleInformationMouseLeave}
+            >
               Information
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </a>
             
-            <div className="absolute top-full left-0 pt-2 z-50" onMouseEnter={() => setIsInformationDropdownOpen(true)} onMouseLeave={() => setIsInformationDropdownOpen(false)}>
-              <div className={`bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out ${isInformationDropdownOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}>
-                <a href="/history" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">History</a>
-                <a href="/health" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Health</a>
-                <a href="/recipe" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Homemade Feline Raw Recipe</a>
-                <a href="/diet" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Diet</a>
-                <a href="/vaccines" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Vaccines</a>
-                <a href="/spaying-and-neutering" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Spaying and Neutering</a>
-                <a href="/recommended-products" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Recommended Products</a>
-                <a href="/faq" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">FAQ</a>
+            {isInformationDropdownOpen && (
+              <div 
+                className="absolute top-full left-0 pt-2 z-50"
+                onMouseEnter={handleInformationMouseEnter} 
+                onMouseLeave={handleInformationMouseLeave}
+              >
+                <div className="bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2">
+                  <a href="/history" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">History</a>
+                  <a href="/health" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Health</a>
+                  <a href="/recipe" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Homemade Feline Raw Recipe</a>
+                  <a href="/diet" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Diet</a>
+                  <a href="/vaccines" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Vaccines</a>
+                  <a href="/spaying-and-neutering" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Spaying and Neutering</a>
+                  <a href="/recommended-products" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Recommended Products</a>
+                  <a href="/faq" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">FAQ</a>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           
           <a href="galleries" className="text-gray-700 hover:text-gray-900 transition-colors">Galleries</a>
