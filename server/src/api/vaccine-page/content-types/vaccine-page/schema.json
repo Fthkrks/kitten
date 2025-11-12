@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "vaccine_pages",
+  "info": {
+    "singularName": "vaccine-page",
+    "pluralName": "vaccine-pages",
+    "displayName": "VaccinePage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "bg": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "vaccaniesSection": {
+      "type": "component",
+      "component": "basic.vaccanies",
+      "repeatable": true
+    }
+  }
+}

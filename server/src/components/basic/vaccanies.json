@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_basic_vaccanies",
+  "info": {
+    "displayName": "Vaccanies"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "OUR PROTOCOL & RECOMMENDATION"
+    },
+    "paragraphs": {
+      "type": "richtext",
+      "default": "        \"Vaccinations can be controversial. Some veterinarians begin a kitten series at 8–16 weeks with yearly boosters, while others prefer a measured approach once immunity is established.\",         \"At our cattery we follow a veterinarian‑guided plan. We recommend the core FVRCP series with boosters, and rabies only where required by law. Decisions about FeLV and other non‑core vaccines are made individually based on lifestyle risk.\",         \"Vaccines should be administered individually whenever possible to reduce the risk of vaccine reactions and to help identify sensitivity if one occurs.\""
+    }
+  },
+  "config": {}
+}

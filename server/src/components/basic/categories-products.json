@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_basic_categories_products",
+  "info": {
+    "displayName": "categoriesProducts"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Drinking Fountains"
+    },
+    "products": {
+      "type": "component",
+      "component": "basic.products",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

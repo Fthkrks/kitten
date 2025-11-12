@@ -98,6 +98,18 @@ export interface BasicCardsAbout extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicCategoriesProducts extends Struct.ComponentSchema {
+  collectionName: 'components_basic_categories_products';
+  info: {
+    displayName: 'categoriesProducts';
+  };
+  attributes: {
+    products: Schema.Attribute.Component<'basic.products', true>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Drinking Fountains'>;
+  };
+}
+
 export interface BasicDescriptionGalleriHome extends Struct.ComponentSchema {
   collectionName: 'components_basic_description_galleri_homes';
   info: {
@@ -155,6 +167,19 @@ export interface BasicFeaturesSpecial extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicHighlights extends Struct.ComponentSchema {
+  collectionName: 'components_basic_highlights';
+  info: {
+    displayName: 'highlights';
+  };
+  attributes: {
+    description: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Wet food or added water/goat milk supports urinary health.'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Hydration First'>;
+  };
+}
+
 export interface BasicImage extends Struct.ComponentSchema {
   collectionName: 'components_basic_images';
   info: {
@@ -185,6 +210,20 @@ export interface BasicImagesnotAlt extends Struct.ComponentSchema {
   attributes: {};
 }
 
+export interface BasicIngredients extends Struct.ComponentSchema {
+  collectionName: 'components_basic_ingredients';
+  info: {
+    displayName: 'Ingredients';
+  };
+  attributes: {
+    amount: Schema.Attribute.String & Schema.Attribute.DefaultTo<'70%'>;
+    name: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'High\u2011quality wet food (poultry or rabbit)'>;
+    note: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'primary moisture & protein'>;
+  };
+}
+
 export interface BasicKittenList extends Struct.ComponentSchema {
   collectionName: 'components_basic_kitten_lists';
   info: {
@@ -194,6 +233,22 @@ export interface BasicKittenList extends Struct.ComponentSchema {
     image: Schema.Attribute.Component<'basic.image', true>;
     title: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Breeding Happy, Healthy<br />Purebred Persians'>;
+  };
+}
+
+export interface BasicLeftImage extends Struct.ComponentSchema {
+  collectionName: 'components_basic_left_images';
+  info: {
+    displayName: 'leftImage';
+  };
+  attributes: {
+    alt: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Persian cat 1903'>;
+    caption: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'THE ARISTOMED MOGGAR'>;
+    src: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Persian cat 1903'>;
   };
 }
 
@@ -265,6 +320,21 @@ export interface BasicPetsData extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicProducts extends Struct.ComponentSchema {
+  collectionName: 'components_basic_products';
+  info: {
+    displayName: 'products';
+  };
+  attributes: {
+    bullets: Schema.Attribute.Component<'basic.repeat-text', true>;
+    imageAlt: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Ceramic drinking fountain'>;
+    imageSrc: Schema.Attribute.Media<'images'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Drinkwell Seascape Ceramic'>;
+  };
+}
+
 export interface BasicQuestionFaq extends Struct.ComponentSchema {
   collectionName: 'components_basic_question_faqs';
   info: {
@@ -272,6 +342,28 @@ export interface BasicQuestionFaq extends Struct.ComponentSchema {
   };
   attributes: {
     question: Schema.Attribute.JSON;
+  };
+}
+
+export interface BasicRecommedProducts extends Struct.ComponentSchema {
+  collectionName: 'components_basic_recommed_products';
+  info: {
+    displayName: 'recommedProducts';
+  };
+  attributes: {
+    categories: Schema.Attribute.Component<'basic.categories-products', true>;
+    heading: Schema.Attribute.String & Schema.Attribute.DefaultTo<'HYDRATION'>;
+  };
+}
+
+export interface BasicRepeatText extends Struct.ComponentSchema {
+  collectionName: 'components_basic_repeat_texts';
+  info: {
+    displayName: 'repeatText';
+  };
+  attributes: {
+    text: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Dishwasher\u2011safe glazed ceramic'>;
   };
 }
 
@@ -397,6 +489,19 @@ export interface BasicTextComponent extends Struct.ComponentSchema {
   };
 }
 
+export interface BasicTextImageData extends Struct.ComponentSchema {
+  collectionName: 'components_basic_text_image_data';
+  info: {
+    displayName: 'TextImageData';
+  };
+  attributes: {
+    leftImage: Schema.Attribute.Component<'basic.left-image', false>;
+    paragraphs: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'Persian cats have dramatically transformed from traditional (mesocephalic) to extreme (brachycephalic) over the last century due to artificial selection, making them almost unrecognizable from their ancestors.",             "Persian cats are descendants of Angora cats crossed with British longhairs, founded in Persia (modern-day Iran). They were popular with royal families for their luxurious coats, personality, and affection, and were shipped to the United States between 1500-1800.",             "Breeders selectively bred traditional Persians into modern flat and peke-face types. The traditional ancestor was a short, broad cat with good bone structure and a protruding, well-rounded snout. The modern Persian retains the short, broad body but has a much rounder head and a \\"peke-face\\" look, with the nose break centered between the eyes and the snout flush with the face. Flat and peke-faced Persians are now more prevalent than \\"doll face\\" Persians.",             "\\"Ethereal Persians Cattery\\" aims to produce \\"doll face\\" Persians. These cats have midstream features between traditional and extreme Persians, characterized by a slightly protruding muzzle and a nose below the lower eyelid. Doll face snouts are shorter than traditional Persians but longer than extreme Persians. The cattery also breeds for the exaggerated extreme coat seen in modern Persians.'>;
+    rightImage: Schema.Attribute.Component<'basic.left-image', false>;
+  };
+}
+
 export interface BasicTimelineSection extends Struct.ComponentSchema {
   collectionName: 'components_basic_timeline_sections';
   info: {
@@ -410,6 +515,41 @@ export interface BasicTimelineSection extends Struct.ComponentSchema {
     title: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'Jason and I Met'>;
     year: Schema.Attribute.String & Schema.Attribute.DefaultTo<'2010'>;
+  };
+}
+
+export interface BasicTips extends Struct.ComponentSchema {
+  collectionName: 'components_basic_tips';
+  info: {
+    displayName: 'Tips';
+  };
+  attributes: {
+    tips: Schema.Attribute.String;
+  };
+}
+
+export interface BasicVaccanies extends Struct.ComponentSchema {
+  collectionName: 'components_basic_vaccanies';
+  info: {
+    displayName: 'Vaccanies';
+  };
+  attributes: {
+    paragraphs: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'        "Vaccinations can be controversial. Some veterinarians begin a kitten series at 8\u201316 weeks with yearly boosters, while others prefer a measured approach once immunity is established.",         "At our cattery we follow a veterinarian\u2011guided plan. We recommend the core FVRCP series with boosters, and rabies only where required by law. Decisions about FeLV and other non\u2011core vaccines are made individually based on lifestyle risk.",         "Vaccines should be administered individually whenever possible to reduce the risk of vaccine reactions and to help identify sensitivity if one occurs."'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'OUR PROTOCOL & RECOMMENDATION'>;
+  };
+}
+
+export interface BasicWhySelection extends Struct.ComponentSchema {
+  collectionName: 'components_basic_why_selections';
+  info: {
+    displayName: 'WhySelection';
+  };
+  attributes: {
+    number: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<1>;
+    text: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'The impact our sweet kittens have on our happiness and that of their new parents'>;
   };
 }
 
@@ -617,18 +757,25 @@ declare module '@strapi/strapi' {
       'basic.card-context': BasicCardContext;
       'basic.card-image': BasicCardImage;
       'basic.cards-about': BasicCardsAbout;
+      'basic.categories-products': BasicCategoriesProducts;
       'basic.description-galleri-home': BasicDescriptionGalleriHome;
       'basic.faq-component': BasicFaqComponent;
       'basic.features': BasicFeatures;
       'basic.features-special': BasicFeaturesSpecial;
+      'basic.highlights': BasicHighlights;
       'basic.image': BasicImage;
       'basic.image-single': BasicImageSingle;
       'basic.imagesnot-alt': BasicImagesnotAlt;
+      'basic.ingredients': BasicIngredients;
       'basic.kitten-list': BasicKittenList;
+      'basic.left-image': BasicLeftImage;
       'basic.marketing-linksdata': BasicMarketingLinksdata;
       'basic.parag-data': BasicParagData;
       'basic.pets-data': BasicPetsData;
+      'basic.products': BasicProducts;
       'basic.question-faq': BasicQuestionFaq;
+      'basic.recommed-products': BasicRecommedProducts;
+      'basic.repeat-text': BasicRepeatText;
       'basic.reviews-component': BasicReviewsComponent;
       'basic.social-links': BasicSocialLinks;
       'basic.terminoal-rewiew': BasicTerminoalRewiew;
@@ -637,7 +784,11 @@ declare module '@strapi/strapi' {
       'basic.testimonials-hero': BasicTestimonialsHero;
       'basic.text-comp': BasicTextComp;
       'basic.text-component': BasicTextComponent;
+      'basic.text-image-data': BasicTextImageData;
       'basic.timeline-section': BasicTimelineSection;
+      'basic.tips': BasicTips;
+      'basic.vaccanies': BasicVaccanies;
+      'basic.why-selection': BasicWhySelection;
       'default.adults': DefaultAdults;
       'default.blog': DefaultBlog;
       'default.comment': DefaultComment;

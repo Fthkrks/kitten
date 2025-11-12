@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "health_pages",
+  "info": {
+    "singularName": "health-page",
+    "pluralName": "health-pages",
+    "displayName": "HealthPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "textImageData": {
+      "type": "component",
+      "component": "basic.text-image-data",
+      "repeatable": false
+    }
+  }
+}

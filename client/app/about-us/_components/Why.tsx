@@ -1,22 +1,11 @@
-export default function Why() {
-  const reasons = [
-    {
-      number: 1,
-      text: "The impact our sweet kittens have on our happiness and that of their new parents",
-    },
-    {
-      number: 2,
-      text: "The ability of our cattery to be financially sustainable",
-    },
-    {
-      number: 3,
-      text: "The loving friendships we craft with our Ethereal families and followers",
-    },
-    {
-      number: 4,
-      text: "Our ability, tailored over years, to produce exceptional persian kittens with sound temperaments and robust health.",
-    },
-  ];
+interface WhyProps {
+  reasons: Array<{
+    number: number;
+    text: string;
+  }>;
+}
+
+export default function Why({ reasons }: WhyProps) {
   return (
     <section className="w-full pt-10 pb-10 flex flex-col items-center bg-white">
       <h2 className="font-serif text-3xl md:text-4xl text-center text-[#3a2b28] font-normal">Why We Breed</h2>

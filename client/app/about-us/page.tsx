@@ -14,7 +14,7 @@ import { fetchMediaData, fetchVideoData, fetchAboutUsPageData } from "@/services
 async function page() {
   const mediaData = await fetchMediaData();
   const videoData = await fetchVideoData();
-  const { cardImage, aboutData, paragData, timelineEvents, cards, faqData } = await fetchAboutUsPageData();
+  const { cardImage, aboutData, paragData, timelineEvents, cards, faqData, reasons } = await fetchAboutUsPageData();
 
   return (
     <div>
@@ -26,7 +26,7 @@ async function page() {
         <Cards key={card.title} {...card} />
       ))}
       <Faq title={faqData.title} questions={faqData.questions} />
-      <Why />
+      <Why reasons={reasons} />
       <Media {...mediaData} />
       <VideoGallery {...videoData} />
     </div>

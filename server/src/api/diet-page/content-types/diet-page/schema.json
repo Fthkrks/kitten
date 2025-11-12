@@ -1,0 +1,59 @@
+{
+  "kind": "singleType",
+  "collectionName": "diet_pages",
+  "info": {
+    "singularName": "diet-page",
+    "pluralName": "diet-pages",
+    "displayName": "DietPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "title": {
+      "type": "string",
+      "default": "Everyday Diet Guidelines"
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "Moisture‑rich, meat‑forward meals for happy Persians"
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "bg": {
+      "type": "string",
+      "default": "#F4FCFD"
+    },
+    "highlights": {
+      "type": "component",
+      "component": "basic.highlights",
+      "repeatable": true
+    },
+    "feedingSchedule": {
+      "type": "component",
+      "component": "basic.highlights",
+      "repeatable": true
+    },
+    "do": {
+      "type": "component",
+      "component": "basic.tips",
+      "repeatable": true
+    },
+    "dont": {
+      "type": "component",
+      "component": "basic.tips",
+      "repeatable": true
+    }
+  }
+}

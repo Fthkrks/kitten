@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_basic_repeat_texts",
+  "info": {
+    "displayName": "repeatText"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string",
+      "default": "Dishwasher‑safe glazed ceramic"
+    }
+  },
+  "config": {}
+}

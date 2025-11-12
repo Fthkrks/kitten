@@ -493,6 +493,7 @@ export interface ApiAboutUsPageAboutUsPage extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     ParaqSection: Schema.Attribute.Component<'basic.parag-data', false>;
     publishedAt: Schema.Attribute.DateTime;
+    reasonSection: Schema.Attribute.Component<'basic.why-selection', true>;
     timeLine: Schema.Attribute.Component<'basic.timeline-section', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -561,6 +562,44 @@ export interface ApiBlogPageBlogPage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiDietPageDietPage extends Struct.SingleTypeSchema {
+  collectionName: 'diet_pages';
+  info: {
+    displayName: 'DietPage';
+    pluralName: 'diet-pages';
+    singularName: 'diet-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    bg: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#F4FCFD'>;
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    coverImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    do: Schema.Attribute.Component<'basic.tips', true>;
+    dont: Schema.Attribute.Component<'basic.tips', true>;
+    feedingSchedule: Schema.Attribute.Component<'basic.highlights', true>;
+    highlights: Schema.Attribute.Component<'basic.highlights', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::diet-page.diet-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    subtitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Moisture\u2011rich, meat\u2011forward meals for happy Persians'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Everyday Diet Guidelines'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiFaqPageFaqPage extends Struct.SingleTypeSchema {
   collectionName: 'faq_pages';
   info: {
@@ -617,6 +656,64 @@ export interface ApiGalleriesPageGalleriesPage extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiHealthPageHealthPage extends Struct.SingleTypeSchema {
+  collectionName: 'health_pages';
+  info: {
+    displayName: 'HealthPage';
+    pluralName: 'health-pages';
+    singularName: 'health-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::health-page.health-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    textImageData: Schema.Attribute.Component<'basic.text-image-data', false>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiHistoryPageHistoryPage extends Struct.SingleTypeSchema {
+  collectionName: 'history_pages';
+  info: {
+    displayName: 'HistoryPage';
+    pluralName: 'history-pages';
+    singularName: 'history-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::history-page.history-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    textImageData: Schema.Attribute.Component<'basic.text-image-data', false>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -791,6 +888,43 @@ export interface ApiMediaLinkMediaLink extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiProductsRecommedProductsRecommed
+  extends Struct.SingleTypeSchema {
+  collectionName: 'products_recommeds';
+  info: {
+    displayName: 'ProductsRecommed';
+    pluralName: 'products-recommeds';
+    singularName: 'products-recommed';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    accentDividerColor: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'#E5E7EB'>;
+    cardBg: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#ffffff'>;
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    cardsPerRow: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<2>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::products-recommed.products-recommed'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    recommendedProductsData: Schema.Attribute.Component<
+      'basic.recommed-products',
+      false
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiQueensPageQueensPage extends Struct.SingleTypeSchema {
   collectionName: 'queens_pages';
   info: {
@@ -814,6 +948,76 @@ export interface ApiQueensPageQueensPage extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     QueensSection: Schema.Attribute.Component<'basic.pets-data', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiRecipePageRecipePage extends Struct.SingleTypeSchema {
+  collectionName: 'recipe_pages';
+  info: {
+    displayName: 'RecipePage';
+    pluralName: 'recipe-pages';
+    singularName: 'recipe-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    bg: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#FFF8EE'>;
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    coverImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    gallery: Schema.Attribute.Media<'images', true>;
+    ingredients: Schema.Attribute.Component<'basic.ingredients', false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::recipe-page.recipe-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    recipeText: Schema.Attribute.RichText &
+      Schema.Attribute.DefaultTo<'Warm wet food to room temperature. Finely mince the cooked meat so there are no large pieces. Mix the ingredients in a clean bowl. Add goat milk or water until you reach a p\u00E2t\u00E9\u2011like texture. Offer small, frequent meals. Refrigerate portions for up to 24h; discard leftovers left out >30 minutes.'>;
+    subtitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Balanced, gentle and easy to transition'>;
+    tips: Schema.Attribute.Component<'basic.tips', true>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Starter Kitten Recipe'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSpayingandNeuteringSpayingandNeutering
+  extends Struct.SingleTypeSchema {
+  collectionName: 'spayingand_neuterings';
+  info: {
+    displayName: 'SpayingandNeutering';
+    pluralName: 'spayingand-neuterings';
+    singularName: 'spayingand-neutering';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    bg: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#ffffff'>;
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::spayingand-neutering.spayingand-neutering'
+    > &
+      Schema.Attribute.Private;
+    paragrafhData: Schema.Attribute.Component<'basic.vaccanies', true>;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -876,6 +1080,36 @@ export interface ApiTestimonialPageTestimonialPage
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiVaccinePageVaccinePage extends Struct.SingleTypeSchema {
+  collectionName: 'vaccine_pages';
+  info: {
+    displayName: 'VaccinePage';
+    pluralName: 'vaccine-pages';
+    singularName: 'vaccine-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    bg: Schema.Attribute.String & Schema.Attribute.DefaultTo<'#ffffff'>;
+    cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::vaccine-page.vaccine-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    vaccaniesSection: Schema.Attribute.Component<'basic.vaccanies', true>;
   };
 }
 
@@ -1393,15 +1627,22 @@ declare module '@strapi/strapi' {
       'api::about-us-page.about-us-page': ApiAboutUsPageAboutUsPage;
       'api::avaible-kitten-page.avaible-kitten-page': ApiAvaibleKittenPageAvaibleKittenPage;
       'api::blog-page.blog-page': ApiBlogPageBlogPage;
+      'api::diet-page.diet-page': ApiDietPageDietPage;
       'api::faq-page.faq-page': ApiFaqPageFaqPage;
       'api::galleries-page.galleries-page': ApiGalleriesPageGalleriesPage;
+      'api::health-page.health-page': ApiHealthPageHealthPage;
+      'api::history-page.history-page': ApiHistoryPageHistoryPage;
       'api::homepage.homepage': ApiHomepageHomepage;
       'api::kings-page.kings-page': ApiKingsPageKingsPage;
       'api::marketing-link.marketing-link': ApiMarketingLinkMarketingLink;
       'api::media-link.media-link': ApiMediaLinkMediaLink;
+      'api::products-recommed.products-recommed': ApiProductsRecommedProductsRecommed;
       'api::queens-page.queens-page': ApiQueensPageQueensPage;
+      'api::recipe-page.recipe-page': ApiRecipePageRecipePage;
+      'api::spayingand-neutering.spayingand-neutering': ApiSpayingandNeuteringSpayingandNeutering;
       'api::terms-page.terms-page': ApiTermsPageTermsPage;
       'api::testimonial-page.testimonial-page': ApiTestimonialPageTestimonialPage;
+      'api::vaccine-page.vaccine-page': ApiVaccinePageVaccinePage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

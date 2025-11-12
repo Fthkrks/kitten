@@ -555,7 +555,7 @@ interface FaqQuestionsItem {
 interface FaqSectionItem {
   id: number;
   title: string;
-  questions: FaqQuestionsItem;
+  questions: FaqQuestionsItem[];
 }
 
 export interface FaqPageApiResponse {
@@ -1026,6 +1026,12 @@ interface FaqSectionItem {
   questions: FaqQuestionItem[];
 }
 
+interface ReasonItem {
+  id: number;
+  number: number;
+  text: string;
+}
+
 export interface AboutUsPageApiResponse {
   data: {
     id: number;
@@ -1036,6 +1042,187 @@ export interface AboutUsPageApiResponse {
     timeLine?: TimeLineEventItem[];
     CardsSection?: CardsSectionItem[];
     FaqSection?: FaqSectionItem[];
+    reasonSection?: ReasonItem[];
+  };
+}
+
+// History Page API Types
+interface HistoryImageItem {
+  id: number;
+  alt: string;
+  title: string;
+  caption: string;
+  src: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+}
+
+interface HistoryTextImageData {
+  id: number;
+  paragraphs: string;
+  leftImage: HistoryImageItem;
+  rightImage: HistoryImageItem;
+}
+
+export interface HistoryPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    cardImageSection: AboutUsCardImageSection;
+    textImageData: HistoryTextImageData;
+  };
+}
+
+// Health Page API Types (same structure as History Page)
+export interface HealthPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    cardImageSection: AboutUsCardImageSection;
+    textImageData: HistoryTextImageData;
+  };
+}
+
+// Recipe Page API Types
+interface RecipeIngredientItem {
+  id: number;
+  name: string;
+  amount: string;
+  note: string;
+}
+
+interface RecipeTipItem {
+  id: number;
+  tips: string;
+}
+
+export interface RecipePageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    title: string;
+    subtitle: string;
+    recipeText: string;
+    bg: string;
+    cardImageSection: AboutUsCardImageSection;
+    ingredients: RecipeIngredientItem;
+    tips: RecipeTipItem[];
+  };
+}
+
+// Diet Page API Types
+interface DietHighlightItem {
+  id: number;
+  title: string;
+  description: string;
+}
+
+interface DietFeedingScheduleItem {
+  id: number;
+  title: string;
+  description: string;
+}
+
+interface DietTipItem {
+  id: number;
+  tips: string;
+}
+
+export interface DietPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    title: string;
+    subtitle: string;
+    bg: string;
+    cardImageSection: AboutUsCardImageSection;
+    coverImage?: {
+      id: number;
+      documentId: string;
+      url: string;
+    };
+    highlights: DietHighlightItem[];
+    feedingSchedule: DietFeedingScheduleItem[];
+    do: DietTipItem[];
+    dont: DietTipItem[];
+  };
+}
+
+// Vaccine Page API Types
+interface VaccineSectionItem {
+  id: number;
+  title: string;
+  paragraphs: string;
+}
+
+export interface VaccinePageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    bg: string;
+    cardImageSection: AboutUsCardImageSection;
+    vaccaniesSection: VaccineSectionItem[];
+  };
+}
+
+// Spaying and Neutering Page API Types
+interface SpayingParagraphItem {
+  id: number;
+  title: string;
+  paragraphs: string;
+}
+
+export interface SpayingAndNeuteringPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    bg: string;
+    cardImageSection: AboutUsCardImageSection;
+    paragrafhData: SpayingParagraphItem[];
+  };
+}
+
+// Products Recommend Page API Types
+interface ProductBulletItem {
+  id: number;
+  text: string;
+}
+
+interface ProductItem {
+  id: number;
+  imageAlt: string;
+  title: string;
+  imageSrc?: {
+    id: number;
+    documentId: string;
+    url: string;
+  };
+  bullets?: ProductBulletItem[];
+}
+
+interface ProductCategoryItem {
+  id: number;
+  title: string;
+  products: ProductItem[];
+}
+
+interface RecommendedProductsDataItem {
+  id: number;
+  heading: string;
+  categories: ProductCategoryItem[];
+}
+
+export interface ProductsRecommendPageApiResponse {
+  data: {
+    id: number;
+    documentId: string;
+    cardsPerRow: number;
+    cardBg: string;
+    accentDividerColor: string;
+    cardImageSection: AboutUsCardImageSection;
+    recommendedProductsData: RecommendedProductsDataItem;
   };
 }
 

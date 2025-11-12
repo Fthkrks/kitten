@@ -1,4 +1,4 @@
-import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse } from '@/types/api';
+import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse, HistoryPageApiResponse, HealthPageApiResponse, RecipePageApiResponse, DietPageApiResponse, VaccinePageApiResponse, SpayingAndNeuteringPageApiResponse, ProductsRecommendPageApiResponse } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:1337';
 
@@ -1241,10 +1241,18 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
     }
     
     // Transform FAQ sections
-    const transformedData: TransformedFaqSection[] = data.data.FaqSection.map(section => ({
+    const transformedData: TransformedFaqSection[] = data.data.FaqSection.map(section => {
+      // Merge all question objects from the questions array into one object
+      const questionsObj: { [key: string]: string } = {};
+      section.questions.forEach(item => {
+        Object.assign(questionsObj, item.question);
+      });
+      
+      return {
       title: section.title,
-      questions: section.questions.question,
-    }));
+        questions: questionsObj,
+      };
+    });
     
     console.log('🔄 Transformed FAQ data:', JSON.stringify(transformedData, null, 2));
     return transformedData;
@@ -1822,9 +1830,13 @@ export async function fetchAboutUsPageData(): Promise<{
       answer: string;
     }>;
   };
+  reasons: Array<{
+    number: number;
+    text: string;
+  }>;
 }> {
   try {
-    const url = `${API_BASE_URL}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate]=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*`;
+    const url = `${API_BASE_URL}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
     console.log('📡 Fetching about us page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
@@ -1914,8 +1926,14 @@ export async function fetchAboutUsPageData(): Promise<{
       }) || []
     };
 
-    console.log('🔄 Transformed about us page data:', JSON.stringify({ cardImage, aboutData, paragData, timelineEvents, cards, faqData }, null, 2));
-    return { cardImage, aboutData, paragData, timelineEvents, cards, faqData };
+    // Transform Reason Section
+    const reasons = data.data.reasonSection?.map(reason => ({
+      number: reason.number,
+      text: reason.text
+    })) || [];
+
+    console.log('🔄 Transformed about us page data:', JSON.stringify({ cardImage, aboutData, paragData, timelineEvents, cards, faqData, reasons }, null, 2));
+    return { cardImage, aboutData, paragData, timelineEvents, cards, faqData, reasons };
   } catch (error) {
     console.error('❌ Error fetching about us page data:', error);
     console.warn('⚠️ Using fallback data');
@@ -1949,13 +1967,727 @@ export async function fetchAboutUsPageData(): Promise<{
       listItems: []
     };
 
-    const timelineEvents = [];
-    const cards = [];
+    const timelineEvents: Array<{
+      year: string;
+      title: string;
+      desc: string;
+      position: string;
+    }> = [];
+    const cards: Array<{
+      title: string;
+      text: string;
+      img: string;
+      bg?: string;
+      reverse: boolean;
+    }> = [];
     const faqData = {
       title: "FAQ",
-      questions: []
+      questions: [] as Array<{
+        question: string;
+        answer: string;
+      }>
+    };
+    const reasons: Array<{
+      number: number;
+      text: string;
+    }> = [];
+
+    return { cardImage, aboutData, paragData, timelineEvents, cards, faqData, reasons };
+  }
+}
+
+export async function fetchHistoryPageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  textImageData: {
+    leftImage: {
+      src: string;
+      alt: string;
+      title: string;
+      caption: string;
+    };
+    rightImage: {
+      src: string;
+      alt: string;
+      title: string;
+      caption: string;
+    };
+    paragraphs: string[];
+  };
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/history-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
+    console.log('📡 Fetching history page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: HistoryPageApiResponse = await response.json();
+    console.log('📥 Raw history page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "HISTORY",
+      cardTitle: data.data.cardImageSection.cardTitle || "OUR HISTORY",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.15)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.3,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#f9f1f1"
     };
 
-    return { cardImage, aboutData, paragData, timelineEvents, cards, faqData };
+    // Transform TextImage Section
+    // Parse paragraphs from the string format (comma-separated with quotes)
+    const paragraphsArray = data.data.textImageData.paragraphs
+      .split('",')
+      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+
+    const textImageData = {
+      leftImage: {
+        src: getImageUrl(data.data.textImageData.leftImage.src.url),
+        alt: data.data.textImageData.leftImage.alt,
+        title: data.data.textImageData.leftImage.title,
+        caption: data.data.textImageData.leftImage.caption
+      },
+      rightImage: {
+        src: getImageUrl(data.data.textImageData.rightImage.src.url),
+        alt: data.data.textImageData.rightImage.alt,
+        title: data.data.textImageData.rightImage.title,
+        caption: data.data.textImageData.rightImage.caption
+      },
+      paragraphs: paragraphsArray
+    };
+
+    console.log('🔄 Transformed history page data:', JSON.stringify({ cardImage, textImageData }, null, 2));
+    return { cardImage, textImageData };
+  } catch (error) {
+    console.error('❌ Error fetching history page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800",
+      heading: "HISTORY",
+      cardTitle: "OUR HISTORY",
+      cardText: "Our history is a story of love, dedication, and the pursuit of perfection.",
+      overlayColor: "rgba(0,0,0,0.15)",
+      parallaxSpeed: 0.3,
+      backgroundColor: "#f9f1f1"
+    };
+
+    const textImageData = {
+      leftImage: {
+        src: "https://images.unsplash.com/photo-1513366208864-87536b8bd7b4?w=800&h=600&fit=crop",
+        alt: "Persian cat 1903",
+        title: "Persian cat 1903",
+        caption: "THE ARISTOMED MOGGAR"
+      },
+      rightImage: {
+        src: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=800&h=600&fit=crop",
+        alt: "Persian cat 2023",
+        title: "Persian cat 2023",
+        caption: "Tiponi Pluto of De' Ethereal"
+      },
+      paragraphs: []
+    };
+
+    return { cardImage, textImageData };
+  }
+}
+
+export async function fetchHealthPageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  textImageData: {
+    leftImage: {
+      src: string;
+      alt: string;
+      title: string;
+      caption: string;
+    };
+    rightImage: {
+      src: string;
+      alt: string;
+      title: string;
+      caption: string;
+    };
+    paragraphs: string[];
+  };
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
+    console.log('📡 Fetching health page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: HealthPageApiResponse = await response.json();
+    console.log('📥 Raw health page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "HEALTH",
+      cardTitle: data.data.cardImageSection.cardTitle || "BREEDING FOR HEALTH",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.2)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#EAF7E7"
+    };
+
+    // Transform TextImage Section
+    // Parse paragraphs from the string format (comma-separated with quotes)
+    const paragraphsArray = data.data.textImageData.paragraphs
+      .split('",')
+      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+
+    const textImageData = {
+      leftImage: {
+        src: getImageUrl(data.data.textImageData.leftImage.src.url),
+        alt: data.data.textImageData.leftImage.alt,
+        title: data.data.textImageData.leftImage.title,
+        caption: data.data.textImageData.leftImage.caption
+      },
+      rightImage: {
+        src: getImageUrl(data.data.textImageData.rightImage.src.url),
+        alt: data.data.textImageData.rightImage.alt,
+        title: data.data.textImageData.rightImage.title,
+        caption: data.data.textImageData.rightImage.caption
+      },
+      paragraphs: paragraphsArray
+    };
+
+    console.log('🔄 Transformed health page data:', JSON.stringify({ cardImage, textImageData }, null, 2));
+    return { cardImage, textImageData };
+  } catch (error) {
+    console.error('❌ Error fetching health page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=1800",
+      heading: "HEALTH",
+      cardTitle: "BREEDING FOR HEALTH",
+      cardText: "Health is our top priority. We follow strict, veterinarian-advised protocols to safeguard the well-being of our kings, queens, and kittens.",
+      overlayColor: "rgba(0,0,0,0.2)",
+      parallaxSpeed: 0.25,
+      backgroundColor: "#EAF7E7"
+    };
+
+    const textImageData = {
+      leftImage: {
+        src: "https://images.unsplash.com/photo-1555680209-51b6ecfa0db9?w=900&h=700&fit=crop",
+        alt: "Vet checking a cat",
+        title: "Routine Veterinary Care",
+        caption: "Regular wellness exams and preventative screening"
+      },
+      rightImage: {
+        src: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=900&h=700&fit=crop",
+        alt: "Clean cattery environment",
+        title: "Clean, Stress‑Reduced Housing",
+        caption: "Sanitation protocols and calm socialization"
+      },
+      paragraphs: []
+    };
+
+    return { cardImage, textImageData };
+  }
+}
+
+export async function fetchRecipePageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  recipeData: {
+    title: string;
+    subtitle: string;
+    recipeText: string;
+    bg: string;
+    ingredients: Array<{
+      name: string;
+      amount?: string;
+      note?: string;
+    }>;
+    tips: string[];
+  };
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/recipe-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[ingredients][populate]=*&populate[tips][populate]=*`;
+    console.log('📡 Fetching recipe page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: RecipePageApiResponse = await response.json();
+    console.log('📥 Raw recipe page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "RECIPE",
+      cardTitle: data.data.cardImageSection.cardTitle || "NUTRITION & RECIPE",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.25)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#FFF8EE"
+    };
+
+    // Transform Recipe Data
+    // Note: API returns ingredients as a single object, but component expects array
+    const ingredientsArray = data.data.ingredients ? [
+      {
+        name: data.data.ingredients.name,
+        amount: data.data.ingredients.amount,
+        note: data.data.ingredients.note
+      }
+    ] : [];
+
+    const tipsArray = data.data.tips?.map(tip => tip.tips) || [];
+
+    const recipeData = {
+      title: data.data.title || "Starter Kitten Recipe",
+      subtitle: data.data.subtitle || "Balanced, gentle and easy to transition",
+      recipeText: data.data.recipeText || "",
+      bg: data.data.bg || "#FFF8EE",
+      ingredients: ingredientsArray,
+      tips: tipsArray
+    };
+
+    console.log('🔄 Transformed recipe page data:', JSON.stringify({ cardImage, recipeData }, null, 2));
+    return { cardImage, recipeData };
+  } catch (error) {
+    console.error('❌ Error fetching recipe page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1800",
+      heading: "RECIPE",
+      cardTitle: "NUTRITION & RECIPE",
+      cardText: "Our kittens thrive on balanced, meat‑forward nutrition.",
+      overlayColor: "rgba(0,0,0,0.25)",
+      parallaxSpeed: 0.25,
+      backgroundColor: "#FFF8EE"
+    };
+
+    const recipeData = {
+      title: "Starter Kitten Recipe",
+      subtitle: "Balanced, gentle and easy to transition",
+      recipeText: "Warm wet food to room temperature. Finely mince the cooked meat so there are no large pieces.",
+      bg: "#FFF8EE",
+      ingredients: [
+        { name: "High‑quality wet food (poultry or rabbit)", amount: "70%", note: "primary moisture & protein" }
+      ],
+      tips: [
+        "Transition gradually over 5–7 days to avoid tummy upset.",
+        "Provide fresh water at all times; kittens need moisture‑rich diets."
+      ]
+    };
+
+    return { cardImage, recipeData };
+  }
+}
+
+export async function fetchDietPageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  dietData: {
+    title: string;
+    subtitle: string;
+    bg: string;
+    coverImage?: string;
+    highlights: Array<{
+      title: string;
+      description: string;
+    }>;
+    feedingSchedule: Array<{
+      label: string;
+      detail: string;
+    }>;
+    dos: string[];
+    donts: string[];
+  };
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/diet-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[coverImage][fields][0]=url&populate[highlights][populate]=*&populate[feedingSchedule][populate]=*&populate[do][populate]=*&populate[dont][populate]=*`;
+    console.log('📡 Fetching diet page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: DietPageApiResponse = await response.json();
+    console.log('📥 Raw diet page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "DIET",
+      cardTitle: data.data.cardImageSection.cardTitle || "DIET GUIDELINES",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.2)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#F4FCFD"
+    };
+
+    // Transform Diet Data
+    const coverImage = data.data.coverImage?.url 
+      ? getImageUrl(data.data.coverImage.url) 
+      : "https://images.unsplash.com/photo-1604908554039-913b1b90a44b?auto=format&fit=crop&q=80&w=1600";
+
+    const highlights = data.data.highlights?.map(item => ({
+      title: item.title,
+      description: item.description
+    })) || [];
+
+    // Transform feeding schedule - API returns title/description, component expects label/detail
+    const feedingSchedule = data.data.feedingSchedule?.map(item => ({
+      label: item.title,
+      detail: item.description
+    })) || [];
+
+    const dos = data.data.do?.map(item => item.tips) || [];
+    const donts = data.data.dont?.map(item => item.tips) || [];
+
+    const dietData = {
+      title: data.data.title || "Everyday Diet Guidelines",
+      subtitle: data.data.subtitle || "Moisture‑rich, meat‑forward meals for happy Persians",
+      bg: data.data.bg || "#F4FCFD",
+      coverImage,
+      highlights,
+      feedingSchedule,
+      dos,
+      donts
+    };
+
+    console.log('🔄 Transformed diet page data:', JSON.stringify({ cardImage, dietData }, null, 2));
+    return { cardImage, dietData };
+  } catch (error) {
+    console.error('❌ Error fetching diet page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1604908554039-913b1b90a44b?auto=format&fit=crop&q=80&w=1800",
+      heading: "DIET",
+      cardTitle: "DIET GUIDELINES",
+      cardText: "A gentle, moisture‑rich diet keeps Persians thriving.",
+      overlayColor: "rgba(0,0,0,0.2)",
+      parallaxSpeed: 0.25,
+      backgroundColor: "#F4FCFD"
+    };
+
+    const dietData = {
+      title: "Everyday Diet Guidelines",
+      subtitle: "Moisture‑rich, meat‑forward meals for happy Persians",
+      bg: "#F4FCFD",
+      coverImage: "https://images.unsplash.com/photo-1604908554039-913b1b90a44b?auto=format&fit=crop&q=80&w=1600",
+      highlights: [
+        { title: "Hydration First", description: "Wet food or added water/goat milk supports urinary health." },
+        { title: "Meat‑Forward", description: "Protein sources promote muscle growth and vitality." }
+      ],
+      feedingSchedule: [
+        { label: "Kittens (8–16 wks)", detail: "3–4 small wet meals/day; free‑access water" },
+        { label: "Adults", detail: "2–3 wet meals/day; optional measured dry as topper" }
+      ],
+      dos: [
+        "Transition new foods slowly over 5–7 days",
+        "Keep bowls spotless; replace water daily"
+      ],
+      donts: [
+        "Don't free‑feed rich dry foods to young kittens",
+        "Avoid sudden recipe changes"
+      ]
+    };
+
+    return { cardImage, dietData };
+  }
+}
+
+export async function fetchVaccinePageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  vaccineData: {
+    sections: Array<{
+      title: string;
+      paragraphs: string[];
+    }>;
+    bg: string;
+  };
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/vaccine-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[vaccaniesSection][populate]=*`;
+    console.log('📡 Fetching vaccine page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: VaccinePageApiResponse = await response.json();
+    console.log('📥 Raw vaccine page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "VACCINES",
+      cardTitle: data.data.cardImageSection.cardTitle || "CORE & OPTIONAL VACCINES",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.25)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.2,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#EEF5FF"
+    };
+
+    // Transform Vaccine Sections
+    // API returns paragraphs as comma-separated string, component expects array
+    const sections = data.data.vaccaniesSection?.map(section => ({
+      title: section.title,
+      paragraphs: section.paragraphs
+        .split('",')
+        .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+    })) || [];
+
+    const vaccineData = {
+      sections,
+      bg: data.data.bg || "#ffffff"
+    };
+
+    console.log('🔄 Transformed vaccine page data:', JSON.stringify({ cardImage, vaccineData }, null, 2));
+    return { cardImage, vaccineData };
+  } catch (error) {
+    console.error('❌ Error fetching vaccine page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1800",
+      heading: "VACCINES",
+      cardTitle: "CORE & OPTIONAL VACCINES",
+      cardText: "Our kittens follow a veterinarian‑guided protocol.",
+      overlayColor: "rgba(0,0,0,0.25)",
+      parallaxSpeed: 0.2,
+      backgroundColor: "#EEF5FF"
+    };
+
+    const vaccineData = {
+      sections: [
+        {
+          title: "OUR PROTOCOL & RECOMMENDATION",
+          paragraphs: [
+            "Vaccinations can be controversial. Some veterinarians begin a kitten series at 8–16 weeks with yearly boosters, while others prefer a measured approach once immunity is established.",
+            "At our cattery we follow a veterinarian‑guided plan. We recommend the core FVRCP series with boosters, and rabies only where required by law."
+          ]
+        }
+      ],
+      bg: "#ffffff"
+    };
+
+    return { cardImage, vaccineData };
+  }
+}
+
+export async function fetchSpayingAndNeuteringPageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  paragrafhData: {
+    sections: Array<{
+      title: string;
+      paragraphs: string[];
+    }>;
+    bg: string;
+  };
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/spayingand-neutering?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[paragrafhData][populate]=*`;
+    console.log('📡 Fetching spaying and neutering page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: SpayingAndNeuteringPageApiResponse = await response.json();
+    console.log('📥 Raw spaying and neutering page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "SPAYING AND NEUTERING",
+      cardTitle: data.data.cardImageSection.cardTitle || "RESPONSIBLE SURGERY PROTOCOL",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.25)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#F9F1F1"
+    };
+
+    // Transform Paragraph Sections
+    // API returns paragraphs as comma-separated string, component expects array
+    const sections = data.data.paragrafhData?.map(section => ({
+      title: section.title,
+      paragraphs: section.paragraphs
+        .split('",')
+        .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+    })) || [];
+
+    const paragrafhData = {
+      sections,
+      bg: data.data.bg || "#ffffff"
+    };
+
+    console.log('🔄 Transformed spaying and neutering page data:', JSON.stringify({ cardImage, paragrafhData }, null, 2));
+    return { cardImage, paragrafhData };
+  } catch (error) {
+    console.error('❌ Error fetching spaying and neutering page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1555680209-51b6ecfa0db9?auto=format&fit=crop&q=80&w=1800",
+      heading: "SPAYING AND NEUTERING",
+      cardTitle: "RESPONSIBLE SURGERY PROTOCOL",
+      cardText: "We believe in responsible pet ownership and veterinarian-guided care.",
+      overlayColor: "rgba(0,0,0,0.25)",
+      parallaxSpeed: 0.25,
+      backgroundColor: "#F9F1F1"
+    };
+
+    const paragrafhData = {
+      sections: [
+        {
+          title: "THE PROS OF SPAYING & NEUTERING",
+          paragraphs: [
+            "Spaying and neutering before sexual maturity brings notable health and behavior benefits. Females are protected from pyometra and drastically reduced risk of certain cancers; males avoid testicular cancer."
+          ]
+        }
+      ],
+      bg: "#ffffff"
+    };
+
+    return { cardImage, paragrafhData };
+  }
+}
+
+export async function fetchProductsRecommendPageData(): Promise<{
+  cardImage: TransformedCardImageData;
+  productsData: {
+    sections: Array<{
+      heading: string;
+      categories: Array<{
+        title: string;
+        products: Array<{
+          imageSrc: string;
+          imageAlt: string;
+          title: string;
+          bullets?: string[];
+          cta?: {
+            label: string;
+            href: string;
+          };
+        }>;
+      }>;
+    }>;
+    cardsPerRow: 1 | 2 | 3;
+    cardBg: string;
+    accentDividerColor: string;
+  };
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/products-recommed?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][imageSrc][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][bullets][populate]=*`;
+    console.log('📡 Fetching products recommend page data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: ProductsRecommendPageApiResponse = await response.json();
+    console.log('📥 Raw products recommend page API response:', JSON.stringify(data, null, 2));
+
+    // Transform CardImage Section
+    const cardImage: TransformedCardImageData = {
+      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heading: data.data.cardImageSection.heading || "RECOMMENDED PRODUCTS",
+      cardTitle: data.data.cardImageSection.cardTitle || "ESSENTIAL PRODUCTS FOR YOUR KITTEN",
+      cardText: data.data.cardImageSection.cardText || "",
+      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.25)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection.backgroundColor || "#FFF8EE"
+    };
+
+    // Transform Products Data
+    // API returns single recommendedProductsData, component expects sections array
+    const placeholderProductImage = "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=900&h=700";
+
+    const section = {
+      heading: data.data.recommendedProductsData.heading,
+      categories: data.data.recommendedProductsData.categories.map(category => ({
+        title: category.title,
+        products: category.products.map(product => ({
+          imageSrc: product.imageSrc?.url ? getImageUrl(product.imageSrc.url) : placeholderProductImage,
+          imageAlt: product.imageAlt,
+          title: product.title,
+          bullets: product.bullets?.map(bullet => bullet.text).filter(Boolean) || [],
+          cta: { label: "SHOP NOW", href: "#" } // CTA'yı default olarak ekliyorum
+        }))
+      }))
+    };
+
+    const productsData = {
+      sections: [section], // Single section'ı array içinde gönderiyoruz
+      cardsPerRow: (data.data.cardsPerRow as 1 | 2 | 3) || 2,
+      cardBg: data.data.cardBg || "#ffffff",
+      accentDividerColor: data.data.accentDividerColor || "#E5E7EB"
+    };
+
+    console.log('🔄 Transformed products recommend page data:', JSON.stringify({ cardImage, productsData }, null, 2));
+    return { cardImage, productsData };
+  } catch (error) {
+    console.error('❌ Error fetching products recommend page data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    const cardImage: TransformedCardImageData = {
+      heroImage: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1800",
+      heading: "RECOMMENDED PRODUCTS",
+      cardTitle: "ESSENTIAL PRODUCTS FOR YOUR KITTEN",
+      cardText: "We've curated a selection of high-quality products.",
+      overlayColor: "rgba(0,0,0,0.25)",
+      parallaxSpeed: 0.25,
+      backgroundColor: "#FFF8EE"
+    };
+
+    const productsData = {
+      sections: [
+        {
+          heading: "HYDRATION",
+          categories: [
+            {
+              title: "Drinking Fountains",
+              products: [
+                {
+                  imageSrc: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=900&h=700&fit=crop",
+                  imageAlt: "Ceramic drinking fountain",
+                  title: "Drinkwell Seascape Ceramic",
+                  bullets: ["Dishwasher‑safe glazed ceramic", "Dual waterfall with replaceable filters"],
+                  cta: { label: "SHOP NOW", href: "#" }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      cardsPerRow: 2 as 1 | 2 | 3,
+      cardBg: "#ffffff",
+      accentDividerColor: "#E5E7EB"
+    };
+
+    return { cardImage, productsData };
   }
 }

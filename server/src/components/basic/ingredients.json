@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_basic_ingredients",
+  "info": {
+    "displayName": "Ingredients"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "default": "High‑quality wet food (poultry or rabbit)"
+    },
+    "amount": {
+      "type": "string",
+      "default": "70%"
+    },
+    "note": {
+      "type": "string",
+      "default": "primary moisture & protein"
+    }
+  },
+  "config": {}
+}

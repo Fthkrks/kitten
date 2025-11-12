@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_basic_products",
+  "info": {
+    "displayName": "products"
+  },
+  "options": {},
+  "attributes": {
+    "imageSrc": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": "Ceramic drinking fountain"
+    },
+    "title": {
+      "type": "string",
+      "default": "Drinkwell Seascape Ceramic"
+    },
+    "bullets": {
+      "type": "component",
+      "component": "basic.repeat-text",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,60 @@
+{
+  "kind": "singleType",
+  "collectionName": "recipe_pages",
+  "info": {
+    "singularName": "recipe-page",
+    "pluralName": "recipe-pages",
+    "displayName": "RecipePage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Starter Kitten Recipe"
+    },
+    "subtitle": {
+      "type": "string",
+      "default": "Balanced, gentle and easy to transition"
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "recipeText": {
+      "type": "richtext",
+      "default": "Warm wet food to room temperature. Finely mince the cooked meat so there are no large pieces. Mix the ingredients in a clean bowl. Add goat milk or water until you reach a pâté‑like texture. Offer small, frequent meals. Refrigerate portions for up to 24h; discard leftovers left out >30 minutes."
+    },
+    "bg": {
+      "type": "string",
+      "default": "#FFF8EE"
+    },
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "ingredients": {
+      "type": "component",
+      "component": "basic.ingredients",
+      "repeatable": false
+    },
+    "tips": {
+      "type": "component",
+      "component": "basic.tips",
+      "repeatable": true
+    }
+  }
+}

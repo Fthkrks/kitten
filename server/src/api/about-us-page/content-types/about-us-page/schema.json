@@ -40,6 +40,11 @@
       "type": "component",
       "component": "basic.faq-component",
       "repeatable": true
+    },
+    "reasonSection": {
+      "type": "component",
+      "component": "basic.why-selection",
+      "repeatable": true
     }
   }
 }

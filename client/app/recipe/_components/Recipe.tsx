@@ -7,18 +7,13 @@ type Ingredient = {
   note?: string;
 };
 
-type Step = {
-  title: string;
-  description: string;
-};
-
 type RecipeProps = {
   title?: string;
   subtitle?: string;
   coverImage?: string;
   gallery?: string[];
   ingredients?: Ingredient[];
-  steps?: Step[];
+  recipeText?: string;
   tips?: string[];
   bg?: string;
 };
@@ -38,23 +33,7 @@ export default function Recipe({
     { name: "Goat milk or water", amount: "5%", note: "adjust texture" },
     { name: "Fish oil or omega blend", amount: "1 tsp", note: "skin & coat" },
   ],
-  steps = [
-    {
-      title: "Prepare base",
-      description:
-        "Warm wet food to room temperature. Finely mince the cooked meat so there are no large pieces.",
-    },
-    {
-      title: "Combine & hydrate",
-      description:
-        "Mix the ingredients in a clean bowl. Add goat milk or water until you reach a pâté‑like texture.",
-    },
-    {
-      title: "Portion & serve",
-      description:
-        "Offer small, frequent meals. Refrigerate portions for up to 24h; discard leftovers left out >30 minutes.",
-    },
-  ],
+  recipeText = "Warm wet food to room temperature. Finely mince the cooked meat so there are no large pieces. Mix the ingredients in a clean bowl. Add goat milk or water until you reach a pâté‑like texture. Offer small, frequent meals. Refrigerate portions for up to 24h; discard leftovers left out >30 minutes.",
   tips = [
     "Transition gradually over 5–7 days to avoid tummy upset.",
     "Provide fresh water at all times; kittens need moisture‑rich diets.",
@@ -94,22 +73,12 @@ export default function Recipe({
             </ul>
           </div>
 
-          {/* Steps */}
+          {/* Recipe Instructions */}
           <div className="md:col-span-2 bg-white rounded-xl shadow-sm ring-1 ring-gray-200 p-6">
-            <h3 className="font-lora text-lg text-[#5A5A5A] mb-4">Steps</h3>
-            <ol className="space-y-5">
-              {steps.map((s, idx) => (
-                <li key={idx} className="flex gap-4">
-                  <div className="shrink-0 w-8 h-8 rounded-full bg-[#FFE0C2] text-[#5A5A5A] flex items-center justify-center font-semibold">
-                    {idx + 1}
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold text-gray-800">{s.title}</div>
-                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">{s.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <h3 className="font-lora text-lg text-[#5A5A5A] mb-4">Instructions</h3>
+            <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+              {recipeText}
+            </div>
 
             {/* Tips */}
             {tips.length > 0 && (

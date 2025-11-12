@@ -1,0 +1,37 @@
+{
+  "kind": "singleType",
+  "collectionName": "products_recommeds",
+  "info": {
+    "singularName": "products-recommed",
+    "pluralName": "products-recommeds",
+    "displayName": "ProductsRecommed"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "recommendedProductsData": {
+      "type": "component",
+      "component": "basic.recommed-products",
+      "repeatable": false
+    },
+    "cardsPerRow": {
+      "type": "integer",
+      "default": 2
+    },
+    "cardBg": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "accentDividerColor": {
+      "type": "string",
+      "default": "#E5E7EB"
+    }
+  }
+}

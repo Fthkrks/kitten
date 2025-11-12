@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_basic_highlights",
+  "info": {
+    "displayName": "highlights"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Hydration First"
+    },
+    "description": {
+      "type": "string",
+      "default": "Wet food or added water/goat milk supports urinary health."
+    }
+  },
+  "config": {}
+}

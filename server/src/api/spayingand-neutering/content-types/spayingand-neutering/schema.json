@@ -1,0 +1,29 @@
+{
+  "kind": "singleType",
+  "collectionName": "spayingand_neuterings",
+  "info": {
+    "singularName": "spayingand-neutering",
+    "pluralName": "spayingand-neuterings",
+    "displayName": "SpayingandNeutering"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "bg": {
+      "type": "string",
+      "default": "#ffffff"
+    },
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "paragrafhData": {
+      "type": "component",
+      "component": "basic.vaccanies",
+      "repeatable": true
+    }
+  }
+}

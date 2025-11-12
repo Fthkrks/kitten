@@ -67,7 +67,7 @@ export default function FAQPage() {
         <div className="space-y-6">
           {faq.map((section, sectionIndex) => {
             const sectionOpen = isSectionOpen(sectionIndex);
-            const questions = Object.entries(section.questions);
+            const questions = section.questions ? Object.entries(section.questions) : [];
 
             return (
               <div

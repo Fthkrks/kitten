@@ -1,0 +1,25 @@
+{
+  "kind": "singleType",
+  "collectionName": "history_pages",
+  "info": {
+    "singularName": "history-page",
+    "pluralName": "history-pages",
+    "displayName": "HistoryPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cardImageSection": {
+      "type": "component",
+      "component": "basic.card-image",
+      "repeatable": false
+    },
+    "textImageData": {
+      "type": "component",
+      "component": "basic.text-image-data",
+      "repeatable": false
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_basic_recommed_products",
+  "info": {
+    "displayName": "recommedProducts"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "default": "HYDRATION"
+    },
+    "categories": {
+      "type": "component",
+      "component": "basic.categories-products",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

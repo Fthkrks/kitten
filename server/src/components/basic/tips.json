@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_basic_tips",
+  "info": {
+    "displayName": "Tips"
+  },
+  "options": {},
+  "attributes": {
+    "tips": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
