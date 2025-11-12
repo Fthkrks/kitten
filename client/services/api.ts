@@ -2,6 +2,42 @@ import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, Transf
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:1337';
 
+// Validate API_BASE_URL in production
+if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+  if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+    console.error('❌ NEXT_PUBLIC_API_BASE_URL is not set! This will cause connection errors.');
+    console.error('⚠️ Please set NEXT_PUBLIC_API_BASE_URL in Vercel environment variables.');
+  } else if (API_BASE_URL.includes('127.0.0.1') || API_BASE_URL.includes('localhost')) {
+    console.error('❌ NEXT_PUBLIC_API_BASE_URL is set to localhost! This will not work in production.');
+    console.error('⚠️ Current value:', API_BASE_URL);
+    console.error('⚠️ Please set NEXT_PUBLIC_API_BASE_URL to your production Strapi API URL.');
+  }
+}
+
+// Timeout for fetch requests (10 seconds)
+const FETCH_TIMEOUT = 10000;
+
+// Helper function to create a fetch with timeout
+async function fetchWithTimeout(url: string, options: RequestInit = {}): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+  
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error(`Request timeout: ${url}`);
+    }
+    throw error;
+  }
+}
+
 // Helper function to get fetch options with draft mode support
 async function getFetchOptions(): Promise<{ cache: RequestCache; headers?: HeadersInit }> {
   // Check if we're in draft mode (Next.js)
@@ -29,9 +65,10 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
   const url = `${API_BASE_URL}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
   
   console.log('🔍 Fetching hero data from:', url);
+  console.log('🌐 API_BASE_URL:', API_BASE_URL);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
@@ -51,6 +88,7 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching hero data:', error);
+    console.error('❌ Error details:', error instanceof Error ? error.message : String(error));
     throw error;
   }
 }
@@ -122,16 +160,19 @@ export async function fetchKittenData(): Promise<TransformedKittenData> {
   const url = `${API_BASE_URL}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
   
   console.log('🔍 Fetching kitten data from:', url);
+  console.log('🌐 API_BASE_URL:', API_BASE_URL);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
     console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text().catch(() => 'Unable to read error response');
+      console.error('❌ API Error Response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText.substring(0, 200)}`);
     }
 
     const data: HomepageApiResponse = await response.json();
@@ -258,14 +299,16 @@ export async function fetchAdultsData(): Promise<TransformedAdultsData> {
   console.log('🔍 Fetching adults data from:', url);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
     console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text().catch(() => 'Unable to read error response');
+      console.error('❌ API Error Response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText.substring(0, 200)}`);
     }
 
     const data: HomepageApiResponse = await response.json();
@@ -334,14 +377,16 @@ export async function fetchCommentsData(): Promise<TransformedCommentsData> {
   console.log('🔍 Fetching comments data from:', url);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
     console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text().catch(() => 'Unable to read error response');
+      console.error('❌ API Error Response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText.substring(0, 200)}`);
     }
 
     const data: HomepageApiResponse = await response.json();
@@ -411,14 +456,16 @@ export async function fetchSpecialData(): Promise<TransformedSpecialData> {
   console.log('🔍 Fetching special data from:', url);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
     console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text().catch(() => 'Unable to read error response');
+      console.error('❌ API Error Response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText.substring(0, 200)}`);
     }
 
     const data: HomepageApiResponse = await response.json();
@@ -490,14 +537,16 @@ export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
   console.log('🔍 Fetching galeries data from:', url);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
     console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unable to read error response');
       console.warn(`⚠️ GaleriesSection API returned status: ${response.status}`);
+      console.warn('⚠️ Error details:', errorText.substring(0, 200));
       console.warn('⚠️ Using fallback data from galeriesData.ts');
       console.info('💡 To fix: Add GaleriesSection to your homepage content type in Strapi');
       const { galeriesData } = require('@/data/galeriesData');
@@ -580,14 +629,16 @@ export async function fetchTestimonialData(): Promise<TransformedTestimonialData
   console.log('🔍 Fetching testimonial data from:', url);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
     console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unable to read error response');
       console.warn(`⚠️ TestiomonialSection API returned status: ${response.status}`);
+      console.warn('⚠️ Error details:', errorText.substring(0, 200));
       console.warn('⚠️ Using fallback data from testimonialData.ts');
       console.info('💡 To fix: Add TestiomonialSection to your homepage content type in Strapi');
       const { testimonialData } = require('@/data/testimonialData');
@@ -681,14 +732,16 @@ export async function fetchMediaData(): Promise<TransformedMediaData> {
   console.log('🔍 Fetching media data from:', url);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
     console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unable to read error response');
       console.warn(`⚠️ Media links API returned status: ${response.status}`);
+      console.warn('⚠️ Error details:', errorText.substring(0, 200));
       console.warn('⚠️ Using fallback data from mediaData.ts');
       console.info('💡 To fix: Add media-links content type in Strapi');
       const { mediaData } = require('@/data/mediaData');
@@ -761,14 +814,16 @@ export async function fetchVideoData(): Promise<TransformedVideoData> {
   console.log('🔍 Fetching video data from:', url);
   
   try {
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
 
     console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unable to read error response');
       console.warn(`⚠️ Marketing links API returned status: ${response.status}`);
+      console.warn('⚠️ Error details:', errorText.substring(0, 200));
       console.warn('⚠️ Using fallback data from videoData.ts');
       console.info('💡 To fix: Add marketing-links content type in Strapi');
       const { videoData } = require('@/data/videoData');
