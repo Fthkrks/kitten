@@ -1,4 +1,6 @@
-export const specialData = {
+import type { TransformedSpecialData } from '@/types/api';
+
+export const specialData: TransformedSpecialData = {
   title: "WHAT MAKES US SPECIAL",
   features: [
     {
@@ -11,7 +13,7 @@ export const specialData = {
         src: "https://images.unsplash.com/photo-1555685812-4b943f1cb0eb?w=1600&h=1000&fit=crop",
         alt: "Breeding for health"
       },
-      imagePosition: "right" 
+      imagePosition: "right"
     },
     {
       id: "disposition",
@@ -35,7 +37,7 @@ export const specialData = {
         src: "https://images.unsplash.com/photo-1511044568932-338cba0ad803?w=1600&h=1000&fit=crop",
         alt: "Feeding for longevity"
       },
-      imagePosition: "right" 
+      imagePosition: "right"
     }
   ]
 };
