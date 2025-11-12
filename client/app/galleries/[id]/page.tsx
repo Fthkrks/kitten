@@ -27,6 +27,9 @@ async function getGalleryItemById(id: string): Promise<GalleryItem | null> {
     
     if (apiGallery) {
       // Transform API gallery to match GalleryItem interface
+      // Convert images from object array to string array for component compatibility
+      const imageStrings = apiGallery.images.map(img => img.src);
+      
       return {
         id: apiGallery.id,
         label: apiGallery.label,
@@ -35,10 +38,7 @@ async function getGalleryItemById(id: string): Promise<GalleryItem | null> {
         category: apiGallery.category,
         description: apiGallery.description,
         fullContent: apiGallery.fullContent,
-        images: apiGallery.images.map(img => ({
-          src: img.src,
-          alt: img.alt
-        }))
+        images: imageStrings
       };
     }
   } catch (error) {
@@ -56,6 +56,7 @@ async function getRelatedItems(currentItem: GalleryItem, limit = 3): Promise<Gal
     const { galleries } = await fetchGalleriesPageData();
     
     // Transform API galleries to match GalleryItem interface
+    // Convert images from object array to string array for component compatibility
     const allItems: GalleryItem[] = galleries.map(gallery => ({
       id: gallery.id,
       label: gallery.label,
@@ -64,10 +65,7 @@ async function getRelatedItems(currentItem: GalleryItem, limit = 3): Promise<Gal
       category: gallery.category,
       description: gallery.description,
       fullContent: gallery.fullContent,
-      images: gallery.images.map(img => ({
-        src: img.src,
-        alt: img.alt
-      }))
+      images: gallery.images.map(img => img.src)
     }));
 
     // First, try to find items with matching categories

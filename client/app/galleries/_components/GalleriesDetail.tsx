@@ -34,7 +34,16 @@ export default function GalleriesDetail({ item, relatedItems = [] }: GalleriesDe
 
   // Generate gallery images with same size
   const generateGalleryImages = (): GalleryImage[] => {
-    const allImages = images.length > 0 ? [image, ...images] : [image];
+    // Normalize images array - convert object array to string array if needed
+    const normalizedImages: string[] = images.map(img => {
+      if (typeof img === 'string') {
+        return img;
+      } else {
+        return img.src;
+      }
+    });
+    
+    const allImages = normalizedImages.length > 0 ? [image, ...normalizedImages] : [image];
     
     // Create more images for demo (you can replace with actual images)
     const galleryImages: GalleryImage[] = Array.from({ length: Math.max(allImages.length * 3, 20) }, (_, idx) => {

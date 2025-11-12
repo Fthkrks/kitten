@@ -7,7 +7,10 @@ export interface GalleryItem {
   aspectRatio?: string;
   description?: string;
   fullContent?: string;
-  images?: string[];
+  images?: Array<{
+    src: string;
+    alt: string;
+  }> | string[];
   category?: string;
 }
 

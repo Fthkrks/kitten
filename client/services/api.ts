@@ -1625,7 +1625,7 @@ export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardI
               .map(cat => cat.trim().toUpperCase())
               .filter(cat => cat.length > 0);
           } else if (Array.isArray(blog.categories)) {
-            categoriesArray = blog.categories.map(cat => String(cat).trim().toUpperCase());
+            categoriesArray = (blog.categories as unknown[]).map((cat: unknown) => String(cat).trim().toUpperCase());
           }
         }
         
@@ -1865,7 +1865,8 @@ export async function fetchAboutUsPageData(): Promise<{
     let url = `${API_BASE_URL}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
     
     // Add status=draft if in draft mode
-    if (fetchOptions.headers?.['strapi-encode-source-maps'] === 'true') {
+    const headers = fetchOptions.headers as Record<string, string> | undefined;
+    if (headers?.['strapi-encode-source-maps'] === 'true') {
       url += '&status=draft';
     }
     
