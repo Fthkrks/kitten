@@ -1,6 +1,29 @@
-import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse, HistoryPageApiResponse, HealthPageApiResponse, RecipePageApiResponse, DietPageApiResponse, VaccinePageApiResponse, SpayingAndNeuteringPageApiResponse, ProductsRecommendPageApiResponse } from '@/types/api';
+import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse, HistoryPageApiResponse, HealthPageApiResponse, RecipePageApiResponse, DietPageApiResponse, VaccinePageApiResponse, SpayingAndNeuteringPageApiResponse, ProductsRecommendPageApiResponse, HeroesApiResponse } from '@/types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:1337';
+
+// Helper function to get fetch options with draft mode support
+async function getFetchOptions(): Promise<{ cache: RequestCache; headers?: HeadersInit }> {
+  // Check if we're in draft mode (Next.js)
+  try {
+    const { draftMode } = await import('next/headers');
+    const { isEnabled } = await draftMode();
+    
+    if (isEnabled) {
+      return {
+        cache: 'no-store',
+        headers: {
+          'strapi-encode-source-maps': 'true',
+        },
+      };
+    }
+  } catch (error) {
+    // draftMode is not available (e.g., in client components)
+    // Fall back to normal fetch
+  }
+  
+  return { cache: 'no-store' };
+}
 
 export async function fetchHeroData(): Promise<TransformedHeroData> {
   const url = `${API_BASE_URL}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
@@ -1836,10 +1859,19 @@ export async function fetchAboutUsPageData(): Promise<{
   }>;
 }> {
   try {
-    const url = `${API_BASE_URL}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
+    const fetchOptions = await getFetchOptions();
+    
+    // Check if draft mode is enabled to add status parameter
+    let url = `${API_BASE_URL}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
+    
+    // Add status=draft if in draft mode
+    if (fetchOptions.headers?.['strapi-encode-source-maps'] === 'true') {
+      url += '&status=draft';
+    }
+    
     console.log('📡 Fetching about us page data from:', url);
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetch(url, fetchOptions);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -2689,5 +2721,44 @@ export async function fetchProductsRecommendPageData(): Promise<{
     };
 
     return { cardImage, productsData };
+  }
+}
+
+export async function fetchHeroesData(): Promise<{
+  siteTitle: string;
+  phoneNumber: string;
+}> {
+  try {
+    const url = `${API_BASE_URL}/api/heroes?populate=*`;
+    console.log('📡 Fetching heroes data from:', url);
+
+    const response = await fetch(url, { cache: 'no-store' });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data: HeroesApiResponse = await response.json();
+    console.log('📥 Raw heroes API response:', JSON.stringify(data, null, 2));
+
+    // Get the first hero item (usually there's only one)
+    const hero = data.data?.[0];
+
+    const result = {
+      siteTitle: hero?.title || "Ethereal Persians",
+      phoneNumber: hero?.phone || "(941) 822-4016"
+    };
+
+    console.log('🔄 Transformed heroes data:', JSON.stringify(result, null, 2));
+    return result;
+  } catch (error) {
+    console.error('❌ Error fetching heroes data:', error);
+    console.warn('⚠️ Using fallback data');
+    
+    // Fallback data
+    return {
+      siteTitle: "Ethereal Persians",
+      phoneNumber: "(941) 822-4016"
+    };
   }
 }

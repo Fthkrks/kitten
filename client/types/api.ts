@@ -1226,6 +1226,29 @@ export interface ProductsRecommendPageApiResponse {
   };
 }
 
+// Heroes API Types (for Header)
+interface HeroItem {
+  id: number;
+  documentId: string;
+  title: string;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+export interface HeroesApiResponse {
+  data: HeroItem[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
 // Transformed data for CardImage component
 export interface TransformedCardImageData {
   heroImage: string;

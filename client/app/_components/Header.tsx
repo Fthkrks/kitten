@@ -1,16 +1,41 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { fetchHeroesData } from "@/services/api";
 
-export default function Header() {
+type HeaderProps = {
+  siteTitle?: string;
+  phoneNumber?: string;
+};
+
+export default function Header({
+  siteTitle: propSiteTitle,
+  phoneNumber: propPhoneNumber,
+}: HeaderProps) {
   const [isKittensDropdownOpen, setIsKittensDropdownOpen] = useState(false);
   const [isAdultsDropdownOpen, setIsAdultsDropdownOpen] = useState(false);
   const [isInformationDropdownOpen, setIsInformationDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [siteTitle, setSiteTitle] = useState(propSiteTitle || "Ethereal Persians");
+  const [phoneNumber, setPhoneNumber] = useState(propPhoneNumber || "(941) 822-4016");
   
   const kittensTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const adultsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const informationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const loadHeroesData = async () => {
+      try {
+        const data = await fetchHeroesData();
+        setSiteTitle(data.siteTitle);
+        setPhoneNumber(data.phoneNumber);
+      } catch (error) {
+        console.error("Failed to load heroes data:", error);
+        // Props'tan gelen değerleri kullanmaya devam et
+      }
+    };
+    loadHeroesData();
+  }, []);
 
   const handleKittensMouseEnter = () => {
     if (kittensTimeoutRef.current) clearTimeout(kittensTimeoutRef.current);
@@ -61,7 +86,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Site Title */}
           <h1 className="text-2xl md:text-4xl font-serif text-rose-400 tracking-wide">
-            Ethereal Persians
+            {siteTitle}
           </h1>
           
           {/* Desktop: Phone Number, Mobile: Burger Menu */}
@@ -83,7 +108,7 @@ export default function Header() {
                 />
               </svg>
               <span className="text-3xl font-lora text-cyan-700">
-                (941) 822-4016
+                {phoneNumber}
               </span>
             </div>
             

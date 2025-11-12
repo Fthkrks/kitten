@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "heroes",
+  "info": {
+    "singularName": "hero",
+    "pluralName": "heroes",
+    "displayName": "Header"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Ethereal Persians"
+    },
+    "phone": {
+      "type": "string",
+      "default": "(941) 822-4016"
+    }
+  }
+}
