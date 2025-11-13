@@ -65,13 +65,10 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
   const url = `${API_BASE_URL}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
   
 
-  
   try {
     const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
-
-    console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -156,13 +153,10 @@ const getImageUrl = (url: string | undefined | null): string => {
 export async function fetchKittenData(): Promise<TransformedKittenData> {
   const url = `${API_BASE_URL}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
 
-  
   try {
     const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
-
-    console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
@@ -295,8 +289,6 @@ export async function fetchAdultsData(): Promise<TransformedAdultsData> {
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
       console.error('❌ API Error Response:', errorText);
@@ -304,12 +296,10 @@ export async function fetchAdultsData(): Promise<TransformedAdultsData> {
     }
 
     const data: HomepageApiResponse = await response.json();
-    console.log('📦 Raw Adults API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform API data to match Adults component props
     const transformedData = transformAdultsData(data);
-    console.log('🔄 Transformed adults data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching adults data:', error);
@@ -372,8 +362,6 @@ export async function fetchCommentsData(): Promise<TransformedCommentsData> {
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
       console.error('❌ API Error Response:', errorText);
@@ -384,8 +372,7 @@ export async function fetchCommentsData(): Promise<TransformedCommentsData> {
     
     // Transform API data to match Comments component props
     const transformedData = transformCommentsData(data);
-    console.log('🔄 Transformed comments data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching comments data:', error);
@@ -449,8 +436,6 @@ export async function fetchSpecialData(): Promise<TransformedSpecialData> {
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
       console.error('❌ API Error Response:', errorText);
@@ -458,12 +443,10 @@ export async function fetchSpecialData(): Promise<TransformedSpecialData> {
     }
 
     const data: HomepageApiResponse = await response.json();
-    console.log('📦 Raw Special API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform API data to match Special component props
     const transformedData = transformSpecialData(data);
-    console.log('🔄 Transformed special data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching special data:', error);
@@ -522,15 +505,11 @@ function transformSpecialData(apiData: HomepageApiResponse): TransformedSpecialD
 
 export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
   const url = `${API_BASE_URL}/api/homepage?populate[GaleriesSection][populate][images][populate]=src`;
-  
-  console.log('🔍 Fetching galeries data from:', url);
-  
+
   try {
     const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
-
-    console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
@@ -543,12 +522,10 @@ export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
     }
 
     const data: HomepageApiResponse = await response.json();
-    console.log('📦 Raw Galeries API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform API data to match Galeries component props
     const transformedData = transformGaleriesData(data);
-    console.log('🔄 Transformed galeries data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching galeries data:', error);
@@ -614,15 +591,11 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
 
 export async function fetchTestimonialData(): Promise<TransformedTestimonialData> {
   const url = `${API_BASE_URL}/api/homepage?populate[TestiomonialSection][populate][testimonials][populate][image][fields][0]=url&populate[TestiomonialSection][populate][testimonials][populate][avatarImage][populate][src][fields][0]=url`;
-  
-  console.log('🔍 Fetching testimonial data from:', url);
-  
+
   try {
     const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
-
-    console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
@@ -635,12 +608,10 @@ export async function fetchTestimonialData(): Promise<TransformedTestimonialData
     }
 
     const data: HomepageApiResponse = await response.json();
-    console.log('📦 Raw Testimonial API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform API data to match Testimonial component props
     const transformedData = transformTestimonialData(data);
-    console.log('🔄 Transformed testimonial data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching testimonial data:', error);
@@ -717,15 +688,11 @@ function transformTestimonialData(apiData: HomepageApiResponse): TransformedTest
 
 export async function fetchMediaData(): Promise<TransformedMediaData> {
   const url = `${API_BASE_URL}/api/media-links?populate[SocialLinks][populate]=icon`;
-  
-  console.log('🔍 Fetching media data from:', url);
-  
+
   try {
     const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
-
-    console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
@@ -738,12 +705,10 @@ export async function fetchMediaData(): Promise<TransformedMediaData> {
     }
 
     const data: MediaLinksApiResponse = await response.json();
-    console.log('📦 Raw Media API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform API data to match Media component props
     const transformedData = transformMediaData(data);
-    console.log('🔄 Transformed media data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching media data:', error);
@@ -799,15 +764,11 @@ function transformMediaData(apiData: MediaLinksApiResponse): TransformedMediaDat
 
 export async function fetchVideoData(): Promise<TransformedVideoData> {
   const url = `${API_BASE_URL}/api/marketing-links?populate[items][populate]=src`;
-  
-  console.log('🔍 Fetching video data from:', url);
-  
+
   try {
     const response = await fetchWithTimeout(url, {
       cache: 'no-store', // Always fetch fresh data
     });
-
-    console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
@@ -820,12 +781,10 @@ export async function fetchVideoData(): Promise<TransformedVideoData> {
     }
 
     const data: MarketingLinksApiResponse = await response.json();
-    console.log('📦 Raw Video API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform API data to match Video component props
     const transformedData = transformVideoData(data);
-    console.log('🔄 Transformed video data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching video data:', error);
@@ -892,9 +851,7 @@ function transformVideoData(apiData: MarketingLinksApiResponse): TransformedVide
 
 export async function fetchAvailableKittenCardImage(): Promise<TransformedCardImageData> {
   const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
-  
-  console.log('🔍 Fetching available kitten card image from:', url);
-  
+
   // Default fallback data
   const fallbackData: TransformedCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
@@ -911,8 +868,6 @@ export async function fetchAvailableKittenCardImage(): Promise<TransformedCardIm
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       console.warn(`⚠️ Available kitten page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
@@ -921,12 +876,10 @@ export async function fetchAvailableKittenCardImage(): Promise<TransformedCardIm
     }
 
     const data: AvailableKittenPageApiResponse = await response.json();
-    console.log('📦 Raw Available Kitten Card Image API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform API data
     const transformedData = transformAvailableKittenCardImage(data, fallbackData);
-    console.log('🔄 Transformed card image data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching available kitten card image:', error);
@@ -974,15 +927,11 @@ function transformAvailableKittenCardImage(
 
 export async function fetchAvailableKittenPetCards(): Promise<TransformedPetCardData[]> {
   const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
-  
-  console.log('🔍 Fetching available kitten pet cards from:', url);
-  
+
   try {
     const response = await fetch(url, {
       cache: 'no-store', // Always fetch fresh data
     });
-
-    console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
       console.warn(`⚠️ Available kitten pet cards API returned status: ${response.status}`);
@@ -992,12 +941,10 @@ export async function fetchAvailableKittenPetCards(): Promise<TransformedPetCard
     }
 
     const data: AvailableKittenPageApiResponse = await response.json();
-    console.log('📦 Raw Pet Cards API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform API data
     const transformedData = transformAvailableKittenPetCards(data);
-    console.log('🔄 Transformed pet cards data:', JSON.stringify(transformedData, null, 2));
-    
+
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching available kitten pet cards:', error);
@@ -1055,15 +1002,11 @@ function transformAvailableKittenPetCards(apiData: AvailableKittenPageApiRespons
 
 export async function fetchPetById(id: string): Promise<TransformedPetCardData | null> {
   const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
-  
-  console.log(`🔍 Fetching pet with ID ${id} from:`, url);
-  
+
   try {
     const response = await fetch(url, {
       cache: 'no-store', // Always fetch fresh data
     });
-
-    console.log('📡 Response status:', response.status);
 
     if (!response.ok) {
       console.warn(`⚠️ Pet API returned status: ${response.status}`);
@@ -1071,8 +1014,7 @@ export async function fetchPetById(id: string): Promise<TransformedPetCardData |
     }
 
     const data: AvailableKittenPageApiResponse = await response.json();
-    console.log('📦 Raw Pet API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform all pets and find the one with matching ID
     const allPets = transformAvailableKittenPetCards(data);
     const pet = allPets.find(p => p.id === id);
@@ -1082,7 +1024,6 @@ export async function fetchPetById(id: string): Promise<TransformedPetCardData |
       return null;
     }
     
-    console.log('🔄 Found pet:', JSON.stringify(pet, null, 2));
     return pet;
   } catch (error) {
     console.error('❌ Error fetching pet by ID:', error);
@@ -1092,9 +1033,7 @@ export async function fetchPetById(id: string): Promise<TransformedPetCardData |
 
 export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaibleData> {
   const url = `${API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
-  
-  console.log('🔍 Fetching adults available data from:', url);
-  
+
   // Default fallback data
   const fallbackData: TransformedAdultsAvaibleData = {
     title: "RETIRING ADULTS",
@@ -1107,8 +1046,6 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       console.warn(`⚠️ Adults available API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
@@ -1116,8 +1053,7 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
     }
 
     const data: AvailableKittenPageApiResponse = await response.json();
-    console.log('📦 Raw Adults Available API data:', JSON.stringify(data, null, 2));
-    
+
     // Check if AdultsAvaible exists
     if (!data.data.AdultsAvaible) {
       console.warn('⚠️ AdultsAvaible not found in API, using fallback data');
@@ -1130,7 +1066,6 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
       buttonText: data.data.AdultsAvaible.buttonText
     };
     
-    console.log('🔄 Transformed adults available data:', JSON.stringify(transformedData, null, 2));
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching adults available data:', error);
@@ -1141,9 +1076,7 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
 
 export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTermsCardImageData; termsContent: TransformedTermsData }> {
   const url = `${API_BASE_URL}/api/terms-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[TermsSection][populate][sections][populate]=*`;
-  
-  console.log('🔍 Fetching terms page data from:', url);
-  
+
   // Default fallback data
   const fallbackCardImage: TransformedTermsCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=1800",
@@ -1202,8 +1135,6 @@ export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTerm
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       console.warn(`⚠️ Terms page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
@@ -1211,8 +1142,7 @@ export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTerm
     }
 
     const data: TermsPageApiResponse = await response.json();
-    console.log('📦 Raw Terms Page API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform cardImageSection
     let cardImage = fallbackCardImage;
     if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
@@ -1243,7 +1173,6 @@ export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTerm
       console.warn('⚠️ TermsSection not found in API, using fallback terms content');
     }
     
-    console.log('🔄 Transformed terms page data:', JSON.stringify({ cardImage, termsContent }, null, 2));
     return { cardImage, termsContent };
   } catch (error) {
     console.error('❌ Error fetching terms page data:', error);
@@ -1254,9 +1183,7 @@ export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTerm
 
 export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
   const url = `${API_BASE_URL}/api/faq-page?populate[FaqSection][populate]=*`;
-  
-  console.log('🔍 Fetching FAQ data from:', url);
-  
+
   // Default fallback data
   const fallbackData: TransformedFaqSection[] = [
     {
@@ -1290,8 +1217,6 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       console.warn(`⚠️ FAQ API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
@@ -1299,8 +1224,7 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
     }
 
     const data: FaqPageApiResponse = await response.json();
-    console.log('📦 Raw FAQ API data:', JSON.stringify(data, null, 2));
-    
+
     // Check if FaqSection exists
     if (!data.data.FaqSection || data.data.FaqSection.length === 0) {
       console.warn('⚠️ FaqSection not found in API, using fallback data');
@@ -1321,7 +1245,6 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
       };
     });
     
-    console.log('🔄 Transformed FAQ data:', JSON.stringify(transformedData, null, 2));
     return transformedData;
   } catch (error) {
     console.error('❌ Error fetching FAQ data:', error);
@@ -1332,9 +1255,7 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
 
 export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCardImageData; kings: TransformedKingsCardData[] }> {
   const url = `${API_BASE_URL}/api/kings-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[KingsSection][populate][image][fields][0]=url`;
-  
-  console.log('🔍 Fetching kings page data from:', url);
-  
+
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
@@ -1382,8 +1303,6 @@ export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCard
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       console.warn(`⚠️ Kings page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
@@ -1391,8 +1310,7 @@ export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCard
     }
 
     const data: KingsPageApiResponse = await response.json();
-    console.log('📦 Raw Kings Page API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform cardImageSection
     let cardImage = fallbackCardImage;
     if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
@@ -1442,7 +1360,6 @@ export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCard
       console.warn('⚠️ KingsSection not found in API, using fallback kings');
     }
     
-    console.log('🔄 Transformed kings page data:', JSON.stringify({ cardImage, kings }, null, 2));
     return { cardImage, kings };
   } catch (error) {
     console.error('❌ Error fetching kings page data:', error);
@@ -1453,9 +1370,7 @@ export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCard
 
 export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCardImageData; queens: TransformedQueensCardData[] }> {
   const url = `${API_BASE_URL}/api/queens-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[QueensSection][populate][image][fields][0]=url`;
-  
-  console.log('🔍 Fetching queens page data from:', url);
-  
+
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
@@ -1489,8 +1404,6 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       console.warn(`⚠️ Queens page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
@@ -1498,8 +1411,7 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
     }
 
     const data: QueensPageApiResponse = await response.json();
-    console.log('📦 Raw Queens Page API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform cardImageSection
     let cardImage = fallbackCardImage;
     if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
@@ -1555,7 +1467,6 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
       console.warn('⚠️ QueensSection not found in API, using fallback queens');
     }
     
-    console.log('🔄 Transformed queens page data:', JSON.stringify({ cardImage, queens }, null, 2));
     return { cardImage, queens };
   } catch (error) {
     console.error('❌ Error fetching queens page data:', error);
@@ -1566,9 +1477,7 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
 
 export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardImageData; whyBlogData: TransformedWhyBlogData; blogs: TransformedBlogPost[] }> {
   const url = `${API_BASE_URL}/api/blog-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[BlogSection][populate][image][fields][0]=url&populate[whyBlogData][populate][imageTop][fields][0]=url&populate[whyBlogData][populate][aboutItems][populate]=*&populate[whyBlogData][populate][imageBottom][fields][0]=url`;
-  
-  console.log('🔍 Fetching blog page data from:', url);
-  
+
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800",
@@ -1605,8 +1514,6 @@ export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardI
       cache: 'no-store', // Always fetch fresh data
     });
 
-    console.log('📡 Response status:', response.status);
-
     if (!response.ok) {
       console.warn(`⚠️ Blog page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
@@ -1614,8 +1521,7 @@ export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardI
     }
 
     const data: BlogPageApiResponse = await response.json();
-    console.log('📦 Raw Blog Page API data:', JSON.stringify(data, null, 2));
-    
+
     // Transform cardImageSection
     let cardImage = fallbackCardImage;
     if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
@@ -1673,8 +1579,6 @@ export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardI
           }
         }
         
-        console.log(`🏷️ Blog ${blog.id} categories:`, blog.categories, '→', categoriesArray);
-        
         return {
           id: blog.id.toString(),
           categories: categoriesArray,
@@ -1691,7 +1595,6 @@ export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardI
       console.warn('⚠️ BlogSection not found in API, using fallback blogs');
     }
     
-    console.log('🔄 Transformed blog page data:', JSON.stringify({ cardImage, whyBlogData, blogs }, null, 2));
     return { cardImage, whyBlogData, blogs };
   } catch (error) {
     console.error('❌ Error fetching blog page data:', error);
@@ -1711,7 +1614,6 @@ export async function fetchTestimonialPageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
-    console.log('📡 Fetching testimonial page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -1720,7 +1622,6 @@ export async function fetchTestimonialPageData(): Promise<{
     }
 
     const data: TestimonialPageApiResponse = await response.json();
-    console.log('📥 Raw testimonial page API response:', JSON.stringify(data, null, 2));
 
     // Transform Hero Section
     const heroData: TransformedTestimonialHeroData = {
@@ -1759,7 +1660,6 @@ export async function fetchTestimonialPageData(): Promise<{
       });
     }
 
-    console.log('🔄 Transformed testimonial page data:', JSON.stringify({ heroData, reviewSections }, null, 2));
     return { heroData, reviewSections };
   } catch (error) {
     console.error('❌ Error fetching testimonial page data:', error);
@@ -1785,7 +1685,6 @@ export async function fetchGalleriesPageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate]=*`;
-    console.log('📡 Fetching galleries page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -1794,7 +1693,6 @@ export async function fetchGalleriesPageData(): Promise<{
     }
 
     const data: GalleriesPageApiResponse = await response.json();
-    console.log('📥 Raw galleries page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -1838,7 +1736,6 @@ export async function fetchGalleriesPageData(): Promise<{
       };
     });
 
-    console.log('🔄 Transformed galleries page data:', JSON.stringify({ cardImage, galleries }, null, 2));
     return { cardImage, galleries };
   } catch (error) {
     console.error('❌ Error fetching galleries page data:', error);
@@ -1913,8 +1810,6 @@ export async function fetchAboutUsPageData(): Promise<{
     if (headers?.['strapi-encode-source-maps'] === 'true') {
       url += '&status=draft';
     }
-    
-    console.log('📡 Fetching about us page data from:', url);
 
     const response = await fetch(url, fetchOptions);
     
@@ -1923,7 +1818,6 @@ export async function fetchAboutUsPageData(): Promise<{
     }
 
     const data: AboutUsPageApiResponse = await response.json();
-    console.log('📥 Raw about us page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -2009,7 +1903,6 @@ export async function fetchAboutUsPageData(): Promise<{
       text: reason.text
     })) || [];
 
-    console.log('🔄 Transformed about us page data:', JSON.stringify({ cardImage, aboutData, paragData, timelineEvents, cards, faqData, reasons }, null, 2));
     return { cardImage, aboutData, paragData, timelineEvents, cards, faqData, reasons };
   } catch (error) {
     console.error('❌ Error fetching about us page data:', error);
@@ -2093,7 +1986,6 @@ export async function fetchHistoryPageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/history-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
-    console.log('📡 Fetching history page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2102,7 +1994,6 @@ export async function fetchHistoryPageData(): Promise<{
     }
 
     const data: HistoryPageApiResponse = await response.json();
-    console.log('📥 Raw history page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -2137,7 +2028,6 @@ export async function fetchHistoryPageData(): Promise<{
       paragraphs: paragraphsArray
     };
 
-    console.log('🔄 Transformed history page data:', JSON.stringify({ cardImage, textImageData }, null, 2));
     return { cardImage, textImageData };
   } catch (error) {
     console.error('❌ Error fetching history page data:', error);
@@ -2194,7 +2084,6 @@ export async function fetchHealthPageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
-    console.log('📡 Fetching health page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2203,7 +2092,6 @@ export async function fetchHealthPageData(): Promise<{
     }
 
     const data: HealthPageApiResponse = await response.json();
-    console.log('📥 Raw health page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -2238,7 +2126,6 @@ export async function fetchHealthPageData(): Promise<{
       paragraphs: paragraphsArray
     };
 
-    console.log('🔄 Transformed health page data:', JSON.stringify({ cardImage, textImageData }, null, 2));
     return { cardImage, textImageData };
   } catch (error) {
     console.error('❌ Error fetching health page data:', error);
@@ -2292,7 +2179,6 @@ export async function fetchRecipePageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/recipe-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[ingredients][populate]=*&populate[tips][populate]=*`;
-    console.log('📡 Fetching recipe page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2301,7 +2187,6 @@ export async function fetchRecipePageData(): Promise<{
     }
 
     const data: RecipePageApiResponse = await response.json();
-    console.log('📥 Raw recipe page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -2335,7 +2220,6 @@ export async function fetchRecipePageData(): Promise<{
       tips: tipsArray
     };
 
-    console.log('🔄 Transformed recipe page data:', JSON.stringify({ cardImage, recipeData }, null, 2));
     return { cardImage, recipeData };
   } catch (error) {
     console.error('❌ Error fetching recipe page data:', error);
@@ -2391,7 +2275,6 @@ export async function fetchDietPageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/diet-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[coverImage][fields][0]=url&populate[highlights][populate]=*&populate[feedingSchedule][populate]=*&populate[do][populate]=*&populate[dont][populate]=*`;
-    console.log('📡 Fetching diet page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2400,7 +2283,6 @@ export async function fetchDietPageData(): Promise<{
     }
 
     const data: DietPageApiResponse = await response.json();
-    console.log('📥 Raw diet page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -2443,7 +2325,6 @@ export async function fetchDietPageData(): Promise<{
       donts
     };
 
-    console.log('🔄 Transformed diet page data:', JSON.stringify({ cardImage, dietData }, null, 2));
     return { cardImage, dietData };
   } catch (error) {
     console.error('❌ Error fetching diet page data:', error);
@@ -2499,7 +2380,6 @@ export async function fetchVaccinePageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/vaccine-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[vaccaniesSection][populate]=*`;
-    console.log('📡 Fetching vaccine page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2508,7 +2388,6 @@ export async function fetchVaccinePageData(): Promise<{
     }
 
     const data: VaccinePageApiResponse = await response.json();
-    console.log('📥 Raw vaccine page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -2535,7 +2414,6 @@ export async function fetchVaccinePageData(): Promise<{
       bg: data.data.bg || "#ffffff"
     };
 
-    console.log('🔄 Transformed vaccine page data:', JSON.stringify({ cardImage, vaccineData }, null, 2));
     return { cardImage, vaccineData };
   } catch (error) {
     console.error('❌ Error fetching vaccine page data:', error);
@@ -2581,7 +2459,6 @@ export async function fetchSpayingAndNeuteringPageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/spayingand-neutering?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[paragrafhData][populate]=*`;
-    console.log('📡 Fetching spaying and neutering page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2590,7 +2467,6 @@ export async function fetchSpayingAndNeuteringPageData(): Promise<{
     }
 
     const data: SpayingAndNeuteringPageApiResponse = await response.json();
-    console.log('📥 Raw spaying and neutering page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -2617,7 +2493,6 @@ export async function fetchSpayingAndNeuteringPageData(): Promise<{
       bg: data.data.bg || "#ffffff"
     };
 
-    console.log('🔄 Transformed spaying and neutering page data:', JSON.stringify({ cardImage, paragrafhData }, null, 2));
     return { cardImage, paragrafhData };
   } catch (error) {
     console.error('❌ Error fetching spaying and neutering page data:', error);
@@ -2676,7 +2551,6 @@ export async function fetchProductsRecommendPageData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/products-recommed?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][imageSrc][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][bullets][populate]=*`;
-    console.log('📡 Fetching products recommend page data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2685,7 +2559,6 @@ export async function fetchProductsRecommendPageData(): Promise<{
     }
 
     const data: ProductsRecommendPageApiResponse = await response.json();
-    console.log('📥 Raw products recommend page API response:', JSON.stringify(data, null, 2));
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
@@ -2723,7 +2596,6 @@ export async function fetchProductsRecommendPageData(): Promise<{
       accentDividerColor: data.data.accentDividerColor || "#E5E7EB"
     };
 
-    console.log('🔄 Transformed products recommend page data:', JSON.stringify({ cardImage, productsData }, null, 2));
     return { cardImage, productsData };
   } catch (error) {
     console.error('❌ Error fetching products recommend page data:', error);
@@ -2783,7 +2655,6 @@ export async function fetchHeroesData(): Promise<{
     }
 
     const data: HeroesApiResponse = await response.json();
-    console.log('📥 Raw heroes API response:', JSON.stringify(data, null, 2));
 
     // Get the first hero item (usually there's only one)
     const hero = data.data?.[0];
@@ -2793,7 +2664,6 @@ export async function fetchHeroesData(): Promise<{
       phoneNumber: hero?.phone || "(941) 822-4016"
     };
 
-    console.log('🔄 Transformed heroes data:', JSON.stringify(result, null, 2));
     return result;
   } catch (error) {
     console.error('❌ Error fetching heroes data:', error);

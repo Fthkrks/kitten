@@ -38,9 +38,7 @@ export default function Hero() {
   useEffect(() => {
     async function loadHeroData() {
       try {
-        console.log('🚀 Client-side: Loading hero data...');
         const data = await fetchHeroData();
-        console.log('✅ Client-side: Hero data loaded successfully', data);
         setHeroData(data);
       } catch (err) {
         console.error('❌ Client-side: Error loading hero data:', err);
