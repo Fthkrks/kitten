@@ -64,8 +64,7 @@ async function getFetchOptions(): Promise<{ cache: RequestCache; headers?: Heade
 export async function fetchHeroData(): Promise<TransformedHeroData> {
   const url = `${API_BASE_URL}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
   
-  console.log('🔍 Fetching hero data from:', url);
-  console.log('🌐 API_BASE_URL:', API_BASE_URL);
+
   
   try {
     const response = await fetchWithTimeout(url, {
@@ -158,9 +157,7 @@ const getImageUrl = (url: string | undefined | null): string => {
 
 export async function fetchKittenData(): Promise<TransformedKittenData> {
   const url = `${API_BASE_URL}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
-  
-  console.log('🔍 Fetching kitten data from:', url);
-  console.log('🌐 API_BASE_URL:', API_BASE_URL);
+
   
   try {
     const response = await fetchWithTimeout(url, {
@@ -176,11 +173,9 @@ export async function fetchKittenData(): Promise<TransformedKittenData> {
     }
 
     const data: HomepageApiResponse = await response.json();
-    console.log('📦 Raw Kitten API data:', JSON.stringify(data, null, 2));
     
     // Transform API data to match Kitten component props
     const transformedData = transformKittenData(data);
-    console.log('🔄 Transformed kitten data:', JSON.stringify(transformedData, null, 2));
     
     return transformedData;
   } catch (error) {
@@ -296,7 +291,6 @@ function transformKittenData(apiData: HomepageApiResponse): TransformedKittenDat
 export async function fetchAdultsData(): Promise<TransformedAdultsData> {
   const url = `${API_BASE_URL}/api/homepage?populate[AdultsSection][populate][cats][populate][image][populate]=src`;
   
-  console.log('🔍 Fetching adults data from:', url);
   
   try {
     const response = await fetchWithTimeout(url, {
@@ -374,7 +368,6 @@ function transformAdultsData(apiData: HomepageApiResponse): TransformedAdultsDat
 export async function fetchCommentsData(): Promise<TransformedCommentsData> {
   const url = `${API_BASE_URL}/api/homepage?populate[CommentSection][populate][features][populate][image][populate]=src`;
   
-  console.log('🔍 Fetching comments data from:', url);
   
   try {
     const response = await fetchWithTimeout(url, {
@@ -390,7 +383,6 @@ export async function fetchCommentsData(): Promise<TransformedCommentsData> {
     }
 
     const data: HomepageApiResponse = await response.json();
-    console.log('📦 Raw Comments API data:', JSON.stringify(data, null, 2));
     
     // Transform API data to match Comments component props
     const transformedData = transformCommentsData(data);
@@ -453,7 +445,6 @@ function transformCommentsData(apiData: HomepageApiResponse): TransformedComment
 export async function fetchSpecialData(): Promise<TransformedSpecialData> {
   const url = `${API_BASE_URL}/api/homepage?populate[SpecialSection][populate][features][populate][image][populate]=src`;
   
-  console.log('🔍 Fetching special data from:', url);
   
   try {
     const response = await fetchWithTimeout(url, {
