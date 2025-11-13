@@ -78,11 +78,9 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
     }
 
     const data: HomepageApiResponse = await response.json();
-    console.log('📦 Raw API data:', JSON.stringify(data, null, 2));
     
     // Transform API data to match Hero component props
     const transformedData = transformHeroData(data);
-    console.log('🔄 Transformed data:', JSON.stringify(transformedData, null, 2));
     
     return transformedData;
   } catch (error) {
@@ -2777,7 +2775,6 @@ export async function fetchHeroesData(): Promise<{
 }> {
   try {
     const url = `${API_BASE_URL}/api/heroes?populate=*`;
-    console.log('📡 Fetching heroes data from:', url);
 
     const response = await fetch(url, { cache: 'no-store' });
     
