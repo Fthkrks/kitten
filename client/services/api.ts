@@ -1889,6 +1889,10 @@ export async function fetchAboutUsPageData(): Promise<{
     const faqData = {
       title: data.data.FaqSection?.[0]?.title || "FAQ",
       questions: data.data.FaqSection?.[0]?.questions?.flatMap(q => {
+        // Check if q.question exists and is not null/undefined
+        if (!q.question || typeof q.question !== 'object') {
+          return [];
+        }
         // Convert the question object to array of {question, answer} pairs
         return Object.entries(q.question).map(([question, answer]) => ({
           question,
