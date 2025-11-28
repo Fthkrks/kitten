@@ -71,7 +71,15 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: HomepageApiResponse = await response.json();
@@ -2652,10 +2660,18 @@ export async function fetchHeroesData(): Promise<{
   try {
     const url = `${API_BASE_URL}/api/heroes?populate=*`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: HeroesApiResponse = await response.json();
