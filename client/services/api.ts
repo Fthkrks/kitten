@@ -1,28 +1,37 @@
 import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse, HistoryPageApiResponse, HealthPageApiResponse, RecipePageApiResponse, DietPageApiResponse, VaccinePageApiResponse, SpayingAndNeuteringPageApiResponse, ProductsRecommendPageApiResponse, HeroesApiResponse } from '@/types/api';
 
-// Support multiple environment variable names for compatibility:
-// - NEXT_PUBLIC_API_BASE_URL (recommended for Next.js)
-// - NEXT_API_BASE_URL (alternative)
-// - NEXT_API_BASE_URL (for existing Vercel setups)
-let apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_API_BASE_URL || process.env.NEXT_API_BASE_URL || 'http://127.0.0.1:1337';
+// Function to get API base URL at runtime (important for production)
+// This ensures environment variables are read at runtime, not build-time
+function getApiBaseUrl(): string {
+  // Read environment variables at runtime
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 
+                     process.env.NEXT_API_BASE_URL || 
+                     process.env.API_BASE_URL || 
+                     'http://127.0.0.1:1337';
+  
+  // Remove trailing slash if present
+  return apiBaseUrl.replace(/\/$/, '');
+}
 
-// Remove trailing slash if present
-apiBaseUrl = apiBaseUrl.replace(/\/$/, '');
+// For backward compatibility, keep a constant but it will use runtime value
+// This is only used in module-level code, fetch functions should use getApiBaseUrl()
+const NEXT_API_BASE_URL = getApiBaseUrl();
 
-const NEXT_API_BASE_URL = apiBaseUrl;
-
-// Validate NEXT_API_BASE_URL in production
+// Validate API base URL in production (runtime check)
 if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
-  const envVar = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_API_BASE_URL || process.env.NEXT_API_BASE_URL;
+  const apiBaseUrl = getApiBaseUrl();
+  const envVar = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_API_BASE_URL || process.env.API_BASE_URL;
   if (!envVar) {
-    console.error('❌ NEXT_API_BASE_URL, NEXT_PUBLIC_API_BASE_URL, or NEXT_API_BASE_URL is not set! This will cause connection errors.');
+    console.error('❌ NEXT_PUBLIC_API_BASE_URL, NEXT_API_BASE_URL, or API_BASE_URL is not set! This will cause connection errors.');
     console.error('⚠️ Please set one of these in Vercel environment variables.');
-  } else if (NEXT_API_BASE_URL.includes('127.0.0.1') || NEXT_API_BASE_URL.includes('localhost')) {
-    console.error('❌ NEXT_API_BASE_URL is set to localhost! This will not work in production.');
-    console.error('⚠️ Current value:', NEXT_API_BASE_URL);
+  } else if (apiBaseUrl.includes('127.0.0.1') || apiBaseUrl.includes('localhost')) {
+    console.error('❌ API_BASE_URL is set to localhost! This will not work in production.');
+    console.error('⚠️ Current value:', apiBaseUrl);
     console.error('⚠️ Please set the environment variable to your production Strapi API URL.');
   } else {
-    console.log('✅ NEXT_API_BASE_URL configured:', NEXT_API_BASE_URL);
+    console.log('✅ API_BASE_URL configured:', apiBaseUrl);
+    console.log('🔍 Using environment variable:', envVar === process.env.NEXT_PUBLIC_API_BASE_URL ? 'NEXT_PUBLIC_API_BASE_URL' : 
+                                                      envVar === process.env.NEXT_API_BASE_URL ? 'NEXT_API_BASE_URL' : 'API_BASE_URL');
   }
 }
 
@@ -74,106 +83,198 @@ async function getFetchOptions(): Promise<{ cache: RequestCache; headers?: Heade
 }
 
 export async function fetchHeroData(): Promise<TransformedHeroData> {
-  const url = `${NEXT_API_BASE_URL}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
+  // Get API base URL at runtime (important for production)
+  const apiBaseUrl = getApiBaseUrl();
   
+  // Try simpler populate first, if it fails, use detailed populate
+  // This helps with production environments that might have URL length limits
+  let url = `${apiBaseUrl}/api/homepage?populate[heroContent][populate]=*`;
+  
+  // Log URL in production for debugging
+  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+    console.log('🔵 fetchHeroData - Attempting with simple populate');
+    console.log('🔵 fetchHeroData - Base URL:', apiBaseUrl);
+    console.log('🔵 fetchHeroData - Full URL length:', url.length);
+  }
+  
+  // First try with simple populate (works in most cases)
+  let response;
+  try {
+    response = await fetchWithTimeout(url, {
+      cache: 'no-store',
+    });
+    
+    // If simple populate works, use it
+    if (response.ok) {
+      if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+        console.log('✅ fetchHeroData - Simple populate worked');
+      }
+    } else {
+      // If simple populate fails, try detailed populate
+      if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+        console.log('⚠️ fetchHeroData - Simple populate failed, trying detailed populate');
+      }
+      
+      const populateQuery = [
+        'populate[heroContent][populate][heroImage][fields][0]=url',
+        'populate[heroContent][populate][logo][fields][0]=url',
+        'populate[heroContent][populate][collageImage1][fields][0]=url',
+        'populate[heroContent][populate][collageImage2][fields][0]=url',
+        'populate[heroContent][populate][collageImage3][fields][0]=url',
+        'populate[heroContent][populate][aboutSection][populate]=*'
+      ].join('&');
+      
+      url = `${apiBaseUrl}/api/homepage?${populateQuery}`;
+      response = await fetchWithTimeout(url, {
+        cache: 'no-store',
+      });
+    }
+  } catch (firstError) {
+    // If first attempt fails, try detailed populate
+    if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+      console.log('⚠️ fetchHeroData - First attempt failed, trying detailed populate');
+    }
+    
+    const populateQuery = [
+      'populate[heroContent][populate][heroImage][fields][0]=url',
+      'populate[heroContent][populate][logo][fields][0]=url',
+      'populate[heroContent][populate][collageImage1][fields][0]=url',
+      'populate[heroContent][populate][collageImage2][fields][0]=url',
+      'populate[heroContent][populate][collageImage3][fields][0]=url',
+      'populate[heroContent][populate][aboutSection][populate]=*'
+    ].join('&');
+    
+    url = `${apiBaseUrl}/api/homepage?${populateQuery}`;
+    response = await fetchWithTimeout(url, {
+      cache: 'no-store',
+    });
+  }
+
+  // Process the response
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('❌ fetchHeroData - HTTP Error:', response.status);
+    console.error('❌ fetchHeroData - Error Response:', errorText.substring(0, 500));
+    console.error('❌ fetchHeroData - Request URL:', url.substring(0, 200) + '...');
+    throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+  }
+
+  // Check if response is JSON
+  const contentType = response.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    const text = await response.text();
+    throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
+  }
 
   try {
-    const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ API Error Response:', errorText);
-      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
-
-    }
-
-    // Check if response is JSON
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      const text = await response.text();
-      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
-    }
-
     const data: HomepageApiResponse = await response.json();
     
     // Transform API data to match Hero component props
     const transformedData = transformHeroData(data);
     
+    if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+      console.log('✅ fetchHeroData - Data fetched successfully');
+    }
+    
     return transformedData;
   } catch (error) {
-    console.error('❌ Error fetching hero data:', error);
-    console.error('❌ Error details:', error instanceof Error ? error.message : String(error));
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('❌ Error fetching hero data:', errorMessage);
+    console.error('❌ Error type:', error instanceof Error ? error.constructor.name : typeof error);
+    
+    // Check for specific error types
+    if (errorMessage.includes('fetch failed') || errorMessage.includes('ECONNREFUSED')) {
+      console.error('❌ Network error - Strapi API connection failed');
+      console.error('🔍 Check if Strapi API is accessible:', NEXT_API_BASE_URL);
+    } else if (errorMessage.includes('timeout')) {
+      console.error('❌ Request timeout - URL might be too complex or API is slow');
+    } else if (errorMessage.includes('Expected JSON')) {
+      console.error('❌ Response is not JSON - API might be returning HTML error page');
+    } else if (errorMessage.includes('Cannot read properties of null')) {
+      console.error('❌ Null reference error - API response structure might be different');
+      console.error('🔍 This usually means an image field is null in Strapi');
+    }
+    
     throw error;
   }
 }
 
 function transformHeroData(apiData: HomepageApiResponse): TransformedHeroData {
+  // Get API base URL at runtime for image URLs
+  const apiBaseUrl = getApiBaseUrl();
   const heroContent = apiData.data.heroContent;
   
   if (!heroContent) {
     throw new Error('heroContent not found in API response');
   }
   
-  // Helper function to get full image URL
-  const getImageUrl = (url: string) => {
-    return url.startsWith('http') ? url : `${NEXT_API_BASE_URL}${url}`;
+  // Helper function to safely get image URL with null checks
+  const getImageUrlSafe = (imageObj: any): string => {
+    if (!imageObj || !imageObj.url) {
+      console.warn('⚠️ Image object or URL is null, using fallback');
+      return 'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800';
+    }
+    const url = imageObj.url;
+    return url.startsWith('http') ? url : `${apiBaseUrl}${url}`;
   };
 
   // Transform listItems from string with \n separators to array
-  const listItems = heroContent.aboutSection.listItems
-    .split('\n')
-    .map(item => item.trim())
-    .filter(item => item.length > 0);
+  const listItems = heroContent.aboutSection?.listItems
+    ? heroContent.aboutSection.listItems
+        .split('\n')
+        .map(item => item.trim())
+        .filter(item => item.length > 0)
+    : [];
 
   return {
     heroImage: {
-      src: getImageUrl(heroContent.heroImage.url),
-      alt: "Hero Image" // Default alt text since API doesn't provide it
+      src: getImageUrlSafe(heroContent.heroImage),
+      alt: "Hero Image"
     },
     logo: {
-      src: getImageUrl(heroContent.logo.url),
-      alt: "Logo" // Default alt text since API doesn't provide it
+      src: getImageUrlSafe(heroContent.logo),
+      alt: "Logo"
     },
-    welcomeText: heroContent.welcomeText,
-    title: heroContent.title,
-    motto: heroContent.motto,
-    description: heroContent.description,
+    welcomeText: heroContent.welcomeText || "Welcome to EPC",
+    title: heroContent.title || "ETHEREAL PERSIANS CATTERY",
+    motto: heroContent.motto || "",
+    description: heroContent.description || "",
     collageImages: {
       image1: {
-        src: getImageUrl(heroContent.collageImage1.url),
-        alt: "Collage Image 1" // Default alt text since API doesn't provide it
+        src: getImageUrlSafe(heroContent.collageImage1),
+        alt: "Collage Image 1"
       },
       image2: {
-        src: getImageUrl(heroContent.collageImage2.url),
-        alt: "Collage Image 2" // Default alt text since API doesn't provide it
+        src: getImageUrlSafe(heroContent.collageImage2),
+        alt: "Collage Image 2"
       },
       image3: {
-        src: getImageUrl(heroContent.collageImage3.url),
-        alt: "Collage Image 3" // Default alt text since API doesn't provide it
+        src: getImageUrlSafe(heroContent.collageImage3),
+        alt: "Collage Image 3"
       }
     },
     aboutSection: {
-      greeting: heroContent.aboutSection.greeting,
-      introduction: heroContent.aboutSection.introduction,
+      greeting: heroContent.aboutSection?.greeting || "HEY FRIEND!",
+      introduction: heroContent.aboutSection?.introduction || "",
       listItems: listItems,
-      conclusion: heroContent.aboutSection.conclusion.trim(),
-      buttonText: heroContent.aboutSection.buttonText.trim()
+      conclusion: heroContent.aboutSection?.conclusion?.trim() || "",
+      buttonText: heroContent.aboutSection?.buttonText?.trim() || "MORE ABOUT US"
     }
   };
 }
 
-// Helper function to get full image URL
+// Helper function to get full image URL (uses runtime API base URL)
 const getImageUrl = (url: string | undefined | null): string => {
   if (!url) {
     return 'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800';
   }
-  return url.startsWith('http') ? url : `${NEXT_API_BASE_URL}${url}`;
+  const apiBaseUrl = getApiBaseUrl();
+  return url.startsWith('http') ? url : `${apiBaseUrl}${url}`;
 };
 
 export async function fetchKittenData(): Promise<TransformedKittenData> {
-    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -303,7 +404,8 @@ function transformKittenData(apiData: HomepageApiResponse): TransformedKittenDat
 }
 
 export async function fetchAdultsData(): Promise<TransformedAdultsData> {
-    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[AdultsSection][populate][cats][populate][image][populate]=src`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/homepage?populate[AdultsSection][populate][cats][populate][image][populate]=src`;
   
   
   try {
@@ -376,7 +478,8 @@ function transformAdultsData(apiData: HomepageApiResponse): TransformedAdultsDat
 }
 
 export async function fetchCommentsData(): Promise<TransformedCommentsData> {
-    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[CommentSection][populate][features][populate][image][populate]=src`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/homepage?populate[CommentSection][populate][features][populate][image][populate]=src`;
   
   
   try {
@@ -450,7 +553,8 @@ function transformCommentsData(apiData: HomepageApiResponse): TransformedComment
 }
 
 export async function fetchSpecialData(): Promise<TransformedSpecialData> {
-    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[SpecialSection][populate][features][populate][image][populate]=src`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/homepage?populate[SpecialSection][populate][features][populate][image][populate]=src`;
   
   
   try {
@@ -526,7 +630,8 @@ function transformSpecialData(apiData: HomepageApiResponse): TransformedSpecialD
 }
 
 export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
-    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[GaleriesSection][populate][images][populate]=src`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/homepage?populate[GaleriesSection][populate][images][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -612,7 +717,8 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
 }
 
 export async function fetchTestimonialData(): Promise<TransformedTestimonialData> {
-    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[TestiomonialSection][populate][testimonials][populate][image][fields][0]=url&populate[TestiomonialSection][populate][testimonials][populate][avatarImage][populate][src][fields][0]=url`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/homepage?populate[TestiomonialSection][populate][testimonials][populate][image][fields][0]=url&populate[TestiomonialSection][populate][testimonials][populate][avatarImage][populate][src][fields][0]=url`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -709,7 +815,8 @@ function transformTestimonialData(apiData: HomepageApiResponse): TransformedTest
 }
 
 export async function fetchMediaData(): Promise<TransformedMediaData> {
-    const url = `${NEXT_API_BASE_URL}/api/media-links?populate[SocialLinks][populate]=icon`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/media-links?populate[SocialLinks][populate]=icon`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -785,7 +892,8 @@ function transformMediaData(apiData: MediaLinksApiResponse): TransformedMediaDat
 }
 
 export async function fetchVideoData(): Promise<TransformedVideoData> {
-    const url = `${NEXT_API_BASE_URL}/api/marketing-links?populate[items][populate]=src`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/marketing-links?populate[items][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -1635,7 +1743,8 @@ export async function fetchTestimonialPageData(): Promise<{
   reviewSections: TransformedReviewSection[];
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -1706,7 +1815,8 @@ export async function fetchGalleriesPageData(): Promise<{
   galleries: TransformedGalleryItem[];
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate]=*`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2011,7 +2121,8 @@ export async function fetchHistoryPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/history-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/history-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2109,7 +2220,8 @@ export async function fetchHealthPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2204,7 +2316,8 @@ export async function fetchRecipePageData(): Promise<{
   };
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/recipe-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[ingredients][populate]=*&populate[tips][populate]=*`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/recipe-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[ingredients][populate]=*&populate[tips][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2300,7 +2413,8 @@ export async function fetchDietPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/diet-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[coverImage][fields][0]=url&populate[highlights][populate]=*&populate[feedingSchedule][populate]=*&populate[do][populate]=*&populate[dont][populate]=*`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/diet-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[coverImage][fields][0]=url&populate[highlights][populate]=*&populate[feedingSchedule][populate]=*&populate[do][populate]=*&populate[dont][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2405,7 +2519,8 @@ export async function fetchVaccinePageData(): Promise<{
   };
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/vaccine-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[vaccaniesSection][populate]=*`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/vaccine-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[vaccaniesSection][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2484,7 +2599,8 @@ export async function fetchSpayingAndNeuteringPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/spayingand-neutering?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[paragrafhData][populate]=*`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/spayingand-neutering?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[paragrafhData][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2576,7 +2692,8 @@ export async function fetchProductsRecommendPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/products-recommed?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][imageSrc][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][bullets][populate]=*`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/products-recommed?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][imageSrc][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][bullets][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2672,7 +2789,8 @@ export async function fetchHeroesData(): Promise<{
   phoneNumber: string;
 }> {
   try {
-    const url = `${NEXT_API_BASE_URL}/api/heroes?populate=*`;
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/heroes?populate=*`;
 
     const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
