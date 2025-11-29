@@ -980,7 +980,8 @@ function transformVideoData(apiData: MarketingLinksApiResponse): TransformedVide
 }
 
 export async function fetchAvailableKittenCardImage(): Promise<TransformedCardImageData> {
-  const url = `${NEXT_API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
 
   // Default fallback data
   const fallbackData: TransformedCardImageData = {
@@ -1056,7 +1057,8 @@ function transformAvailableKittenCardImage(
 }
 
 export async function fetchAvailableKittenPetCards(): Promise<TransformedPetCardData[]> {
-  const url = `${NEXT_API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
 
   try {
     const response = await fetch(url, {
@@ -1131,7 +1133,8 @@ function transformAvailableKittenPetCards(apiData: AvailableKittenPageApiRespons
 }
 
 export async function fetchPetById(id: string): Promise<TransformedPetCardData | null> {
-  const url = `${NEXT_API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
 
   try {
     const response = await fetch(url, {
@@ -1162,7 +1165,8 @@ export async function fetchPetById(id: string): Promise<TransformedPetCardData |
 }
 
 export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaibleData> {
-  const url = `${NEXT_API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
 
   // Default fallback data
   const fallbackData: TransformedAdultsAvaibleData = {
@@ -1205,7 +1209,8 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
 }
 
 export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTermsCardImageData; termsContent: TransformedTermsData }> {
-  const url = `${NEXT_API_BASE_URL}/api/terms-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[TermsSection][populate][sections][populate]=*`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/terms-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[TermsSection][populate][sections][populate]=*`;
 
   // Default fallback data
   const fallbackCardImage: TransformedTermsCardImageData = {
@@ -1312,7 +1317,8 @@ export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTerm
 }
 
 export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
-  const url = `${NEXT_API_BASE_URL}/api/faq-page?populate[FaqSection][populate]=*`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/faq-page?populate[FaqSection][populate]=*`;
 
   // Default fallback data
   const fallbackData: TransformedFaqSection[] = [
@@ -1384,7 +1390,8 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
 }
 
 export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCardImageData; kings: TransformedKingsCardData[] }> {
-  const url = `${NEXT_API_BASE_URL}/api/kings-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[KingsSection][populate][image][fields][0]=url`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/kings-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[KingsSection][populate][image][fields][0]=url`;
 
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
@@ -1499,7 +1506,8 @@ export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCard
 }
 
 export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCardImageData; queens: TransformedQueensCardData[] }> {
-  const url = `${NEXT_API_BASE_URL}/api/queens-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[QueensSection][populate][image][fields][0]=url`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/queens-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[QueensSection][populate][image][fields][0]=url`;
 
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
@@ -1606,7 +1614,8 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
 }
 
 export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardImageData; whyBlogData: TransformedWhyBlogData; blogs: TransformedBlogPost[] }> {
-  const url = `${NEXT_API_BASE_URL}/api/blog-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[BlogSection][populate][image][fields][0]=url&populate[whyBlogData][populate][imageTop][fields][0]=url&populate[whyBlogData][populate][aboutItems][populate]=*&populate[whyBlogData][populate][imageBottom][fields][0]=url`;
+  const apiBaseUrl = getApiBaseUrl();
+  const url = `${apiBaseUrl}/api/blog-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[BlogSection][populate][image][fields][0]=url&populate[whyBlogData][populate][imageTop][fields][0]=url&populate[whyBlogData][populate][aboutItems][populate]=*&populate[whyBlogData][populate][imageBottom][fields][0]=url`;
 
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
@@ -1932,10 +1941,12 @@ export async function fetchAboutUsPageData(): Promise<{
   }>;
 }> {
   try {
+    // Get API base URL at runtime (important for production)
+    const apiBaseUrl = getApiBaseUrl();
     const fetchOptions = await getFetchOptions();
     
     // Check if draft mode is enabled to add status parameter
-    let url = `${NEXT_API_BASE_URL}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
+    let url = `${apiBaseUrl}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
     
     // Add status=draft if in draft mode
     const headers = fetchOptions.headers as Record<string, string> | undefined;
@@ -1951,9 +1962,11 @@ export async function fetchAboutUsPageData(): Promise<{
 
     const data: AboutUsPageApiResponse = await response.json();
 
-    // Transform CardImage Section
+    // Transform CardImage Section with null checks
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800',
       heading: data.data.cardImageSection.heading || "ABOUT US",
       cardTitle: data.data.cardImageSection.cardTitle || "OUR STORY",
       cardText: data.data.cardImageSection.cardText || "",
@@ -1978,26 +1991,30 @@ export async function fetchAboutUsPageData(): Promise<{
 
     // Transform Paraq Section
     // Parse paragraphs from the string format (comma-separated)
-    const paragraphsArray = data.data.ParaqSection.paragraphs
-      .split('",')
-      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+    const paragraphsArray = data.data.ParaqSection?.paragraphs
+      ? data.data.ParaqSection.paragraphs
+          .split('",')
+          .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+      : [];
 
-    // Extract list items from the object
-    const listItemsData = data.data.ParaqSection.listItems[0];
-    const listItems = [
-      listItemsData.school,
-      listItemsData.job,
-      listItemsData.job2,
-      listItemsData.job3
-    ];
+    // Extract list items from the object with null checks
+    const listItemsData = data.data.ParaqSection?.listItems?.[0];
+    const listItems = listItemsData ? [
+      listItemsData.school || '',
+      listItemsData.job || '',
+      listItemsData.job2 || '',
+      listItemsData.job3 || ''
+    ].filter(item => item.length > 0) : [];
 
     const paragData = {
-      image: getImageUrl(data.data.ParaqSection.image.url),
-      imageAlt: data.data.ParaqSection.imageAlt,
-      title: data.data.ParaqSection.title,
+      image: data.data.ParaqSection?.image?.url 
+        ? getImageUrl(data.data.ParaqSection.image.url)
+        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500',
+      imageAlt: data.data.ParaqSection?.imageAlt || "Roxy and Cat",
+      title: data.data.ParaqSection?.title || "Roxy: The Crazy Cat Lady",
       paragraphs: paragraphsArray,
-      listTitle: data.data.ParaqSection.listTitle,
-      listItems
+      listTitle: data.data.ParaqSection?.listTitle || "",
+      listItems: listItems || []
     };
 
     // Transform Timeline Section
@@ -2008,13 +2025,13 @@ export async function fetchAboutUsPageData(): Promise<{
       position: event.position.toLowerCase()
     })) || [];
 
-    // Transform Cards Section
+    // Transform Cards Section with null checks
     const cards = data.data.CardsSection?.map((card, index) => ({
-      title: card.title,
-      text: card.text,
-      img: getImageUrl(card.img.url),
+      title: card.title || "",
+      text: card.text || "",
+      img: card.img?.url ? getImageUrl(card.img.url) : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500',
       bg: index === 1 ? "#fff" : undefined,
-      reverse: card.reserve
+      reverse: card.reserve || false
     })) || [];
 
     // Transform FAQ Section
@@ -2132,35 +2149,43 @@ export async function fetchHistoryPageData(): Promise<{
 
     const data: HistoryPageApiResponse = await response.json();
 
-    // Transform CardImage Section
+    // Transform CardImage Section with null checks
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "HISTORY",
-      cardTitle: data.data.cardImageSection.cardTitle || "OUR HISTORY",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.15)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.3,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#f9f1f1"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800',
+      heading: data.data.cardImageSection?.heading || "HISTORY",
+      cardTitle: data.data.cardImageSection?.cardTitle || "OUR HISTORY",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.15)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection?.parallaxSpeed) || 0.3,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#f9f1f1"
     };
 
-    // Transform TextImage Section
+    // Transform TextImage Section with null checks
     // Parse paragraphs from the string format (comma-separated with quotes)
-    const paragraphsArray = data.data.textImageData.paragraphs
-      .split('",')
-      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+    const paragraphsArray = data.data.textImageData?.paragraphs
+      ? data.data.textImageData.paragraphs
+          .split('",')
+          .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+      : [];
 
     const textImageData = {
       leftImage: {
-        src: getImageUrl(data.data.textImageData.leftImage.src.url),
-        alt: data.data.textImageData.leftImage.alt,
-        title: data.data.textImageData.leftImage.title,
-        caption: data.data.textImageData.leftImage.caption
+        src: data.data.textImageData?.leftImage?.src?.url 
+          ? getImageUrl(data.data.textImageData.leftImage.src.url)
+          : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500',
+        alt: data.data.textImageData?.leftImage?.alt || "History Image",
+        title: data.data.textImageData?.leftImage?.title || "",
+        caption: data.data.textImageData?.leftImage?.caption || ""
       },
       rightImage: {
-        src: getImageUrl(data.data.textImageData.rightImage.src.url),
-        alt: data.data.textImageData.rightImage.alt,
-        title: data.data.textImageData.rightImage.title,
-        caption: data.data.textImageData.rightImage.caption
+        src: data.data.textImageData?.rightImage?.src?.url 
+          ? getImageUrl(data.data.textImageData.rightImage.src.url)
+          : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500',
+        alt: data.data.textImageData?.rightImage?.alt || "History Image",
+        title: data.data.textImageData?.rightImage?.title || "",
+        caption: data.data.textImageData?.rightImage?.caption || ""
       },
       paragraphs: paragraphsArray
     };
@@ -2242,24 +2267,30 @@ export async function fetchHealthPageData(): Promise<{
       backgroundColor: data.data.cardImageSection.backgroundColor || "#EAF7E7"
     };
 
-    // Transform TextImage Section
+    // Transform TextImage Section with null checks
     // Parse paragraphs from the string format (comma-separated with quotes)
-    const paragraphsArray = data.data.textImageData.paragraphs
-      .split('",')
-      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+    const paragraphsArray = data.data.textImageData?.paragraphs
+      ? data.data.textImageData.paragraphs
+          .split('",')
+          .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+      : [];
 
     const textImageData = {
       leftImage: {
-        src: getImageUrl(data.data.textImageData.leftImage.src.url),
-        alt: data.data.textImageData.leftImage.alt,
-        title: data.data.textImageData.leftImage.title,
-        caption: data.data.textImageData.leftImage.caption
+        src: data.data.textImageData?.leftImage?.src?.url 
+          ? getImageUrl(data.data.textImageData.leftImage.src.url)
+          : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500',
+        alt: data.data.textImageData?.leftImage?.alt || "Health Image",
+        title: data.data.textImageData?.leftImage?.title || "",
+        caption: data.data.textImageData?.leftImage?.caption || ""
       },
       rightImage: {
-        src: getImageUrl(data.data.textImageData.rightImage.src.url),
-        alt: data.data.textImageData.rightImage.alt,
-        title: data.data.textImageData.rightImage.title,
-        caption: data.data.textImageData.rightImage.caption
+        src: data.data.textImageData?.rightImage?.src?.url 
+          ? getImageUrl(data.data.textImageData.rightImage.src.url)
+          : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500',
+        alt: data.data.textImageData?.rightImage?.alt || "Health Image",
+        title: data.data.textImageData?.rightImage?.title || "",
+        caption: data.data.textImageData?.rightImage?.caption || ""
       },
       paragraphs: paragraphsArray
     };
@@ -2327,15 +2358,17 @@ export async function fetchRecipePageData(): Promise<{
 
     const data: RecipePageApiResponse = await response.json();
 
-    // Transform CardImage Section
+    // Transform CardImage Section with null checks
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "RECIPE",
-      cardTitle: data.data.cardImageSection.cardTitle || "NUTRITION & RECIPE",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.25)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#FFF8EE"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800',
+      heading: data.data.cardImageSection?.heading || "RECIPE",
+      cardTitle: data.data.cardImageSection?.cardTitle || "NUTRITION & RECIPE",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.25)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection?.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#FFF8EE"
     };
 
     // Transform Recipe Data
@@ -2424,15 +2457,17 @@ export async function fetchDietPageData(): Promise<{
 
     const data: DietPageApiResponse = await response.json();
 
-    // Transform CardImage Section
+    // Transform CardImage Section with null checks
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "DIET",
-      cardTitle: data.data.cardImageSection.cardTitle || "DIET GUIDELINES",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.2)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#F4FCFD"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800',
+      heading: data.data.cardImageSection?.heading || "DIET",
+      cardTitle: data.data.cardImageSection?.cardTitle || "DIET GUIDELINES",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.2)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection?.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#F4FCFD"
     };
 
     // Transform Diet Data
@@ -2530,24 +2565,28 @@ export async function fetchVaccinePageData(): Promise<{
 
     const data: VaccinePageApiResponse = await response.json();
 
-    // Transform CardImage Section
+    // Transform CardImage Section with null checks
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "VACCINES",
-      cardTitle: data.data.cardImageSection.cardTitle || "CORE & OPTIONAL VACCINES",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.25)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.2,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#EEF5FF"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800',
+      heading: data.data.cardImageSection?.heading || "VACCINES",
+      cardTitle: data.data.cardImageSection?.cardTitle || "CORE & OPTIONAL VACCINES",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.25)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection?.parallaxSpeed) || 0.2,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#EEF5FF"
     };
 
-    // Transform Vaccine Sections
+    // Transform Vaccine Sections with null checks
     // API returns paragraphs as comma-separated string, component expects array
     const sections = data.data.vaccaniesSection?.map(section => ({
-      title: section.title,
+      title: section.title || "",
       paragraphs: section.paragraphs
-        .split('",')
-        .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+        ? section.paragraphs
+            .split('",')
+            .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+        : []
     })) || [];
 
     const vaccineData = {
@@ -2610,24 +2649,28 @@ export async function fetchSpayingAndNeuteringPageData(): Promise<{
 
     const data: SpayingAndNeuteringPageApiResponse = await response.json();
 
-    // Transform CardImage Section
+    // Transform CardImage Section with null checks
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "SPAYING AND NEUTERING",
-      cardTitle: data.data.cardImageSection.cardTitle || "RESPONSIBLE SURGERY PROTOCOL",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.25)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#F9F1F1"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800',
+      heading: data.data.cardImageSection?.heading || "SPAYING AND NEUTERING",
+      cardTitle: data.data.cardImageSection?.cardTitle || "RESPONSIBLE SURGERY PROTOCOL",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.25)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection?.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#F9F1F1"
     };
 
-    // Transform Paragraph Sections
+    // Transform Paragraph Sections with null checks
     // API returns paragraphs as comma-separated string, component expects array
     const sections = data.data.paragrafhData?.map(section => ({
-      title: section.title,
+      title: section.title || "",
       paragraphs: section.paragraphs
-        .split('",')
-        .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+        ? section.paragraphs
+            .split('",')
+            .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+        : []
     })) || [];
 
     const paragrafhData = {
@@ -2703,29 +2746,31 @@ export async function fetchProductsRecommendPageData(): Promise<{
 
     const data: ProductsRecommendPageApiResponse = await response.json();
 
-    // Transform CardImage Section
+    // Transform CardImage Section with null checks
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "RECOMMENDED PRODUCTS",
-      cardTitle: data.data.cardImageSection.cardTitle || "ESSENTIAL PRODUCTS FOR YOUR KITTEN",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.25)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#FFF8EE"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800',
+      heading: data.data.cardImageSection?.heading || "RECOMMENDED PRODUCTS",
+      cardTitle: data.data.cardImageSection?.cardTitle || "ESSENTIAL PRODUCTS FOR YOUR KITTEN",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.25)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection?.parallaxSpeed) || 0.25,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#FFF8EE"
     };
 
-    // Transform Products Data
+    // Transform Products Data with null checks
     // API returns single recommendedProductsData, component expects sections array
     const placeholderProductImage = "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&w=900&h=700";
 
     const section = {
-      heading: data.data.recommendedProductsData.heading,
-      categories: data.data.recommendedProductsData.categories.map(category => ({
-        title: category.title,
-        products: category.products.map(product => ({
+      heading: data.data.recommendedProductsData?.heading || "",
+      categories: data.data.recommendedProductsData?.categories?.map(category => ({
+        title: category.title || "",
+        products: category.products?.map(product => ({
           imageSrc: product.imageSrc?.url ? getImageUrl(product.imageSrc.url) : placeholderProductImage,
-          imageAlt: product.imageAlt,
-          title: product.title,
+          imageAlt: product.imageAlt || "",
+          title: product.title || "",
           bullets: product.bullets?.map(bullet => bullet.text).filter(Boolean) || [],
           cta: { label: "SHOP NOW", href: "#" } // CTA'yı default olarak ekliyorum
         }))
