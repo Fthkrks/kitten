@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { fetchHeroesData } from "@/services/api";
 
 type HeaderProps = {
   siteTitle?: string;
@@ -26,7 +25,19 @@ export default function Header({
   useEffect(() => {
     const loadHeroesData = async () => {
       try {
-        const data = await fetchHeroesData();
+        const response = await fetch('/api/heroes');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await response.text();
+          throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
+        }
+        
+        const data = await response.json();
         setSiteTitle(data.siteTitle);
         setPhoneNumber(data.phoneNumber);
       } catch (error) {

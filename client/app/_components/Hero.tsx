@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { fetchHeroData } from "@/services/api";
 
 interface HeroData {
   heroImage: {
@@ -38,7 +37,19 @@ export default function Hero() {
   useEffect(() => {
     async function loadHeroData() {
       try {
-        const data = await fetchHeroData();
+        const response = await fetch('/api/hero');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await response.text();
+          throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
+        }
+        
+        const data = await response.json();
         setHeroData(data);
       } catch (err) {
         console.error('❌ Client-side: Error loading hero data:', err);
