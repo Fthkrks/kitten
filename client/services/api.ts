@@ -1,21 +1,24 @@
 import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse, HistoryPageApiResponse, HealthPageApiResponse, RecipePageApiResponse, DietPageApiResponse, VaccinePageApiResponse, SpayingAndNeuteringPageApiResponse, ProductsRecommendPageApiResponse, HeroesApiResponse } from '@/types/api';
 
-// Support both API_BASE_URL and NEXT_PUBLIC_API_BASE_URL for compatibility
-const NEXT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || 'http://127.0.0.1:1337';
+// Support multiple environment variable names for compatibility:
+// - NEXT_PUBLIC_API_BASE_URL (recommended for Next.js)
+// - API_BASE_URL (alternative)
+// - NEXT_API_BASE_URL (for existing Vercel setups)
+const NEXT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || process.env.NEXT_API_BASE_URL || 'http://127.0.0.1:1337';
 
 // Remove trailing slash if present
 const API_BASE_URL = NEXT_API_BASE_URL.replace(/\/$/, '');
 
 // Validate API_BASE_URL in production
 if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
-  const envVar = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL;
+  const envVar = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || process.env.NEXT_API_BASE_URL;
   if (!envVar) {
-    console.error('❌ API_BASE_URL or NEXT_PUBLIC_API_BASE_URL is not set! This will cause connection errors.');
-    console.error('⚠️ Please set NEXT_PUBLIC_API_BASE_URL in Vercel environment variables.');
+    console.error('❌ API_BASE_URL, NEXT_PUBLIC_API_BASE_URL, or NEXT_API_BASE_URL is not set! This will cause connection errors.');
+    console.error('⚠️ Please set one of these in Vercel environment variables.');
   } else if (API_BASE_URL.includes('127.0.0.1') || API_BASE_URL.includes('localhost')) {
     console.error('❌ API_BASE_URL is set to localhost! This will not work in production.');
     console.error('⚠️ Current value:', API_BASE_URL);
-    console.error('⚠️ Please set NEXT_PUBLIC_API_BASE_URL to your production Strapi API URL.');
+    console.error('⚠️ Please set the environment variable to your production Strapi API URL.');
   } else {
     console.log('✅ API_BASE_URL configured:', API_BASE_URL);
   }
