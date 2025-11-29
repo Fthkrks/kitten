@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server';
 import { fetchHeroData } from '@/services/api';
 
-// Force dynamic rendering and disable caching
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 // Fallback data when API is unavailable
 const fallbackHeroData = {
   heroImage: {
