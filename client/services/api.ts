@@ -1962,31 +1962,38 @@ export async function fetchAboutUsPageData(): Promise<{
 
     const data: AboutUsPageApiResponse = await response.json();
 
+    // Check if data.data exists
+    if (!data.data) {
+      throw new Error('API response missing data field');
+    }
+
     // Transform CardImage Section with null checks
     const cardImage: TransformedCardImageData = {
       heroImage: data.data.cardImageSection?.heroImage?.url 
         ? getImageUrl(data.data.cardImageSection.heroImage.url)
         : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800',
-      heading: data.data.cardImageSection.heading || "ABOUT US",
-      cardTitle: data.data.cardImageSection.cardTitle || "OUR STORY",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.10)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.3,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#f9f1f1"
+      heading: data.data.cardImageSection?.heading || "ABOUT US",
+      cardTitle: data.data.cardImageSection?.cardTitle || "OUR STORY",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.10)",
+      parallaxSpeed: parseFloat(data.data.cardImageSection?.parallaxSpeed) || 0.3,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#f9f1f1"
     };
 
-    // Transform About Section
-    const aboutImageUrl = data.data.AboutSection.image?.url
-      ? getImageUrl(data.data.AboutSection.image.url)
-      : 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&q=80&w=500';
+    // Transform About Section with null checks
+    // Safely get image URL - check if AboutSection exists, then image, then url
+    let aboutImageUrl = 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&q=80&w=500';
+    if (data.data.AboutSection && data.data.AboutSection.image && data.data.AboutSection.image.url) {
+      aboutImageUrl = getImageUrl(data.data.AboutSection.image.url);
+    }
 
     const aboutData = {
       image: aboutImageUrl,
-      imageAlt: data.data.AboutSection.imageAlt || "Roxy and Jason with Persian cat",
-      title: data.data.AboutSection.title || "About Us",
-      paragraph1: data.data.AboutSection.paragraph1,
-      highlightText: data.data.AboutSection.highlightText,
-      paragraph2: data.data.AboutSection.paragraph2
+      imageAlt: data.data.AboutSection?.imageAlt || "Roxy and Jason with Persian cat",
+      title: data.data.AboutSection?.title || "About Us",
+      paragraph1: data.data.AboutSection?.paragraph1 || "",
+      highlightText: data.data.AboutSection?.highlightText || "",
+      paragraph2: data.data.AboutSection?.paragraph2 || ""
     };
 
     // Transform Paraq Section
@@ -2006,10 +2013,14 @@ export async function fetchAboutUsPageData(): Promise<{
       listItemsData.job3 || ''
     ].filter(item => item.length > 0) : [];
 
+    // Safely get ParaqSection image URL
+    let paragImageUrl = 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500';
+    if (data.data.ParaqSection && data.data.ParaqSection.image && data.data.ParaqSection.image.url) {
+      paragImageUrl = getImageUrl(data.data.ParaqSection.image.url);
+    }
+
     const paragData = {
-      image: data.data.ParaqSection?.image?.url 
-        ? getImageUrl(data.data.ParaqSection.image.url)
-        : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500',
+      image: paragImageUrl,
       imageAlt: data.data.ParaqSection?.imageAlt || "Roxy and Cat",
       title: data.data.ParaqSection?.title || "Roxy: The Crazy Cat Lady",
       paragraphs: paragraphsArray,
@@ -2017,12 +2028,12 @@ export async function fetchAboutUsPageData(): Promise<{
       listItems: listItems || []
     };
 
-    // Transform Timeline Section
+    // Transform Timeline Section with null checks
     const timelineEvents = data.data.timeLine?.map(event => ({
-      year: event.year,
-      title: event.title,
-      desc: event.desc,
-      position: event.position.toLowerCase()
+      year: event?.year || "",
+      title: event?.title || "",
+      desc: event?.desc || "",
+      position: event?.position ? event.position.toLowerCase() : "left"
     })) || [];
 
     // Transform Cards Section with null checks
@@ -2034,26 +2045,26 @@ export async function fetchAboutUsPageData(): Promise<{
       reverse: card.reserve || false
     })) || [];
 
-    // Transform FAQ Section
+    // Transform FAQ Section with null checks
     const faqData = {
       title: data.data.FaqSection?.[0]?.title || "FAQ",
       questions: data.data.FaqSection?.[0]?.questions?.flatMap(q => {
-        // Check if q.question exists and is not null/undefined
-        if (!q.question || typeof q.question !== 'object') {
+        // Check if q exists and q.question exists and is not null/undefined
+        if (!q || !q.question || typeof q.question !== 'object') {
           return [];
         }
         // Convert the question object to array of {question, answer} pairs
         return Object.entries(q.question).map(([question, answer]) => ({
-          question,
-          answer
+          question: question || "",
+          answer: answer || ""
         }));
       }) || []
     };
 
-    // Transform Reason Section
+    // Transform Reason Section with null checks
     const reasons = data.data.reasonSection?.map(reason => ({
-      number: reason.number,
-      text: reason.text
+      number: reason?.number || 0,
+      text: reason?.text || ""
     })) || [];
 
     return { cardImage, aboutData, paragData, timelineEvents, cards, faqData, reasons };
