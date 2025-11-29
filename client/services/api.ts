@@ -84,7 +84,9 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
 
     if (!response.ok) {
       const errorText = await response.text();
+      console.error('❌ API Error Response:', errorText);
       throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+
     }
 
     // Check if response is JSON
