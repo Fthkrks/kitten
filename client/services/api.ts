@@ -9,18 +9,38 @@ const NEXT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.AP
 // Remove trailing slash if present
 const API_BASE_URL = NEXT_API_BASE_URL.replace(/\/$/, '');
 
-// Validate API_BASE_URL in production
-if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+// Function to get API base URL (for runtime access)
+export function getApiBaseUrl(): string {
+  // Runtime check - this will work in both server and client
+  const runtimeUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || process.env.NEXT_API_BASE_URL || API_BASE_URL;
+  return runtimeUrl.replace(/\/$/, '');
+}
+
+// Validate API_BASE_URL in production (server-side only)
+if (typeof window === 'undefined') {
   const envVar = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || process.env.NEXT_API_BASE_URL;
-  if (!envVar) {
-    console.error('❌ API_BASE_URL, NEXT_PUBLIC_API_BASE_URL, or NEXT_API_BASE_URL is not set! This will cause connection errors.');
-    console.error('⚠️ Please set one of these in Vercel environment variables.');
-  } else if (API_BASE_URL.includes('127.0.0.1') || API_BASE_URL.includes('localhost')) {
-    console.error('❌ API_BASE_URL is set to localhost! This will not work in production.');
-    console.error('⚠️ Current value:', API_BASE_URL);
-    console.error('⚠️ Please set the environment variable to your production Strapi API URL.');
+  
+  if (process.env.NODE_ENV === 'production') {
+    if (!envVar) {
+      console.error('❌ API_BASE_URL, NEXT_PUBLIC_API_BASE_URL, or NEXT_API_BASE_URL is not set! This will cause connection errors.');
+      console.error('⚠️ Please set one of these in Vercel environment variables.');
+      console.error('🔍 Available env vars:', {
+        NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL ? '✅ Set' : '❌ Not set',
+        API_BASE_URL: process.env.API_BASE_URL ? '✅ Set' : '❌ Not set',
+        NEXT_API_BASE_URL: process.env.NEXT_API_BASE_URL ? '✅ Set' : '❌ Not set',
+      });
+    } else if (API_BASE_URL.includes('127.0.0.1') || API_BASE_URL.includes('localhost')) {
+      console.error('❌ API_BASE_URL is set to localhost! This will not work in production.');
+      console.error('⚠️ Current value:', API_BASE_URL);
+      console.error('⚠️ Please set the environment variable to your production Strapi API URL.');
+    } else {
+      console.log('✅ API_BASE_URL configured:', API_BASE_URL);
+      console.log('🔍 Using environment variable:', envVar === process.env.NEXT_PUBLIC_API_BASE_URL ? 'NEXT_PUBLIC_API_BASE_URL' : 
+                                                      envVar === process.env.API_BASE_URL ? 'API_BASE_URL' : 'NEXT_API_BASE_URL');
+    }
   } else {
-    console.log('✅ API_BASE_URL configured:', API_BASE_URL);
+    // Development mode
+    console.log('🔵 Development mode - API_BASE_URL:', API_BASE_URL);
   }
 }
 
@@ -72,7 +92,12 @@ async function getFetchOptions(): Promise<{ cache: RequestCache; headers?: Heade
 }
 
 export async function fetchHeroData(): Promise<TransformedHeroData> {
-  const url = `${API_BASE_URL}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
+  // Use runtime API_BASE_URL to ensure it's read correctly in production
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
+  if (typeof window === 'undefined') {
+    console.log('🔵 fetchHeroData - Server-side, Using API URL:', baseUrl);
+  }
   
 
   try {
@@ -165,11 +190,19 @@ const getImageUrl = (url: string | undefined | null): string => {
   if (!url) {
     return 'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800';
   }
-  return url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+  // Use runtime API_BASE_URL
+  const baseUrl = getApiBaseUrl();
+  return url.startsWith('http') ? url : `${baseUrl}${url}`;
 };
 
 export async function fetchKittenData(): Promise<TransformedKittenData> {
-    const url = `${API_BASE_URL}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
+    // Use runtime API_BASE_URL to ensure it's read correctly
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
+    if (typeof window === 'undefined') {
+      console.log('🔵 fetchKittenData - Server-side, Using API URL:', baseUrl);
+    }
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -299,7 +332,9 @@ function transformKittenData(apiData: HomepageApiResponse): TransformedKittenDat
 }
 
 export async function fetchAdultsData(): Promise<TransformedAdultsData> {
-    const url = `${API_BASE_URL}/api/homepage?populate[AdultsSection][populate][cats][populate][image][populate]=src`;
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/homepage?populate[AdultsSection][populate][cats][populate][image][populate]=src`;
   
   
   try {
@@ -372,7 +407,9 @@ function transformAdultsData(apiData: HomepageApiResponse): TransformedAdultsDat
 }
 
 export async function fetchCommentsData(): Promise<TransformedCommentsData> {
-    const url = `${API_BASE_URL}/api/homepage?populate[CommentSection][populate][features][populate][image][populate]=src`;
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/homepage?populate[CommentSection][populate][features][populate][image][populate]=src`;
   
   
   try {
@@ -446,7 +483,9 @@ function transformCommentsData(apiData: HomepageApiResponse): TransformedComment
 }
 
 export async function fetchSpecialData(): Promise<TransformedSpecialData> {
-    const url = `${API_BASE_URL}/api/homepage?populate[SpecialSection][populate][features][populate][image][populate]=src`;
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/homepage?populate[SpecialSection][populate][features][populate][image][populate]=src`;
   
   
   try {
@@ -522,7 +561,9 @@ function transformSpecialData(apiData: HomepageApiResponse): TransformedSpecialD
 }
 
 export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
-    const url = `${API_BASE_URL}/api/homepage?populate[GaleriesSection][populate][images][populate]=src`;
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/homepage?populate[GaleriesSection][populate][images][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -608,7 +649,9 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
 }
 
 export async function fetchTestimonialData(): Promise<TransformedTestimonialData> {
-    const url = `${API_BASE_URL}/api/homepage?populate[TestiomonialSection][populate][testimonials][populate][image][fields][0]=url&populate[TestiomonialSection][populate][testimonials][populate][avatarImage][populate][src][fields][0]=url`;
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/homepage?populate[TestiomonialSection][populate][testimonials][populate][image][fields][0]=url&populate[TestiomonialSection][populate][testimonials][populate][avatarImage][populate][src][fields][0]=url`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -705,7 +748,9 @@ function transformTestimonialData(apiData: HomepageApiResponse): TransformedTest
 }
 
 export async function fetchMediaData(): Promise<TransformedMediaData> {
-    const url = `${API_BASE_URL}/api/media-links?populate[SocialLinks][populate]=icon`;
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/media-links?populate[SocialLinks][populate]=icon`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -781,7 +826,9 @@ function transformMediaData(apiData: MediaLinksApiResponse): TransformedMediaDat
 }
 
 export async function fetchVideoData(): Promise<TransformedVideoData> {
-    const url = `${API_BASE_URL}/api/marketing-links?populate[items][populate]=src`;
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/marketing-links?populate[items][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -2668,7 +2715,9 @@ export async function fetchHeroesData(): Promise<{
   phoneNumber: string;
 }> {
   try {
-    const url = `${API_BASE_URL}/api/heroes?populate=*`;
+    // Use runtime API_BASE_URL to ensure it's read correctly in production
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/heroes?populate=*`;
 
     const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
