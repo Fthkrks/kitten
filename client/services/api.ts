@@ -2,45 +2,27 @@ import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, Transf
 
 // Support multiple environment variable names for compatibility:
 // - NEXT_PUBLIC_API_BASE_URL (recommended for Next.js)
-// - API_BASE_URL (alternative)
+// - NEXT_API_BASE_URL (alternative)
 // - NEXT_API_BASE_URL (for existing Vercel setups)
-const NEXT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || process.env.NEXT_API_BASE_URL || 'http://127.0.0.1:1337';
+let apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_API_BASE_URL || process.env.NEXT_API_BASE_URL || 'http://127.0.0.1:1337';
 
 // Remove trailing slash if present
-const API_BASE_URL = NEXT_API_BASE_URL.replace(/\/$/, '');
+apiBaseUrl = apiBaseUrl.replace(/\/$/, '');
 
-// Function to get API base URL (for runtime access)
-export function getApiBaseUrl(): string {
-  // Runtime check - this will work in both server and client
-  const runtimeUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || process.env.NEXT_API_BASE_URL || API_BASE_URL;
-  return runtimeUrl.replace(/\/$/, '');
-}
+const NEXT_API_BASE_URL = apiBaseUrl;
 
-// Validate API_BASE_URL in production (server-side only)
-if (typeof window === 'undefined') {
-  const envVar = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || process.env.NEXT_API_BASE_URL;
-  
-  if (process.env.NODE_ENV === 'production') {
-    if (!envVar) {
-      console.error('❌ API_BASE_URL, NEXT_PUBLIC_API_BASE_URL, or NEXT_API_BASE_URL is not set! This will cause connection errors.');
-      console.error('⚠️ Please set one of these in Vercel environment variables.');
-      console.error('🔍 Available env vars:', {
-        NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL ? '✅ Set' : '❌ Not set',
-        API_BASE_URL: process.env.API_BASE_URL ? '✅ Set' : '❌ Not set',
-        NEXT_API_BASE_URL: process.env.NEXT_API_BASE_URL ? '✅ Set' : '❌ Not set',
-      });
-    } else if (API_BASE_URL.includes('127.0.0.1') || API_BASE_URL.includes('localhost')) {
-      console.error('❌ API_BASE_URL is set to localhost! This will not work in production.');
-      console.error('⚠️ Current value:', API_BASE_URL);
-      console.error('⚠️ Please set the environment variable to your production Strapi API URL.');
-    } else {
-      console.log('✅ API_BASE_URL configured:', API_BASE_URL);
-      console.log('🔍 Using environment variable:', envVar === process.env.NEXT_PUBLIC_API_BASE_URL ? 'NEXT_PUBLIC_API_BASE_URL' : 
-                                                      envVar === process.env.API_BASE_URL ? 'API_BASE_URL' : 'NEXT_API_BASE_URL');
-    }
+// Validate NEXT_API_BASE_URL in production
+if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+  const envVar = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_API_BASE_URL || process.env.NEXT_API_BASE_URL;
+  if (!envVar) {
+    console.error('❌ NEXT_API_BASE_URL, NEXT_PUBLIC_API_BASE_URL, or NEXT_API_BASE_URL is not set! This will cause connection errors.');
+    console.error('⚠️ Please set one of these in Vercel environment variables.');
+  } else if (NEXT_API_BASE_URL.includes('127.0.0.1') || NEXT_API_BASE_URL.includes('localhost')) {
+    console.error('❌ NEXT_API_BASE_URL is set to localhost! This will not work in production.');
+    console.error('⚠️ Current value:', NEXT_API_BASE_URL);
+    console.error('⚠️ Please set the environment variable to your production Strapi API URL.');
   } else {
-    // Development mode
-    console.log('🔵 Development mode - API_BASE_URL:', API_BASE_URL);
+    console.log('✅ NEXT_API_BASE_URL configured:', NEXT_API_BASE_URL);
   }
 }
 
@@ -92,12 +74,7 @@ async function getFetchOptions(): Promise<{ cache: RequestCache; headers?: Heade
 }
 
 export async function fetchHeroData(): Promise<TransformedHeroData> {
-  // Use runtime API_BASE_URL to ensure it's read correctly in production
-  const baseUrl = getApiBaseUrl();
-  const url = `${baseUrl}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
-  if (typeof window === 'undefined') {
-    console.log('🔵 fetchHeroData - Server-side, Using API URL:', baseUrl);
-  }
+  const url = `${NEXT_API_BASE_URL}/api/homepage?populate[heroContent][populate][heroImage][fields][0]=url&populate[heroContent][populate][logo][fields][0]=url&populate[heroContent][populate][collageImage1][fields][0]=url&populate[heroContent][populate][collageImage2][fields][0]=url&populate[heroContent][populate][collageImage3][fields][0]=url&populate[heroContent][populate][aboutSection][populate]=*`;
   
 
   try {
@@ -139,7 +116,7 @@ function transformHeroData(apiData: HomepageApiResponse): TransformedHeroData {
   
   // Helper function to get full image URL
   const getImageUrl = (url: string) => {
-    return url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
+    return url.startsWith('http') ? url : `${NEXT_API_BASE_URL}${url}`;
   };
 
   // Transform listItems from string with \n separators to array
@@ -190,19 +167,11 @@ const getImageUrl = (url: string | undefined | null): string => {
   if (!url) {
     return 'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800';
   }
-  // Use runtime API_BASE_URL
-  const baseUrl = getApiBaseUrl();
-  return url.startsWith('http') ? url : `${baseUrl}${url}`;
+  return url.startsWith('http') ? url : `${NEXT_API_BASE_URL}${url}`;
 };
 
 export async function fetchKittenData(): Promise<TransformedKittenData> {
-    // Use runtime API_BASE_URL to ensure it's read correctly
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
-    if (typeof window === 'undefined') {
-      console.log('🔵 fetchKittenData - Server-side, Using API URL:', baseUrl);
-    }
+    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[KittenSection][populate][Kittens][populate][image][populate]=*`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -332,9 +301,7 @@ function transformKittenData(apiData: HomepageApiResponse): TransformedKittenDat
 }
 
 export async function fetchAdultsData(): Promise<TransformedAdultsData> {
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/homepage?populate[AdultsSection][populate][cats][populate][image][populate]=src`;
+    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[AdultsSection][populate][cats][populate][image][populate]=src`;
   
   
   try {
@@ -407,9 +374,7 @@ function transformAdultsData(apiData: HomepageApiResponse): TransformedAdultsDat
 }
 
 export async function fetchCommentsData(): Promise<TransformedCommentsData> {
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/homepage?populate[CommentSection][populate][features][populate][image][populate]=src`;
+    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[CommentSection][populate][features][populate][image][populate]=src`;
   
   
   try {
@@ -483,9 +448,7 @@ function transformCommentsData(apiData: HomepageApiResponse): TransformedComment
 }
 
 export async function fetchSpecialData(): Promise<TransformedSpecialData> {
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/homepage?populate[SpecialSection][populate][features][populate][image][populate]=src`;
+    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[SpecialSection][populate][features][populate][image][populate]=src`;
   
   
   try {
@@ -561,9 +524,7 @@ function transformSpecialData(apiData: HomepageApiResponse): TransformedSpecialD
 }
 
 export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/homepage?populate[GaleriesSection][populate][images][populate]=src`;
+    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[GaleriesSection][populate][images][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -649,9 +610,7 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
 }
 
 export async function fetchTestimonialData(): Promise<TransformedTestimonialData> {
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/homepage?populate[TestiomonialSection][populate][testimonials][populate][image][fields][0]=url&populate[TestiomonialSection][populate][testimonials][populate][avatarImage][populate][src][fields][0]=url`;
+    const url = `${NEXT_API_BASE_URL}/api/homepage?populate[TestiomonialSection][populate][testimonials][populate][image][fields][0]=url&populate[TestiomonialSection][populate][testimonials][populate][avatarImage][populate][src][fields][0]=url`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -748,9 +707,7 @@ function transformTestimonialData(apiData: HomepageApiResponse): TransformedTest
 }
 
 export async function fetchMediaData(): Promise<TransformedMediaData> {
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/media-links?populate[SocialLinks][populate]=icon`;
+    const url = `${NEXT_API_BASE_URL}/api/media-links?populate[SocialLinks][populate]=icon`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -826,9 +783,7 @@ function transformMediaData(apiData: MediaLinksApiResponse): TransformedMediaDat
 }
 
 export async function fetchVideoData(): Promise<TransformedVideoData> {
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/marketing-links?populate[items][populate]=src`;
+    const url = `${NEXT_API_BASE_URL}/api/marketing-links?populate[items][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -1678,7 +1633,7 @@ export async function fetchTestimonialPageData(): Promise<{
   reviewSections: TransformedReviewSection[];
 }> {
   try {
-    const url = `${API_BASE_URL}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
+    const url = `${NEXT_API_BASE_URL}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -1749,7 +1704,7 @@ export async function fetchGalleriesPageData(): Promise<{
   galleries: TransformedGalleryItem[];
 }> {
   try {
-    const url = `${API_BASE_URL}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate]=*`;
+    const url = `${NEXT_API_BASE_URL}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2054,7 +2009,7 @@ export async function fetchHistoryPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${API_BASE_URL}/api/history-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
+    const url = `${NEXT_API_BASE_URL}/api/history-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2152,7 +2107,7 @@ export async function fetchHealthPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${API_BASE_URL}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
+    const url = `${NEXT_API_BASE_URL}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2247,7 +2202,7 @@ export async function fetchRecipePageData(): Promise<{
   };
 }> {
   try {
-    const url = `${API_BASE_URL}/api/recipe-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[ingredients][populate]=*&populate[tips][populate]=*`;
+    const url = `${NEXT_API_BASE_URL}/api/recipe-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[ingredients][populate]=*&populate[tips][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2343,7 +2298,7 @@ export async function fetchDietPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${API_BASE_URL}/api/diet-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[coverImage][fields][0]=url&populate[highlights][populate]=*&populate[feedingSchedule][populate]=*&populate[do][populate]=*&populate[dont][populate]=*`;
+    const url = `${NEXT_API_BASE_URL}/api/diet-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[coverImage][fields][0]=url&populate[highlights][populate]=*&populate[feedingSchedule][populate]=*&populate[do][populate]=*&populate[dont][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2448,7 +2403,7 @@ export async function fetchVaccinePageData(): Promise<{
   };
 }> {
   try {
-    const url = `${API_BASE_URL}/api/vaccine-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[vaccaniesSection][populate]=*`;
+    const url = `${NEXT_API_BASE_URL}/api/vaccine-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[vaccaniesSection][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2527,7 +2482,7 @@ export async function fetchSpayingAndNeuteringPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${API_BASE_URL}/api/spayingand-neutering?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[paragrafhData][populate]=*`;
+    const url = `${NEXT_API_BASE_URL}/api/spayingand-neutering?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[paragrafhData][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2619,7 +2574,7 @@ export async function fetchProductsRecommendPageData(): Promise<{
   };
 }> {
   try {
-    const url = `${API_BASE_URL}/api/products-recommed?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][imageSrc][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][bullets][populate]=*`;
+    const url = `${NEXT_API_BASE_URL}/api/products-recommed?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][imageSrc][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][bullets][populate]=*`;
 
     const response = await fetch(url, { cache: 'no-store' });
     
@@ -2715,9 +2670,7 @@ export async function fetchHeroesData(): Promise<{
   phoneNumber: string;
 }> {
   try {
-    // Use runtime API_BASE_URL to ensure it's read correctly in production
-    const baseUrl = getApiBaseUrl();
-    const url = `${baseUrl}/api/heroes?populate=*`;
+    const url = `${NEXT_API_BASE_URL}/api/heroes?populate=*`;
 
     const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
