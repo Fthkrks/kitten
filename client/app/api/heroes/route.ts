@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { fetchHeroesData } from '@/services/api';
 
+// Force dynamic rendering and disable caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   console.log('🔵 API Route /api/heroes called');
   try {
