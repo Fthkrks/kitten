@@ -2041,93 +2041,135 @@ export async function fetchAboutUsPageData(): Promise<{
 
     const data: AboutUsPageApiResponse = await response.json();
 
+    // Validate API response structure
+    if (!data || !data.data) {
+      console.error('❌ About Us API response is missing data field');
+      throw new Error('Invalid API response structure');
+    }
+
+    // Log in production for debugging
+    if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+      console.log('🔵 fetchAboutUsPageData - API Response received');
+      console.log('🔵 Available sections:', Object.keys(data.data || {}));
+    }
+
     // Transform CardImage Section
+    const cardImageHeroUrl = data.data?.cardImageSection?.heroImage?.url
+      ? getImageUrl(data.data.cardImageSection.heroImage.url)
+      : "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800";
+    
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "ABOUT US",
-      cardTitle: data.data.cardImageSection.cardTitle || "OUR STORY",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.10)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.3,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#f9f1f1"
+      heroImage: cardImageHeroUrl,
+      heading: data.data?.cardImageSection?.heading || "ABOUT US",
+      cardTitle: data.data?.cardImageSection?.cardTitle || "OUR STORY",
+      cardText: data.data?.cardImageSection?.cardText || "",
+      overlayColor: data.data?.cardImageSection?.overlayColor || "rgba(0,0,0,0.10)",
+      parallaxSpeed: parseFloat(data.data?.cardImageSection?.parallaxSpeed || "0.3") || 0.3,
+      backgroundColor: data.data?.cardImageSection?.backgroundColor || "#f9f1f1"
     };
 
     // Transform About Section
-    const aboutImageUrl = data.data.AboutSection.image?.url
+    const aboutImageUrl = data.data?.AboutSection?.image?.url
       ? getImageUrl(data.data.AboutSection.image.url)
       : 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&q=80&w=500';
 
     const aboutData = {
       image: aboutImageUrl,
-      imageAlt: data.data.AboutSection.imageAlt || "Roxy and Jason with Persian cat",
-      title: data.data.AboutSection.title || "About Us",
-      paragraph1: data.data.AboutSection.paragraph1,
-      highlightText: data.data.AboutSection.highlightText,
-      paragraph2: data.data.AboutSection.paragraph2
+      imageAlt: data.data?.AboutSection?.imageAlt || "Roxy and Jason with Persian cat",
+      title: data.data?.AboutSection?.title || "About Us",
+      paragraph1: data.data?.AboutSection?.paragraph1 || "",
+      highlightText: data.data?.AboutSection?.highlightText || "",
+      paragraph2: data.data?.AboutSection?.paragraph2 || ""
     };
 
     // Transform Paraq Section
     // Parse paragraphs from the string format (comma-separated)
-    const paragraphsArray = data.data.ParaqSection.paragraphs
-      .split('",')
-      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+    const paragraphsArray = data.data?.ParaqSection?.paragraphs
+      ? data.data.ParaqSection.paragraphs
+          .split('",')
+          .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+          .filter(p => p.length > 0)
+      : [];
 
     // Extract list items from the object
-    const listItemsData = data.data.ParaqSection.listItems[0];
-    const listItems = [
-      listItemsData.school,
-      listItemsData.job,
-      listItemsData.job2,
-      listItemsData.job3
-    ];
+    const listItemsData = data.data?.ParaqSection?.listItems?.[0];
+    const listItems = listItemsData
+      ? [
+          listItemsData.school || "",
+          listItemsData.job || "",
+          listItemsData.job2 || "",
+          listItemsData.job3 || ""
+        ].filter(item => item.length > 0)
+      : [];
+
+    const paragImageUrl = data.data?.ParaqSection?.image?.url
+      ? getImageUrl(data.data.ParaqSection.image.url)
+      : 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=500';
 
     const paragData = {
-      image: getImageUrl(data.data.ParaqSection.image.url),
-      imageAlt: data.data.ParaqSection.imageAlt,
-      title: data.data.ParaqSection.title,
+      image: paragImageUrl,
+      imageAlt: data.data?.ParaqSection?.imageAlt || "Roxy and Cat",
+      title: data.data?.ParaqSection?.title || "",
       paragraphs: paragraphsArray,
-      listTitle: data.data.ParaqSection.listTitle,
+      listTitle: data.data?.ParaqSection?.listTitle || "",
       listItems
     };
 
     // Transform Timeline Section
-    const timelineEvents = data.data.timeLine?.map(event => ({
-      year: event.year,
-      title: event.title,
-      desc: event.desc,
-      position: event.position.toLowerCase()
+    const timelineEvents = data.data?.timeLine?.map(event => ({
+      year: event?.year || "",
+      title: event?.title || "",
+      desc: event?.desc || "",
+      position: event?.position?.toLowerCase() || "left"
     })) || [];
 
     // Transform Cards Section
-    const cards = data.data.CardsSection?.map((card, index) => ({
-      title: card.title,
-      text: card.text,
-      img: getImageUrl(card.img.url),
-      bg: index === 1 ? "#fff" : undefined,
-      reverse: card.reserve
-    })) || [];
+    const cards = data.data?.CardsSection?.map((card, index) => {
+      const cardImageUrl = card?.img?.url
+        ? getImageUrl(card.img.url)
+        : 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&q=80&w=800';
+      
+      return {
+        title: card?.title || "",
+        text: card?.text || "",
+        img: cardImageUrl,
+        bg: index === 1 ? "#fff" : undefined,
+        reverse: card?.reserve || false
+      };
+    }).filter(card => card.title || card.text) || [];
 
     // Transform FAQ Section
     const faqData = {
-      title: data.data.FaqSection?.[0]?.title || "FAQ",
-      questions: data.data.FaqSection?.[0]?.questions?.flatMap(q => {
+      title: data.data?.FaqSection?.[0]?.title || "FAQ",
+      questions: data.data?.FaqSection?.[0]?.questions?.flatMap(q => {
         // Check if q.question exists and is not null/undefined
-        if (!q.question || typeof q.question !== 'object') {
+        if (!q?.question || typeof q.question !== 'object') {
           return [];
         }
         // Convert the question object to array of {question, answer} pairs
         return Object.entries(q.question).map(([question, answer]) => ({
-          question,
-          answer
-        }));
+          question: question || "",
+          answer: (answer as string) || ""
+        })).filter(qa => qa.question && qa.answer);
       }) || []
     };
 
     // Transform Reason Section
-    const reasons = data.data.reasonSection?.map(reason => ({
-      number: reason.number,
-      text: reason.text
-    })) || [];
+    const reasons = data.data?.reasonSection?.map(reason => ({
+      number: reason?.number || 0,
+      text: reason?.text || ""
+    })).filter(r => r.text) || [];
+
+    // Log in production for debugging
+    if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+      console.log('✅ fetchAboutUsPageData - Data fetched successfully');
+      console.log('✅ About Section:', !!data.data?.AboutSection);
+      console.log('✅ Paraq Section:', !!data.data?.ParaqSection);
+      console.log('✅ Timeline Events:', timelineEvents.length);
+      console.log('✅ Cards:', cards.length);
+      console.log('✅ FAQ Questions:', faqData.questions.length);
+      console.log('✅ Reasons:', reasons.length);
+    }
 
     return { cardImage, aboutData, paragData, timelineEvents, cards, faqData, reasons };
   } catch (error) {
