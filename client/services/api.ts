@@ -980,8 +980,6 @@ function transformVideoData(apiData: MarketingLinksApiResponse): TransformedVide
 }
 
 export async function fetchAvailableKittenCardImage(): Promise<TransformedCardImageData> {
-  const url = `${NEXT_API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
-
   // Default fallback data
   const fallbackData: TransformedCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
@@ -994,14 +992,24 @@ export async function fetchAvailableKittenCardImage(): Promise<TransformedCardIm
   };
   
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ Available kitten page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
       console.info('💡 To fix: Add avaible-kitten-page content type in Strapi');
+      return fallbackData;
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}. Using fallback data`);
       return fallbackData;
     }
 
@@ -1056,17 +1064,25 @@ function transformAvailableKittenCardImage(
 }
 
 export async function fetchAvailableKittenPetCards(): Promise<TransformedPetCardData[]> {
-  const url = `${NEXT_API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
-
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ Available kitten pet cards API returned status: ${response.status}`);
       console.warn('⚠️ Using empty array');
       console.info('💡 To fix: Add PetCards to your avaible-kitten-page content type in Strapi');
+      return [];
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}. Using empty array`);
       return [];
     }
 
@@ -1131,15 +1147,23 @@ function transformAvailableKittenPetCards(apiData: AvailableKittenPageApiRespons
 }
 
 export async function fetchPetById(id: string): Promise<TransformedPetCardData | null> {
-  const url = `${NEXT_API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
-
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ Pet API returned status: ${response.status}`);
+      return null;
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}`);
       return null;
     }
 
@@ -1162,8 +1186,6 @@ export async function fetchPetById(id: string): Promise<TransformedPetCardData |
 }
 
 export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaibleData> {
-  const url = `${NEXT_API_BASE_URL}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
-
   // Default fallback data
   const fallbackData: TransformedAdultsAvaibleData = {
     title: "RETIRING ADULTS",
@@ -1172,13 +1194,23 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
   };
   
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ Adults available API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
+      return fallbackData;
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}. Using fallback data`);
       return fallbackData;
     }
 
@@ -1205,8 +1237,6 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
 }
 
 export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTermsCardImageData; termsContent: TransformedTermsData }> {
-  const url = `${NEXT_API_BASE_URL}/api/terms-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[TermsSection][populate][sections][populate]=*`;
-
   // Default fallback data
   const fallbackCardImage: TransformedTermsCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=1800",
@@ -1261,13 +1291,23 @@ export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTerm
   };
   
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/terms-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[TermsSection][populate][sections][populate]=*`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ Terms page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
+      return { cardImage: fallbackCardImage, termsContent: fallbackTermsContent };
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}. Using fallback data`);
       return { cardImage: fallbackCardImage, termsContent: fallbackTermsContent };
     }
 
@@ -1312,8 +1352,6 @@ export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTerm
 }
 
 export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
-  const url = `${NEXT_API_BASE_URL}/api/faq-page?populate[FaqSection][populate]=*`;
-
   // Default fallback data
   const fallbackData: TransformedFaqSection[] = [
     {
@@ -1343,13 +1381,23 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
   ];
   
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/faq-page?populate[FaqSection][populate]=*`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ FAQ API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
+      return fallbackData;
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}. Using fallback data`);
       return fallbackData;
     }
 
@@ -1384,8 +1432,6 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
 }
 
 export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCardImageData; kings: TransformedKingsCardData[] }> {
-  const url = `${NEXT_API_BASE_URL}/api/kings-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[KingsSection][populate][image][fields][0]=url`;
-
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
@@ -1429,13 +1475,23 @@ export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCard
   ];
   
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/kings-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[KingsSection][populate][image][fields][0]=url`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ Kings page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
+      return { cardImage: fallbackCardImage, kings: fallbackKings };
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}. Using fallback data`);
       return { cardImage: fallbackCardImage, kings: fallbackKings };
     }
 
@@ -1499,8 +1555,6 @@ export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCard
 }
 
 export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCardImageData; queens: TransformedQueensCardData[] }> {
-  const url = `${NEXT_API_BASE_URL}/api/queens-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[QueensSection][populate][image][fields][0]=url`;
-
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=1800",
@@ -1530,13 +1584,23 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
   ];
   
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/queens-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[QueensSection][populate][image][fields][0]=url`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ Queens page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
+      return { cardImage: fallbackCardImage, queens: fallbackQueens };
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}. Using fallback data`);
       return { cardImage: fallbackCardImage, queens: fallbackQueens };
     }
 
@@ -1606,8 +1670,6 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
 }
 
 export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardImageData; whyBlogData: TransformedWhyBlogData; blogs: TransformedBlogPost[] }> {
-  const url = `${NEXT_API_BASE_URL}/api/blog-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[BlogSection][populate][image][fields][0]=url&populate[whyBlogData][populate][imageTop][fields][0]=url&populate[whyBlogData][populate][aboutItems][populate]=*&populate[whyBlogData][populate][imageBottom][fields][0]=url`;
-
   // Default fallback data
   const fallbackCardImage: TransformedCardImageData = {
     heroImage: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800",
@@ -1640,13 +1702,23 @@ export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardI
   const fallbackBlogs: TransformedBlogPost[] = [];
   
   try {
-    const response = await fetch(url, {
-      cache: 'no-store', // Always fetch fresh data
-    });
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/blog-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[BlogSection][populate][image][fields][0]=url&populate[whyBlogData][populate][imageTop][fields][0]=url&populate[whyBlogData][populate][aboutItems][populate]=*&populate[whyBlogData][populate][imageBottom][fields][0]=url`;
+
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.warn(`⚠️ Blog page API returned status: ${response.status}`);
       console.warn('⚠️ Using fallback data');
+      return { cardImage: fallbackCardImage, whyBlogData: fallbackWhyBlogData, blogs: fallbackBlogs };
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.warn(`⚠️ Expected JSON but got ${contentType}. Using fallback data`);
       return { cardImage: fallbackCardImage, whyBlogData: fallbackWhyBlogData, blogs: fallbackBlogs };
     }
 
@@ -1746,10 +1818,18 @@ export async function fetchTestimonialPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: TestimonialPageApiResponse = await response.json();
@@ -1818,10 +1898,18 @@ export async function fetchGalleriesPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate]=*`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: GalleriesPageApiResponse = await response.json();
@@ -1933,18 +2021,9 @@ export async function fetchAboutUsPageData(): Promise<{
 }> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const fetchOptions = await getFetchOptions();
-    
-    // Check if draft mode is enabled to add status parameter
-    let url = `${apiBaseUrl}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]=url&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate]=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
-    
-    // Add status=draft if in draft mode
-    const headers = fetchOptions.headers as Record<string, string> | undefined;
-    if (headers?.['strapi-encode-source-maps'] === 'true') {
-      url += '&status=draft';
-    }
+    const url = `${apiBaseUrl}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]=url&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate]=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
 
-    const response = await fetchWithTimeout(url, fetchOptions);
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2135,10 +2214,18 @@ export async function fetchHistoryPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/history-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: HistoryPageApiResponse = await response.json();
@@ -2234,10 +2321,18 @@ export async function fetchHealthPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: HealthPageApiResponse = await response.json();
@@ -2330,10 +2425,18 @@ export async function fetchRecipePageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/recipe-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[ingredients][populate]=*&populate[tips][populate]=*`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: RecipePageApiResponse = await response.json();
@@ -2427,10 +2530,18 @@ export async function fetchDietPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/diet-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[coverImage][fields][0]=url&populate[highlights][populate]=*&populate[feedingSchedule][populate]=*&populate[do][populate]=*&populate[dont][populate]=*`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: DietPageApiResponse = await response.json();
@@ -2533,10 +2644,18 @@ export async function fetchVaccinePageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/vaccine-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[vaccaniesSection][populate]=*`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: VaccinePageApiResponse = await response.json();
@@ -2613,10 +2732,18 @@ export async function fetchSpayingAndNeuteringPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/spayingand-neutering?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[paragrafhData][populate]=*`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: SpayingAndNeuteringPageApiResponse = await response.json();
@@ -2706,10 +2833,18 @@ export async function fetchProductsRecommendPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/products-recommed?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][imageSrc][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][bullets][populate]=*`;
 
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, response: ${errorText.substring(0, 200)}`);
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      throw new Error(`Expected JSON but got ${contentType}. Response: ${text.substring(0, 200)}`);
     }
 
     const data: ProductsRecommendPageApiResponse = await response.json();
