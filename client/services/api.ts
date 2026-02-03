@@ -2283,13 +2283,17 @@ export async function fetchHistoryPageData(): Promise<{
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "HISTORY",
-      cardTitle: data.data.cardImageSection.cardTitle || "OUR HISTORY",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.15)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.3,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#f9f1f1"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=1800",
+      heading: data.data.cardImageSection?.heading || "HISTORY",
+      cardTitle: data.data.cardImageSection?.cardTitle || "OUR HISTORY",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.15)",
+      parallaxSpeed: data.data.cardImageSection?.parallaxSpeed 
+        ? parseFloat(data.data.cardImageSection.parallaxSpeed) 
+        : 0.3,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#f9f1f1"
     };
 
     // Transform TextImage Section
@@ -2390,13 +2394,17 @@ export async function fetchHealthPageData(): Promise<{
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "HEALTH",
-      cardTitle: data.data.cardImageSection.cardTitle || "BREEDING FOR HEALTH",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.2)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#EAF7E7"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=1800",
+      heading: data.data.cardImageSection?.heading || "HEALTH",
+      cardTitle: data.data.cardImageSection?.cardTitle || "BREEDING FOR HEALTH",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.2)",
+      parallaxSpeed: data.data.cardImageSection?.parallaxSpeed 
+        ? parseFloat(data.data.cardImageSection.parallaxSpeed) 
+        : 0.25,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#EAF7E7"
     };
 
     // Transform TextImage Section
