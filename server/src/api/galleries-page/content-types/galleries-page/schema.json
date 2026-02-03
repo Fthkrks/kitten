@@ -7,13 +7,9 @@
     "displayName": "Galleries-pages"
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": false
-    }
-  },
+  "pluginOptions": {},
   "attributes": {
     "cardImageSection": {
       "type": "component",

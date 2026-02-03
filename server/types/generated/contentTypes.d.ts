@@ -636,12 +636,7 @@ export interface ApiGalleriesPageGalleriesPage extends Struct.SingleTypeSchema {
     singularName: 'galleries-page';
   };
   options: {
-    draftAndPublish: false;
-  };
-  pluginOptions: {
-    i18n: {
-      localized: false;
-    };
+    draftAndPublish: true;
   };
   attributes: {
     cardImageSection: Schema.Attribute.Component<'basic.card-image', false>;

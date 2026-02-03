@@ -1896,7 +1896,7 @@ export async function fetchGalleriesPageData(): Promise<{
 }> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate]=*`;
+    const url = `${apiBaseUrl}  `;
 
     const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
@@ -1916,13 +1916,17 @@ export async function fetchGalleriesPageData(): Promise<{
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "GALLERIES",
-      cardTitle: data.data.cardImageSection.cardTitle || "CHECK OUT OUR PHOTO ALBUMS",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.15)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.3,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#f9f1f1"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&q=80&w=1800",
+      heading: data.data.cardImageSection?.heading || "GALLERIES",
+      cardTitle: data.data.cardImageSection?.cardTitle || "CHECK OUT OUR PHOTO ALBUMS",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.15)",
+      parallaxSpeed: data.data.cardImageSection?.parallaxSpeed 
+        ? parseFloat(data.data.cardImageSection.parallaxSpeed) 
+        : 0.3,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#f9f1f1"
     };
 
     // Transform Galleries Data
