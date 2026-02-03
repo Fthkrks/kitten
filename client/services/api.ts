@@ -331,30 +331,68 @@ function transformKittenData(apiData: HomepageApiResponse): TransformedKittenDat
     };
   }
   
-  let imageItem = kittenSection.Kittens.image;
+  // API can return image as array or single object, handle both cases
+  const imageData = kittenSection.Kittens.image as any;
+  let imageItems: any[] = [];
   
-  // If image is an array, take the first element
-  if (Array.isArray(imageItem)) {
-    if (imageItem.length === 0) {
-      console.warn('⚠️ Kitten images not found in API, using fallback data');
-      console.info('💡 To use API data: Add images to KittenSection in Strapi admin panel');
+  // If image is not an array, wrap it in an array
+  if (!Array.isArray(imageData)) {
+    imageItems = [imageData];
+  } else {
+    imageItems = imageData;
+  }
+  
+  // Check if array is empty
+  if (imageItems.length === 0) {
+    console.warn('⚠️ Kitten images not found in API, using fallback data');
+    console.info('💡 To use API data: Add images to KittenSection in Strapi admin panel');
+    
+    const { kittenData } = require('@/data/kittenData');
+    return {
+      title: kittenSection.title,
+      kittens: kittenData.kittens,
+      buttonText: kittenSection.buttonText
+    };
+  }
+  
+  // Map all images to kittens array
+  const kittens = imageItems
+    .filter((imageItem: any) => {
+      // Filter out invalid items
+      if (!imageItem || typeof imageItem !== 'object') {
+        console.warn('⚠️ Skipping invalid kitten image structure');
+        return false;
+      }
+      if (!imageItem.src) {
+        console.warn('⚠️ Skipping kitten image without src');
+        return false;
+      }
+      return true;
+    })
+    .map((imageItem: any, index: number) => {
+      // Generate a unique ID from the image name
+      const id = imageItem.src.name?.split('-').pop()?.replace(/\.[^/.]+$/, '') || `kitten-${imageItem.id || index}`;
       
-      // Import and use fallback data
-      const { kittenData } = require('@/data/kittenData');
+      // Extract name from alt text (e.g., "SMOKE" -> "SMOKE")
+      const name = imageItem.alt?.split(' ')[0] || 'Kitten';
+      
+      // For "Rainbow Collection", use shorter mobile title
+      const mobileTitle = imageItem.alt?.includes('Collection') ? 'Rainbow' : undefined;
+      
       return {
-        title: kittenSection.title,
-        kittens: kittenData.kittens,
-        buttonText: kittenSection.buttonText
+        id,
+        name: imageItem.alt?.includes('Collection') ? imageItem.alt : name,
+        mobileTitle,
+        image: {
+          src: getImageUrl(imageItem.src.url),
+          alt: imageItem.alt || 'Kitten'
+        }
       };
-    }
-    imageItem = imageItem[0];
-  }
+    });
   
-  // Check if imageItem has the expected structure
-  if (!imageItem || typeof imageItem !== 'object') {
-    console.warn('⚠️ Invalid kitten image structure, using fallback data');
-    console.info('💡 Check KittenSection image configuration in Strapi');
-    
+  // If no valid kittens after filtering, use fallback
+  if (kittens.length === 0) {
+    console.warn('⚠️ No valid kitten images found, using fallback data');
     const { kittenData } = require('@/data/kittenData');
     return {
       title: kittenSection.title,
@@ -362,43 +400,10 @@ function transformKittenData(apiData: HomepageApiResponse): TransformedKittenDat
       buttonText: kittenSection.buttonText
     };
   }
-  
-  // Check if src exists
-  if (!imageItem.src) {
-    console.warn('⚠️ Kitten image src not populated, using fallback data');
-    console.info('💡 Make sure image media is properly uploaded in Strapi');
-    
-    const { kittenData } = require('@/data/kittenData');
-    return {
-      title: kittenSection.title,
-      kittens: kittenData.kittens,
-      buttonText: kittenSection.buttonText
-    };
-  }
-  
-  // Generate a unique ID from the image name
-  const id = imageItem.src.name?.split('-').pop()?.replace(/\.[^/.]+$/, '') || 'kitten-1';
-  
-  // Extract name from alt text (e.g., "Silver Persian Kitten" -> "Silver")
-  const name = imageItem.alt?.split(' ')[0] || 'Kitten';
-  
-  // For "Rainbow Collection", use shorter mobile title
-  const mobileTitle = imageItem.alt?.includes('Collection') ? 'Rainbow' : undefined;
-  
-  // Create a single kitten object
-  const kitten = {
-    id,
-    name: imageItem.alt?.includes('Collection') ? imageItem.alt : name,
-    mobileTitle,
-    image: {
-      src: getImageUrl(imageItem.src.url),
-      alt: imageItem.alt || 'Kitten'
-    }
-  };
 
   return {
     title: kittenSection.title,
-    kittens: [kitten], // Wrap in array for component compatibility
+    kittens, // Return all kittens array
     buttonText: kittenSection.buttonText
   };
 }
