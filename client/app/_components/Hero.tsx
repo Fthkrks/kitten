@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface HeroData {
@@ -240,9 +241,11 @@ export default function Hero() {
 
                 {/* CTA Button */}
                 <div className="flex justify-end">
-                  <button className="bg-[#E2F4E2] cursor-pointer  duration-300 hover:bg-[#D0E8D0] text-gray-800 px-6 md:px-8 py-2 md:py-3 rounded-xl font-medium text-sm md:text-base transition-colors shadow-md font-lora">
-                    {aboutSection.buttonText}
-                  </button>
+                  <Link href="/about-us">
+                    <button className="bg-[#E2F4E2] cursor-pointer  duration-300 hover:bg-[#D0E8D0] text-gray-800 px-6 md:px-8 py-2 md:py-3 rounded-xl font-medium text-sm md:text-base transition-colors shadow-md font-lora">
+                      {aboutSection.buttonText}
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

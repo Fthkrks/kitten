@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { TransformedKittenData } from "@/types/api";
 
 type KittenProps = TransformedKittenData;
@@ -56,9 +57,11 @@ export default function Kitten({ title, kittens, buttonText }: KittenProps) {
 
         {/* CTA Button */}
         <div className="flex justify-center md:justify-end">
-          <button className="bg-[#E2F4E2] cursor-pointer duration-300 hover:bg-[#D0E8D0] text-[#5A5A5A] px-6 md:px-8 py-3 md:py-4 rounded-xl font-medium text-base md:text-lg transition-colors shadow-xl font-lora">
-            {buttonText}
-          </button>
+          <Link href="/avaible-kittens">
+            <button className="bg-[#E2F4E2] cursor-pointer duration-300 hover:bg-[#D0E8D0] text-[#5A5A5A] px-6 md:px-8 py-3 md:py-4 rounded-xl font-medium text-base md:text-lg transition-colors shadow-xl font-lora">
+              {buttonText}
+            </button>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Look() {
   return (
     <section className="py-20 bg-white">
@@ -55,9 +57,11 @@ export default function Look() {
 
             {/* CTA */}
             <div className="mt-8">
-              <button className="rounded-md  bg-[#E2F4E2] px-10 py-3.5 font-lora text-md cursor-pointer tracking-wide font-medium text-[#5A5A5A] shadow-xl hover:bg-[#D0E8D0] transition-colors font-lora">
-                VIEW AVAILABLE KITTENS
-              </button>
+              <Link href="/avaible-kittens">
+                <button className="rounded-md  bg-[#E2F4E2] px-10 py-3.5 font-lora text-md cursor-pointer tracking-wide font-medium text-[#5A5A5A] shadow-xl hover:bg-[#D0E8D0] transition-colors font-lora">
+                  VIEW AVAILABLE KITTENS
+                </button>
+              </Link>
             </div>
           </div>
         </div>

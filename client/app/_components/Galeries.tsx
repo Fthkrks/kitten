@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { TransformedGaleriesData } from "@/types/api";
 
 type GaleriesProps = TransformedGaleriesData;
@@ -25,9 +26,11 @@ export default function Galeries({ title, description, buttonText, images }: Gal
               {description.eyeCandyText}
             </p>
             <div className="mt-8">
-              <button className="rounded-md bg-[#E2F4E2] px-10 py-3.5 font-lora text-md cursor-pointer tracking-wide font-medium text-[#5A5A5A] shadow-xl hover:bg-[#D0E8D0] transition-colors">
-                {buttonText}
-              </button>
+              <Link href="/galleries">
+                <button className="rounded-md bg-[#E2F4E2] px-10 py-3.5 font-lora text-md cursor-pointer tracking-wide font-medium text-[#5A5A5A] shadow-xl hover:bg-[#D0E8D0] transition-colors">
+                  {buttonText}
+                </button>
+              </Link>
             </div>
           </div>
 
