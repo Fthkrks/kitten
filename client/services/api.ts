@@ -2298,22 +2298,26 @@ export async function fetchHistoryPageData(): Promise<{
 
     // Transform TextImage Section
     // Parse paragraphs from the string format (comma-separated with quotes)
-    const paragraphsArray = data.data.textImageData.paragraphs
-      .split('",')
-      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+    const paragraphsArray = data.data.textImageData?.paragraphs
+      ? data.data.textImageData.paragraphs.split('",').map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+      : [];
 
     const textImageData = {
       leftImage: {
-        src: getImageUrl(data.data.textImageData.leftImage.src.url),
-        alt: data.data.textImageData.leftImage.alt,
-        title: data.data.textImageData.leftImage.title,
-        caption: data.data.textImageData.leftImage.caption
+        src: data.data.textImageData?.leftImage?.src?.url 
+          ? getImageUrl(data.data.textImageData.leftImage.src.url)
+          : "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=800",
+        alt: data.data.textImageData?.leftImage?.alt || "British Longhair Cat",
+        title: data.data.textImageData?.leftImage?.title || "Our History",
+        caption: data.data.textImageData?.leftImage?.caption || ""
       },
       rightImage: {
-        src: getImageUrl(data.data.textImageData.rightImage.src.url),
-        alt: data.data.textImageData.rightImage.alt,
-        title: data.data.textImageData.rightImage.title,
-        caption: data.data.textImageData.rightImage.caption
+        src: data.data.textImageData?.rightImage?.src?.url 
+          ? getImageUrl(data.data.textImageData.rightImage.src.url)
+          : "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&q=80&w=800",
+        alt: data.data.textImageData?.rightImage?.alt || "British Longhair Cat",
+        title: data.data.textImageData?.rightImage?.title || "Our Journey",
+        caption: data.data.textImageData?.rightImage?.caption || ""
       },
       paragraphs: paragraphsArray
     };
@@ -2409,22 +2413,26 @@ export async function fetchHealthPageData(): Promise<{
 
     // Transform TextImage Section
     // Parse paragraphs from the string format (comma-separated with quotes)
-    const paragraphsArray = data.data.textImageData.paragraphs
-      .split('",')
-      .map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'));
+    const paragraphsArray = data.data.textImageData?.paragraphs
+      ? data.data.textImageData.paragraphs.split('",').map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+      : [];
 
     const textImageData = {
       leftImage: {
-        src: getImageUrl(data.data.textImageData.leftImage.src.url),
-        alt: data.data.textImageData.leftImage.alt,
-        title: data.data.textImageData.leftImage.title,
-        caption: data.data.textImageData.leftImage.caption
+        src: data.data.textImageData?.leftImage?.src?.url 
+          ? getImageUrl(data.data.textImageData.leftImage.src.url)
+          : "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=800",
+        alt: data.data.textImageData?.leftImage?.alt || "British Longhair Cat",
+        title: data.data.textImageData?.leftImage?.title || "Health Focus",
+        caption: data.data.textImageData?.leftImage?.caption || ""
       },
       rightImage: {
-        src: getImageUrl(data.data.textImageData.rightImage.src.url),
-        alt: data.data.textImageData.rightImage.alt,
-        title: data.data.textImageData.rightImage.title,
-        caption: data.data.textImageData.rightImage.caption
+        src: data.data.textImageData?.rightImage?.src?.url 
+          ? getImageUrl(data.data.textImageData.rightImage.src.url)
+          : "https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&q=80&w=800",
+        alt: data.data.textImageData?.rightImage?.alt || "British Longhair Cat",
+        title: data.data.textImageData?.rightImage?.title || "Breeding Standards",
+        caption: data.data.textImageData?.rightImage?.caption || ""
       },
       paragraphs: paragraphsArray
     };
