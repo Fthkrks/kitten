@@ -23,7 +23,8 @@
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
     "strapi-plugin-populate-deep": "^3.0.1",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "vercel": "^50.9.1"
   },
   "devDependencies": {
     "@types/node": "^20",

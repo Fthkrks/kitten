@@ -1814,7 +1814,7 @@ export async function fetchTestimonialPageData(): Promise<{
   heroData: TransformedTestimonialHeroData;
   reviewSections: TransformedReviewSection[];
 }> {
-  try {
+  try { 
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
 
@@ -2590,13 +2590,17 @@ export async function fetchDietPageData(): Promise<{
 
     // Transform CardImage Section
     const cardImage: TransformedCardImageData = {
-      heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-      heading: data.data.cardImageSection.heading || "DIET",
-      cardTitle: data.data.cardImageSection.cardTitle || "DIET GUIDELINES",
-      cardText: data.data.cardImageSection.cardText || "",
-      overlayColor: data.data.cardImageSection.overlayColor || "rgba(0,0,0,0.2)",
-      parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed) || 0.25,
-      backgroundColor: data.data.cardImageSection.backgroundColor || "#F4FCFD"
+      heroImage: data.data.cardImageSection?.heroImage?.url 
+        ? getImageUrl(data.data.cardImageSection.heroImage.url)
+        : "https://images.unsplash.com/photo-1604908554039-913b1b90a44b?auto=format&fit=crop&q=80&w=1600",
+      heading: data.data.cardImageSection?.heading || "DIET",
+      cardTitle: data.data.cardImageSection?.cardTitle || "DIET GUIDELINES",
+      cardText: data.data.cardImageSection?.cardText || "",
+      overlayColor: data.data.cardImageSection?.overlayColor || "rgba(0,0,0,0.2)",
+      parallaxSpeed: data.data.cardImageSection?.parallaxSpeed 
+        ? parseFloat(data.data.cardImageSection.parallaxSpeed) 
+        : 0.25,
+      backgroundColor: data.data.cardImageSection?.backgroundColor || "#F4FCFD"
     };
 
     // Transform Diet Data
