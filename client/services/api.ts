@@ -1896,7 +1896,7 @@ export async function fetchGalleriesPageData(): Promise<{
 }> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}  `;
+    const url = `${apiBaseUrl}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate][src][fields][1]=alternativeText`;
 
     const response = await fetchWithTimeout(url, { cache: 'no-store' });
     
