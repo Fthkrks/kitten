@@ -636,7 +636,7 @@ function transformSpecialData(apiData: HomepageApiResponse): TransformedSpecialD
 
 export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/homepage?populate[GaleriesSection][populate][images][populate]=src`;
+    const url = `${apiBaseUrl}/api/homepage?populate[GaleriesSection][populate][image][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -675,11 +675,13 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
     return galeriesData;
   }
   
-  const galeriesSection = apiData.data.GaleriesSection;
+  const galeriesSection = apiData.data.GaleriesSection as any;
   
-  // Check if images is an array
-  if (!Array.isArray(galeriesSection.images)) {
-    console.warn('⚠️ images is not an array, using fallback data');
+  // Handle both 'image' and 'images' field names, and ensure it's an array
+  let imageData = galeriesSection.image || galeriesSection.images;
+  
+  if (!imageData) {
+    console.warn('⚠️ image/images not found in GaleriesSection, using fallback data');
     const { galeriesData } = require('@/data/galeriesData');
     return {
       title: galeriesSection.title,
@@ -693,8 +695,13 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
     };
   }
   
+  // Ensure imageData is an array
+  if (!Array.isArray(imageData)) {
+    imageData = [imageData];
+  }
+  
   // Transform images array - only take first 3 images for fixed layout
-  const images = galeriesSection.images.slice(0, 3).map((imageItem, index) => {
+  const images = imageData.slice(0, 3).map((imageItem: any, index: number) => {
     // Check if src exists
     if (!imageItem.src) {
       console.warn(`⚠️ Image ${index} src not populated, using fallback`);
