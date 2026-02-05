@@ -636,7 +636,7 @@ function transformSpecialData(apiData: HomepageApiResponse): TransformedSpecialD
 
 export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/homepage?populate[GaleriesSection][populate][image][populate]=src`;
+    const url = `${apiBaseUrl}/api/homepage?populate[GaleriesSection][populate][description][populate]=*&populate[GaleriesSection][populate][image][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -677,53 +677,54 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
   
   const galeriesSection = apiData.data.GaleriesSection as any;
   
+  // Get fallback data for use in case of missing fields
+  const { galeriesData } = require('@/data/galeriesData');
+  
+  // Handle description - it's a component
+  const descriptionData = galeriesSection.description || {};
+  const description = {
+    mainText: descriptionData.mainText || galeriesData.description.mainText,
+    browsingText: descriptionData.browsingText || galeriesData.description.browsingText,
+    eyeCandyText: descriptionData.eyeCandyText || galeriesData.description.eyeCandyText
+  };
+  
   // Handle both 'image' and 'images' field names, and ensure it's an array
   let imageData = galeriesSection.image || galeriesSection.images;
   
-  if (!imageData) {
-    console.warn('⚠️ image/images not found in GaleriesSection, using fallback data');
-    const { galeriesData } = require('@/data/galeriesData');
+  if (!imageData || !Array.isArray(imageData) || imageData.length === 0) {
+    console.warn('⚠️ image/images not found in GaleriesSection, using fallback images');
     return {
-      title: galeriesSection.title,
-      description: {
-        mainText: galeriesSection.mainText,
-        browsingText: galeriesSection.browsingText,
-        eyeCandyText: galeriesSection.eyeCandyText
-      },
-      buttonText: galeriesSection.buttonText,
+      title: galeriesSection.title || galeriesData.title,
+      description,
+      buttonText: galeriesSection.buttonText || galeriesData.buttonText,
       images: galeriesData.images
     };
-  }
-  
-  // Ensure imageData is an array
-  if (!Array.isArray(imageData)) {
-    imageData = [imageData];
   }
   
   // Transform images array - only take first 3 images for fixed layout
   const images = imageData.slice(0, 3).map((imageItem: any, index: number) => {
     // Check if src exists
-    if (!imageItem.src) {
+    if (!imageItem.src || !imageItem.src.url) {
       console.warn(`⚠️ Image ${index} src not populated, using fallback`);
-      const { galeriesData } = require('@/data/galeriesData');
       return galeriesData.images[index] || galeriesData.images[0];
     }
     
     return {
       id: imageItem.id.toString(),
       src: getImageUrl(imageItem.src.url),
-      alt: imageItem.alt
+      alt: imageItem.alt || `Gallery image ${index + 1}`
     };
   });
 
+  // If we don't have enough images, fill with fallback
+  while (images.length < 3) {
+    images.push(galeriesData.images[images.length] || galeriesData.images[0]);
+  }
+
   return {
-    title: galeriesSection.title,
-    description: {
-      mainText: galeriesSection.mainText,
-      browsingText: galeriesSection.browsingText,
-      eyeCandyText: galeriesSection.eyeCandyText
-    },
-    buttonText: galeriesSection.buttonText,
+    title: galeriesSection.title || galeriesData.title,
+    description,
+    buttonText: galeriesSection.buttonText || galeriesData.buttonText,
     images
   };
 }

@@ -144,14 +144,19 @@ interface GaleriesImageHomepage {
   src: StrapiImageFull;
 }
 
-interface GaleriesSectionHomepage {
+interface GaleriesDescriptionHomepage {
   id: number;
-  title: string;
   mainText: string;
   browsingText: string;
   eyeCandyText: string;
+}
+
+interface GaleriesSectionHomepage {
+  id: number;
+  title: string;
+  description: GaleriesDescriptionHomepage;
   buttonText: string;
-  images: GaleriesImageHomepage[];
+  image: GaleriesImageHomepage[];
 }
 
 // Popular Section (for Homepage API)

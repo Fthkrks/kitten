@@ -17,40 +17,52 @@ export default function Look() {
               COLOR?
             </h2>
             <p className="mt-6 text-md leading-7 text-[#5A5A5A]/80 max-w-sm">
-              We specialize in golden, silver, and blue golden Persian cats. If you are searching for a different color, we offer kittens from what we call our rainbow collection – kittens with solid colors such as blue, red, and cream, as well as bi-colors, tabbies, and many other color combinations. We offer color variety to help you diversify your collection because we find beauty in many colors. We also believe that each kitten is valued not just by their color, but by combining all their features.
+              At Astrid Moon Cattery, we specialize in carefully selected colors including Golden, Blue Golden, Black Golden Shaded, Black Golden Shell, and Bi-Color kittens. These beautiful varieties are the foundation of our breeding program and reflect the type and quality we aim to produce.
+            </p>
+            <p className="mt-4 text-md leading-7 text-[#5A5A5A]/80 max-w-sm">
+              From rich golden tones to light shell patterns and striking bi-color combinations, each kitten is evaluated not only for color, but also for health, temperament, structure, and overall balance.
+            </p>
+            <p className="mt-4 text-md leading-7 text-[#5A5A5A]/80 max-w-sm">
+              We believe that true beauty is a combination of color, character, and quality — and every kitten is special in its own way.
             </p>
           </div>
 
           {/* Right: Two lists */}
           <div className="md:col-span-2">
             <div className="grid sm:grid-cols-2 gap-10">
-              {/* Rare Colors */}
-              <div className="">
-                <div className="flex items-center gap-4">
-                  <span className="h-px w-10 bg-gray-300" />
-                  <h3 className="font-lora text-[#8EA58E] text-lg">Rare Colors</h3>
-                </div>
-                <ul className="mt-4 space-y-2 text-[#5A5A5A]/80 text-sm">
-                  <li>Silver</li>
-                  <li>Golden</li>
-                  <li>Blue Golden</li>
-                  <li>Blue Silver</li>
-                </ul>
-              </div>
-
               {/* Traditional Colors */}
               <div>
                 <div className="flex items-center gap-4">
                   <span className="h-px w-10 bg-gray-300" />
-                  <h3 className="font-lora text-[#8EA58E] text-lg">Traditional Colors</h3>
+                  <h3 className="font-lora text-[#8EA58E] text-lg">Traditional colors</h3>
                 </div>
                 <ul className="mt-4 space-y-2 text-[#5A5A5A]/80 text-sm">
-                  <li>Red</li>
-                  <li>Cream</li>
-                  <li>Blue</li>
-                  <li>Tabby</li>
-                  <li>Bi-Color</li>
-                  <li>Any Mix of the Above +</li>
+                  <li>Golden</li>
+                  <li>Blue golden</li>
+                  <li>Black golden shaded</li>
+                  <li>Black golden shell (Chinchilla Golden)</li>
+                  <li>Bicolors</li>
+                  <li>Odd-Eye</li>
+                </ul>
+              </div>
+
+              {/* Coat Color Codes */}
+              <div className="">
+                <div className="flex items-center gap-4">
+                  <span className="h-px w-10 bg-gray-300" />
+                  <h3 className="font-lora text-[#8EA58E] text-lg">Coat Color Codes</h3>
+                </div>
+                <ul className="mt-4 space-y-2 text-[#5A5A5A]/80 text-sm">
+                  <li>Ny11</li>
+                  <li>Ny12</li>
+                  <li>Cy11</li>
+                  <li>Cy12</li>
+                  <li>By11</li>
+                  <li>By12</li>
+                  <li>Ay11</li>
+                  <li>Ay12</li>
+                  <li>Ny25</li>
+                  <li>By25</li>
                 </ul>
               </div>
             </div>
