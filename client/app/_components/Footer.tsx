@@ -1,5 +1,5 @@
-"use client";
 import Image from "next/image";
+import ScrollToTop from "./ScrollToTop";
 
 interface SocialLink {
   id: string;
@@ -9,10 +9,18 @@ interface SocialLink {
 }
 
 interface FooterProps {
+  siteTitle?: string;
+  phoneNumber?: string;
+  location?: string;
   socialLinks?: SocialLink[];
 }
 
-export default function Footer({ socialLinks = [] }: FooterProps) {
+export default function Footer({ 
+  siteTitle = "Astrid Moon Cattery",
+  phoneNumber = "(832) 951-0506",
+  location = "SARASOTA, FLORIDA",
+  socialLinks = [] 
+}: FooterProps) {
   return (
     <footer className="bg-[#F9F1F1] pt-12 pb-0">
       <div className="max-w-7xl mx-auto px-6">
@@ -20,13 +28,13 @@ export default function Footer({ socialLinks = [] }: FooterProps) {
           {/* Sol - İletişim Bilgileri */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
             <h2 className="font-lora text-[#b1868e] text-xl md:text-2xl tracking-wider">
-              ETHEREAL PERSIANS LLC
+              {siteTitle.toUpperCase()}
             </h2>
             <div className="text-[#9a868d] text-base md:text-lg">
-              SARASOTA, FLORIDA
+              {location}
             </div>
             <div className="text-[#b1868e] text-base md:text-lg">
-              1(941) 822-4016
+              {phoneNumber}
             </div>
             <div className="flex gap-4 pt-2">
               {socialLinks.length > 0 ? (
@@ -166,30 +174,13 @@ export default function Footer({ socialLinks = [] }: FooterProps) {
       {/* Alt Copyright Barı */}
       <div className="bg-[#efd1d1] w-full text-[#b1868e] text-xs flex flex-col md:flex-row justify-between items-center px-6 py-4 mt-12 gap-3 md:gap-0">
         <div className="text-center md:text-left">
-          © 2025 Ethereal Persians | 
+          © 2025 {siteTitle} | 
           <a href="#" className="underline hover:text-[#9a868d] ml-1">Terms Of Use</a> | 
           <a href="#" className="underline hover:text-[#9a868d] ml-1">Privacy Policy</a>
         </div>
         
         {/* Scroll to top butonu */}
-        <button
-          className="fixed md:static bottom-6 right-6 md:right-0 flex items-center justify-center bg-[#b1868e] hover:bg-[#a67d8f] text-white w-11 h-11 rounded-full shadow-lg transition-all duration-300 z-50 hover:scale-110"
-          aria-label="Scroll to top"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        >
-          <svg 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2.5" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <path d="M12 19V5M5 12l7-7 7 7"/>
-          </svg>
-        </button>
+        <ScrollToTop />
       </div>
     </footer>
   );

@@ -1,4 +1,4 @@
-import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse, HistoryPageApiResponse, HealthPageApiResponse, RecipePageApiResponse, DietPageApiResponse, VaccinePageApiResponse, SpayingAndNeuteringPageApiResponse, ProductsRecommendPageApiResponse, HeroesApiResponse } from '@/types/api';
+import { HomepageApiResponse, TransformedHeroData, TransformedKittenData, TransformedAdultsData, TransformedCommentsData, TransformedSpecialData, TransformedGaleriesData, TransformedPopularData, TransformedTestimonialData, MediaLinksApiResponse, TransformedMediaData, MarketingLinksApiResponse, TransformedVideoData, AvailableKittenPageApiResponse, TransformedCardImageData, TransformedPetCardData, TransformedAdultsAvaibleData, TermsPageApiResponse, TransformedTermsCardImageData, TransformedTermsData, FaqPageApiResponse, TransformedFaqSection, KingsPageApiResponse, TransformedKingsCardData, QueensPageApiResponse, TransformedQueensCardData, BlogPageApiResponse, TransformedWhyBlogData, TransformedBlogPost, TestimonialPageApiResponse, TransformedTestimonialHeroData, TransformedTestimonialReview, GalleriesPageApiResponse, TransformedGalleryItem, AboutUsPageApiResponse, HistoryPageApiResponse, HealthPageApiResponse, RecipePageApiResponse, DietPageApiResponse, VaccinePageApiResponse, SpayingAndNeuteringPageApiResponse, ProductsRecommendPageApiResponse, HeroesApiResponse } from '@/types/api';
 
 // Function to get API base URL at runtime (important for production)
 // This ensures environment variables are read at runtime, not build-time
@@ -725,6 +725,80 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
     },
     buttonText: galeriesSection.buttonText,
     images
+  };
+}
+
+export async function fetchPopularData(): Promise<TransformedPopularData> {
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/homepage?populate[PopularSection][populate][item][populate]=src`;
+
+  try {
+    const response = await fetchWithTimeout(url, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unable to read error response');
+      console.warn(`⚠️ PopularSection API returned status: ${response.status}`);
+      console.warn('⚠️ Error details:', errorText.substring(0, 200));
+      console.warn('⚠️ Using fallback data from popularData.ts');
+      console.info('💡 To fix: Add PopularSection to your homepage content type in Strapi');
+      const { popularData } = require('@/data/popularData');
+      return popularData;
+    }
+
+    const data: HomepageApiResponse = await response.json();
+
+    // Transform API data to match Popular component props
+    const transformedData = transformPopularData(data);
+
+    return transformedData;
+  } catch (error) {
+    console.error('❌ Error fetching popular data:', error);
+    console.warn('⚠️ Using fallback data from popularData.ts');
+    const { popularData } = require('@/data/popularData');
+    return popularData;
+  }
+}
+
+function transformPopularData(apiData: HomepageApiResponse): TransformedPopularData {
+  // Check if PopularSection exists
+  if (!apiData.data.PopularSection) {
+    console.warn('⚠️ PopularSection not found in homepage API, using fallback data');
+    const { popularData } = require('@/data/popularData');
+    return popularData;
+  }
+  
+  const popularSection = apiData.data.PopularSection as any;
+  
+  // Handle 'item' field
+  let itemData = popularSection.item;
+  
+  if (!itemData || !Array.isArray(itemData)) {
+    console.warn('⚠️ item not found or not an array in PopularSection, using fallback data');
+    const { popularData } = require('@/data/popularData');
+    return popularData;
+  }
+  
+  // Transform items array
+  const items = itemData.map((imageItem: any, index: number) => {
+    // Check if src exists
+    if (!imageItem.src) {
+      console.warn(`⚠️ Item ${index} src not populated, using fallback`);
+      const { popularData } = require('@/data/popularData');
+      return popularData.items[index] || popularData.items[0];
+    }
+    
+    return {
+      id: imageItem.id.toString(),
+      src: getImageUrl(imageItem.src.url),
+      alt: imageItem.alt
+    };
+  });
+
+  return {
+    title: popularSection.title,
+    items
   };
 }
 
@@ -3036,8 +3110,8 @@ export async function fetchHeroesData(): Promise<{
     const hero = data.data?.[0];
 
     const result = {
-      siteTitle: hero?.title || "Ethereal Persians",
-      phoneNumber: hero?.phone || "(941) 822-4016"
+      siteTitle: hero?.title || "Astrid Moon Cattery",
+      phoneNumber: hero?.phone || "(832) 951-0506"
     };
 
     return result;
@@ -3047,8 +3121,8 @@ export async function fetchHeroesData(): Promise<{
     
     // Fallback data
     return {
-      siteTitle: "Ethereal Persians",
-      phoneNumber: "(941) 822-4016"
+      siteTitle: "Astrid Moon Cattery",
+      phoneNumber: "(832) 951-0506"
     };
   }
 }

@@ -1,4 +1,4 @@
-import { popularData } from "@/data/popularData";
+import { popularData as fallbackPopularData } from "@/data/popularData";
 import { kittenData as fallbackKittenData } from "@/data/kittenData";
 import { adultsData as fallbackAdultsData } from "@/data/adultsData";
 import { commentsData as fallbackCommentsData } from "@/data/commentsData";
@@ -20,7 +20,7 @@ import Popular from "./_components/Popular";
 import Special from "./_components/Special";
 import Testimontal from "./_components/Testimontal";
 import VideoGallery from "./_components/Video";
-import { fetchKittenData, fetchAdultsData, fetchCommentsData, fetchSpecialData, fetchGaleriesData, fetchTestimonialData, fetchMediaData, fetchVideoData } from "@/services/api";
+import { fetchKittenData, fetchAdultsData, fetchCommentsData, fetchSpecialData, fetchGaleriesData, fetchPopularData, fetchTestimonialData, fetchMediaData, fetchVideoData } from "@/services/api";
 
 // Helper function to safely fetch data with fallback
 async function safeFetch<T>(
@@ -39,12 +39,13 @@ async function safeFetch<T>(
 
 export default async function Home() {
   // Fetch all data with error handling and fallbacks
-  const [kittenData, adultsData, commentsData, specialData, galeriesData, testimonialData, mediaData, videoData] = await Promise.all([
+  const [kittenData, adultsData, commentsData, specialData, galeriesData, popularData, testimonialData, mediaData, videoData] = await Promise.all([
     safeFetch(fetchKittenData, fallbackKittenData, 'kittenData'),
     safeFetch(fetchAdultsData, fallbackAdultsData, 'adultsData'),
     safeFetch(fetchCommentsData, fallbackCommentsData, 'commentsData'),
     safeFetch(fetchSpecialData, fallbackSpecialData, 'specialData'),
     safeFetch(fetchGaleriesData, fallbackGaleriesData, 'galeriesData'),
+    safeFetch(fetchPopularData, fallbackPopularData, 'popularData'),
     safeFetch(fetchTestimonialData, fallbackTestimonialData, 'testimonialData'),
     safeFetch(fetchMediaData, fallbackMediaData, 'mediaData'),
     safeFetch(fetchVideoData, fallbackVideoData, 'videoData'),

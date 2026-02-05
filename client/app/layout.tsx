@@ -3,7 +3,7 @@ import { Poppins, Lora } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
-import { mediaData } from "@/data/mediaData";
+import { fetchHeroesData, fetchMediaData } from "@/services/api";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -17,23 +17,31 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "Ethereal Persians",
-  description: "Premium Persian cat breeding - Ethereal Persians Cattery",
+  title: "Astrid Moon Cattery",
+  description: "Premium Persian cat breeding - Astrid Moon Cattery",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch heroes data and media data for footer
+  const heroesData = await fetchHeroesData();
+  const mediaData = await fetchMediaData();
+
   return (
     <html lang="en">
       <body
         className={`${poppins.variable} ${lora.variable} antialiased`}
       >
-        <Header />
+        <Header siteTitle={heroesData.siteTitle} phoneNumber={heroesData.phoneNumber} />
         {children}
-        <Footer socialLinks={mediaData.socialLinks} />
+        <Footer 
+          siteTitle={heroesData.siteTitle} 
+          phoneNumber={heroesData.phoneNumber}
+          socialLinks={mediaData.socialLinks} 
+        />
       </body>
     </html>
   );

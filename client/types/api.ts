@@ -278,6 +278,16 @@ export interface TransformedGaleriesData {
   }[];
 }
 
+// Transformed data for Popular component
+export interface TransformedPopularData {
+  title: string;
+  items: {
+    id: string;
+    src: string;
+    alt: string;
+  }[];
+}
+
 // Testimonial Section (for Homepage API)
 interface TestimonialItemHomepage {
   id: number;

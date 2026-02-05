@@ -15,8 +15,8 @@ export default function Header({
   const [isAdultsDropdownOpen, setIsAdultsDropdownOpen] = useState(false);
   const [isInformationDropdownOpen, setIsInformationDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [siteTitle, setSiteTitle] = useState(propSiteTitle || "Ethereal Persians");
-  const [phoneNumber, setPhoneNumber] = useState(propPhoneNumber || "(941) 822-4016");
+  const [siteTitle, setSiteTitle] = useState(propSiteTitle || "Astrid Moon Cattery");
+  const [phoneNumber, setPhoneNumber] = useState(propPhoneNumber || "(832) 951-0506");
   
   const kittensTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const adultsTimeoutRef = useRef<NodeJS.Timeout | null>(null);

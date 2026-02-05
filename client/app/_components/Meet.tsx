@@ -130,16 +130,6 @@ export default function Meet({
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 50vw"
                         />
-                        
-                        {/* Image Overlay Text */}
-                        <div className="absolute top-3 left-3 z-10">
-                          <span
-                            className="text-xs md:text-sm font-semibold tracking-wide"
-                            style={{ color: descriptionClr }}
-                          >
-                            {card.imageOverlayText}
-                          </span>
-                        </div>
                       </div>
                     </div>
                   </div>
