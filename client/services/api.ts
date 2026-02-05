@@ -636,7 +636,7 @@ function transformSpecialData(apiData: HomepageApiResponse): TransformedSpecialD
 
 export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/homepage?populate[GaleriesSection][populate][description][populate]=*&populate[GaleriesSection][populate][image][populate]=src`;
+    const url = `${apiBaseUrl}/api/homepage?populate[GalleriesSection][populate][description][populate]=*&populate[GalleriesSection][populate][image][populate]=src`;
 
   try {
     const response = await fetchWithTimeout(url, {
@@ -645,18 +645,23 @@ export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => 'Unable to read error response');
-      console.warn(`⚠️ GaleriesSection API returned status: ${response.status}`);
+      console.warn(`⚠️ GalleriesSection API returned status: ${response.status}`);
       console.warn('⚠️ Error details:', errorText.substring(0, 200));
       console.warn('⚠️ Using fallback data from galeriesData.ts');
-      console.info('💡 To fix: Add GaleriesSection to your homepage content type in Strapi');
+      console.info('💡 To fix: Add GalleriesSection to your homepage content type in Strapi');
       const { galeriesData } = require('@/data/galeriesData');
       return galeriesData;
     }
 
     const data: HomepageApiResponse = await response.json();
+    
+    console.log('✅ GalleriesSection API response received');
+    console.log('📊 GalleriesSection data:', data.data.GalleriesSection);
 
     // Transform API data to match Galeries component props
     const transformedData = transformGaleriesData(data);
+    
+    console.log('🎨 Transformed Galeries data:', transformedData);
 
     return transformedData;
   } catch (error) {
@@ -668,20 +673,20 @@ export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
 }
 
 function transformGaleriesData(apiData: HomepageApiResponse): TransformedGaleriesData {
-  // Check if GaleriesSection exists
-  if (!apiData.data.GaleriesSection) {
-    console.warn('⚠️ GaleriesSection not found in homepage API, using fallback data');
+  // Check if GalleriesSection exists
+  if (!apiData.data.GalleriesSection) {
+    console.warn('⚠️ GalleriesSection not found in homepage API, using fallback data');
     const { galeriesData } = require('@/data/galeriesData');
     return galeriesData;
   }
   
-  const galeriesSection = apiData.data.GaleriesSection as any;
+  const GalleriesSection = apiData.data.GalleriesSection as any;
   
   // Get fallback data for use in case of missing fields
   const { galeriesData } = require('@/data/galeriesData');
   
   // Handle description - it's a component
-  const descriptionData = galeriesSection.description || {};
+  const descriptionData = GalleriesSection.description || {};
   const description = {
     mainText: descriptionData.mainText || galeriesData.description.mainText,
     browsingText: descriptionData.browsingText || galeriesData.description.browsingText,
@@ -689,14 +694,14 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
   };
   
   // Handle both 'image' and 'images' field names, and ensure it's an array
-  let imageData = galeriesSection.image || galeriesSection.images;
+  let imageData = GalleriesSection.image || GalleriesSection.images;
   
   if (!imageData || !Array.isArray(imageData) || imageData.length === 0) {
-    console.warn('⚠️ image/images not found in GaleriesSection, using fallback images');
+    console.warn('⚠️ image/images not found in GalleriesSection, using fallback images');
     return {
-      title: galeriesSection.title || galeriesData.title,
+      title: GalleriesSection.title || galeriesData.title,
       description,
-      buttonText: galeriesSection.buttonText || galeriesData.buttonText,
+      buttonText: GalleriesSection.buttonText || galeriesData.buttonText,
       images: galeriesData.images
     };
   }
@@ -704,14 +709,22 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
   // Transform images array - only take first 3 images for fixed layout
   const images = imageData.slice(0, 3).map((imageItem: any, index: number) => {
     // Check if src exists
-    if (!imageItem.src || !imageItem.src.url) {
-      console.warn(`⚠️ Image ${index} src not populated, using fallback`);
+    if (!imageItem.src) {
+      console.warn(`⚠️ Image ${index} src not found, using fallback`);
+      return galeriesData.images[index] || galeriesData.images[0];
+    }
+    
+    // Handle both cases: src might be an object with url, or might be a direct url string
+    const imageUrl = typeof imageItem.src === 'object' ? imageItem.src.url : imageItem.src;
+    
+    if (!imageUrl) {
+      console.warn(`⚠️ Image ${index} url not found, using fallback`);
       return galeriesData.images[index] || galeriesData.images[0];
     }
     
     return {
-      id: imageItem.id.toString(),
-      src: getImageUrl(imageItem.src.url),
+      id: imageItem.id?.toString() || `image-${index}`,
+      src: getImageUrl(imageUrl),
       alt: imageItem.alt || `Gallery image ${index + 1}`
     };
   });
@@ -722,9 +735,9 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
   }
 
   return {
-    title: galeriesSection.title || galeriesData.title,
+    title: GalleriesSection.title || galeriesData.title,
     description,
-    buttonText: galeriesSection.buttonText || galeriesData.buttonText,
+    buttonText: GalleriesSection.buttonText || galeriesData.buttonText,
     images
   };
 }

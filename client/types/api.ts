@@ -137,26 +137,26 @@ interface SpecialSectionHomepage {
   features: SpecialFeatureItemHomepage[];
 }
 
-// Galeries Section (for Homepage API)
-interface GaleriesImageHomepage {
+// Galleries Section (for Homepage API)
+interface GalleriesImageHomepage {
   id: number;
   alt: string;
   src: StrapiImageFull;
 }
 
-interface GaleriesDescriptionHomepage {
+interface GalleriesDescriptionHomepage {
   id: number;
   mainText: string;
   browsingText: string;
   eyeCandyText: string;
 }
 
-interface GaleriesSectionHomepage {
+interface GalleriesSectionHomepage {
   id: number;
   title: string;
-  description: GaleriesDescriptionHomepage;
+  description: GalleriesDescriptionHomepage;
   buttonText: string;
-  image: GaleriesImageHomepage[];
+  image: GalleriesImageHomepage[];
 }
 
 // Popular Section (for Homepage API)
@@ -186,7 +186,7 @@ export interface HomepageApiResponse {
     AdultsSection?: AdultsSectionHomepage;
     CommentSection?: CommentSectionHomepage;
     SpecialSection?: SpecialSectionHomepage;
-    GaleriesSection?: GaleriesSectionHomepage;
+    GalleriesSection?: GalleriesSectionHomepage;
     PopularSection?: PopularSectionHomepage;
     TestiomonialSection?: TestimonialSectionHomepage;
   };
