@@ -154,6 +154,19 @@ interface GaleriesSectionHomepage {
   images: GaleriesImageHomepage[];
 }
 
+// Popular Section (for Homepage API)
+interface PopularItemHomepage {
+  id: number;
+  alt: string;
+  src: StrapiImageFull;
+}
+
+interface PopularSectionHomepage {
+  id: number;
+  title: string;
+  item: PopularItemHomepage[];
+}
+
 // Main API Response
 export interface HomepageApiResponse {
   data: {
@@ -169,6 +182,7 @@ export interface HomepageApiResponse {
     CommentSection?: CommentSectionHomepage;
     SpecialSection?: SpecialSectionHomepage;
     GaleriesSection?: GaleriesSectionHomepage;
+    PopularSection?: PopularSectionHomepage;
     TestiomonialSection?: TestimonialSectionHomepage;
   };
   meta: {};
