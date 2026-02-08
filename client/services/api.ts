@@ -3157,7 +3157,11 @@ export async function fetchKittenAppData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/kitten-app?populate=*`;
 
+    console.log('🔵 fetchKittenAppData - Fetching from:', url);
+
     const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
+    
+    console.log('📡 fetchKittenAppData - Response status:', response.status);
     
     if (!response.ok) {
       console.warn(`⚠️ Kitten App API returned ${response.status}, using fallback data`);
@@ -3165,20 +3169,50 @@ export async function fetchKittenAppData(): Promise<{
     }
 
     const data = await response.json();
+    console.log('📦 fetchKittenAppData - Raw API data:', JSON.stringify(data, null, 2));
+    
     const kittenAppData = data.data;
+    console.log('📦 fetchKittenAppData - kittenAppData:', JSON.stringify(kittenAppData, null, 2));
 
-    return {
-      title: kittenAppData?.title || "KITTEN APPLICATION",
-      description: kittenAppData?.description || "Welcome to our kitten application form.",
-      questions: kittenAppData?.questions?.map((q: any, index: number) => ({
-        id: index + 1,
-        question: q.question || "",
+    // Map API fields to expected format
+    // API uses: label, Desc, KittenQuestion
+    // Code expects: title, description, questions
+    const questions = kittenAppData?.KittenQuestion?.map((q: any) => {
+      // Convert Options object to array if needed
+      let optionsArray: string[] = [];
+      if (q.Options && typeof q.Options === 'object') {
+        optionsArray = Object.values(q.Options);
+      }
+
+      console.log(`🔸 Processing question ID ${q.id}:`, {
+        Question: q.Question,
+        isElective: q.isElective,
+        Options: q.Options,
+        optionsArray
+      });
+
+      return {
+        id: q.id,
+        question: q.Question || "",
         isElective: q.isElective || false,
-        options: q.options || []
-      })) || []
+        options: optionsArray
+      };
+    }) || [];
+
+    console.log('✅ fetchKittenAppData - Final questions:', JSON.stringify(questions, null, 2));
+
+    const result = {
+      title: kittenAppData?.label || "KITTEN APPLICATION",
+      description: kittenAppData?.Desc || "Welcome to our kitten application form.",
+      questions: questions
     };
+
+    console.log('✅ fetchKittenAppData - Returning:', JSON.stringify(result, null, 2));
+
+    return result;
   } catch (error) {
     console.error('❌ Error fetching kitten app data:', error);
+    console.error('❌ Error details:', error instanceof Error ? error.message : error);
     return getFallbackKittenAppData();
   }
 }
