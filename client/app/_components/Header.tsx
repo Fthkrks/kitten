@@ -304,7 +304,7 @@ export default function Header({
               >
                 <div className="bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2">
                   <a href="avaible-kittens" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Available Kittens</a>
-                  <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Kitten Application</a>
+                  <a href="kittenapp" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Kitten Application</a>
                   <a href="terms" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Terms of Sale</a>
                   <a href="faq" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">FAQ</a>
                 </div>

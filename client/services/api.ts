@@ -746,7 +746,7 @@ function transformGaleriesData(apiData: HomepageApiResponse): TransformedGalerie
 
 export async function fetchPopularData(): Promise<TransformedPopularData> {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/homepage?populate[PopularSection][populate][item][populate]=src`;
+    const url = `${apiBaseUrl}/api/homepage?populate[PopularSection][populate][item][populate]=*`;
 
   try {
     const response = await fetchWithTimeout(url, {

@@ -18,7 +18,7 @@ interface FooterProps {
 export default function Footer({ 
   siteTitle = "Astrid Moon Cattery",
   phoneNumber = "(832) 951-0506",
-  location = "SARASOTA, FLORIDA",
+  location = "AUSTIN, TEXAS",
   socialLinks = [] 
 }: FooterProps) {
   return (
