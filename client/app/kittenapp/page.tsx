@@ -228,7 +228,7 @@ export default function KittenApplicationPage() {
                 {q.question}
               </label>
 
-              {/* If NOT elective (isElective: false) → Textarea */}
+              {/* If NOT elective (isElective: false) → Textarea (resizable) */}
               {!q.isElective && (
                 <textarea
                   value={formData.dynamicAnswers[q.id] || ""}
@@ -242,7 +242,7 @@ export default function KittenApplicationPage() {
                     })
                   }
                   rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8EA58E] focus:border-transparent resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#8EA58E] focus:border-transparent resize-y min-h-[100px]"
                 />
               )}
 
