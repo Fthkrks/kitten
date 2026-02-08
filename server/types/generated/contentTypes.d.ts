@@ -852,6 +852,37 @@ export interface ApiKingsPageKingsPage extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiKittenApplicationPageKittenApplicationPage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'kitten_application_pages';
+  info: {
+    displayName: 'KittenApplicationPage';
+    pluralName: 'kitten-application-pages';
+    singularName: 'kitten-application-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Desc: Schema.Attribute.Text;
+    label: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::kitten-application-page.kitten-application-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    QuestionApp: Schema.Attribute.Component<'default.questions', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiMarketingLinkMarketingLink
   extends Struct.CollectionTypeSchema {
   collectionName: 'marketing_links';
@@ -1658,6 +1689,7 @@ declare module '@strapi/strapi' {
       'api::history-page.history-page': ApiHistoryPageHistoryPage;
       'api::homepage.homepage': ApiHomepageHomepage;
       'api::kings-page.kings-page': ApiKingsPageKingsPage;
+      'api::kitten-application-page.kitten-application-page': ApiKittenApplicationPageKittenApplicationPage;
       'api::marketing-link.marketing-link': ApiMarketingLinkMarketingLink;
       'api::media-link.media-link': ApiMediaLinkMediaLink;
       'api::products-recommed.products-recommed': ApiProductsRecommedProductsRecommed;

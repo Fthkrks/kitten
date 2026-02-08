@@ -1,0 +1,26 @@
+{
+  "kind": "singleType",
+  "collectionName": "kitten_application_pages",
+  "info": {
+    "singularName": "kitten-application-page",
+    "pluralName": "kitten-application-pages",
+    "displayName": "KittenApplicationPage"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "Desc": {
+      "type": "text"
+    },
+    "QuestionApp": {
+      "type": "component",
+      "component": "default.questions",
+      "repeatable": true
+    }
+  }
+}

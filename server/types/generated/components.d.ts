@@ -685,6 +685,18 @@ export interface DefaultPopular extends Struct.ComponentSchema {
   };
 }
 
+export interface DefaultQuestions extends Struct.ComponentSchema {
+  collectionName: 'components_default_questions';
+  info: {
+    displayName: 'Questions';
+  };
+  attributes: {
+    IsElective: Schema.Attribute.Boolean;
+    Options: Schema.Attribute.JSON;
+    Question: Schema.Attribute.String;
+  };
+}
+
 export interface DefaultSpecial extends Struct.ComponentSchema {
   collectionName: 'components_default_specials';
   info: {
@@ -797,6 +809,7 @@ declare module '@strapi/strapi' {
       'default.hero': DefaultHero;
       'default.kitten': DefaultKitten;
       'default.popular': DefaultPopular;
+      'default.questions': DefaultQuestions;
       'default.special': DefaultSpecial;
       'default.terms': DefaultTerms;
       'default.testiomonial-home': DefaultTestiomonialHome;

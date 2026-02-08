@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_default_questions",
+  "info": {
+    "displayName": "Questions"
+  },
+  "options": {},
+  "attributes": {
+    "Question": {
+      "type": "string"
+    },
+    "IsElective": {
+      "type": "boolean"
+    },
+    "Options": {
+      "type": "json"
+    }
+  },
+  "config": {}
+}

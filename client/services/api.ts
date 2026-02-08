@@ -60,7 +60,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}): Promise
 }
 
 // Helper function to get fetch options with draft mode support
-async function getFetchOptions(): Promise<{ cache: RequestCache; headers?: HeadersInit }> {
+async function getFetchOptions(): Promise<{ next?: { revalidate: number | false }; cache?: RequestCache; headers?: HeadersInit }> {
   // Check if we're in draft mode (Next.js)
   try {
     const { draftMode } = await import('next/headers');
@@ -79,7 +79,9 @@ async function getFetchOptions(): Promise<{ cache: RequestCache; headers?: Heade
     // Fall back to normal fetch
   }
   
-  return { cache: 'no-store' };
+  return { 
+    next: { revalidate: 60 } // ISR: Her 60 saniyede bir yeniden validate et
+  };
 }
 
 export async function fetchHeroData(): Promise<TransformedHeroData> {
@@ -101,7 +103,7 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
   let response;
   try {
     response = await fetchWithTimeout(url, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
     
     // If simple populate works, use it
@@ -126,7 +128,7 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
       
       url = `${apiBaseUrl}/api/homepage?${populateQuery}`;
       response = await fetchWithTimeout(url, {
-        cache: 'no-store',
+        next: { revalidate: 60 },
       });
     }
   } catch (firstError) {
@@ -146,7 +148,7 @@ export async function fetchHeroData(): Promise<TransformedHeroData> {
     
     url = `${apiBaseUrl}/api/homepage?${populateQuery}`;
     response = await fetchWithTimeout(url, {
-      cache: 'no-store',
+      next: { revalidate: 60 },
     });
   }
 
@@ -278,7 +280,7 @@ export async function fetchKittenData(): Promise<TransformedKittenData> {
 
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -415,7 +417,7 @@ export async function fetchAdultsData(): Promise<TransformedAdultsData> {
   
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -489,7 +491,7 @@ export async function fetchCommentsData(): Promise<TransformedCommentsData> {
   
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -564,7 +566,7 @@ export async function fetchSpecialData(): Promise<TransformedSpecialData> {
   
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -640,7 +642,7 @@ export async function fetchGaleriesData(): Promise<TransformedGaleriesData> {
 
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -748,7 +750,7 @@ export async function fetchPopularData(): Promise<TransformedPopularData> {
 
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -822,7 +824,7 @@ export async function fetchTestimonialData(): Promise<TransformedTestimonialData
 
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -920,7 +922,7 @@ export async function fetchMediaData(): Promise<TransformedMediaData> {
 
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -997,7 +999,7 @@ export async function fetchVideoData(): Promise<TransformedVideoData> {
 
   try {
     const response = await fetchWithTimeout(url, {
-      cache: 'no-store', // Always fetch fresh data
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {
@@ -1093,9 +1095,9 @@ export async function fetchAvailableKittenCardImage(): Promise<TransformedCardIm
   
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*&populate[cardImageSection][populate][heroImage][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1166,9 +1168,9 @@ function transformAvailableKittenCardImage(
 export async function fetchAvailableKittenPetCards(): Promise<TransformedPetCardData[]> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*&populate[cardImageSection][populate][heroImage][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1249,9 +1251,9 @@ function transformAvailableKittenPetCards(apiData: AvailableKittenPageApiRespons
 export async function fetchPetById(id: string): Promise<TransformedPetCardData | null> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*&populate[cardImageSection][populate][heroImage][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1295,9 +1297,9 @@ export async function fetchAdultsAvaibleData(): Promise<TransformedAdultsAvaible
   
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*`;
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*&populate[cardImageSection][populate][heroImage][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1394,7 +1396,7 @@ export async function fetchTermsPageData(): Promise<{ cardImage: TransformedTerm
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/terms-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[TermsSection][populate][sections][populate]=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1484,7 +1486,7 @@ export async function fetchFaqData(): Promise<TransformedFaqSection[]> {
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/faq-page?populate[FaqSection][populate]=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1578,7 +1580,7 @@ export async function fetchKingsPageData(): Promise<{ cardImage: TransformedCard
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/kings-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[KingsSection][populate][image][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1687,7 +1689,7 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/queens-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[QueensSection][populate][image][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1805,7 +1807,7 @@ export async function fetchBlogPageData(): Promise<{ cardImage: TransformedCardI
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/blog-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[BlogSection][populate][image][fields][0]=url&populate[whyBlogData][populate][imageTop][fields][0]=url&populate[whyBlogData][populate][aboutItems][populate]=*&populate[whyBlogData][populate][imageBottom][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1918,7 +1920,7 @@ export async function fetchTestimonialPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/testimonial-page?populate[HeroSection][populate]=*&populate[Base][populate][Reviews][populate][avatar][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -1998,7 +2000,7 @@ export async function fetchGalleriesPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/galleries-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[GalleriesData][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate][src][fields][0]=url&populate[GalleriesData][populate][images][populate][src][fields][1]=alternativeText`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2127,7 +2129,7 @@ export async function fetchAboutUsPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/about-us-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[AboutSection][populate][image][fields][0]=url&populate[ParaqSection][populate][image][fields][0]=url&populate[ParaqSection][populate][listItems][populate]=*&populate[timeLine][populate]=*&populate[CardsSection][populate][img][fields][0]=url&populate[FaqSection][populate][questions][populate]=*&populate[reasonSection][populate]=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2360,7 +2362,7 @@ export async function fetchHistoryPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/history-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2475,7 +2477,7 @@ export async function fetchHealthPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2587,7 +2589,7 @@ export async function fetchRecipePageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/recipe-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[ingredients][populate]=*&populate[tips][populate]=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2692,7 +2694,7 @@ export async function fetchDietPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/diet-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[coverImage][fields][0]=url&populate[highlights][populate]=*&populate[feedingSchedule][populate]=*&populate[do][populate]=*&populate[dont][populate]=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2810,7 +2812,7 @@ export async function fetchVaccinePageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/vaccine-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[vaccaniesSection][populate]=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2898,7 +2900,7 @@ export async function fetchSpayingAndNeuteringPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/spayingand-neutering?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[paragrafhData][populate]=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -2999,7 +3001,7 @@ export async function fetchProductsRecommendPageData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/products-recommed?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][imageSrc][fields][0]=url&populate[recommendedProductsData][populate][categories][populate][products][populate][bullets][populate]=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -3104,7 +3106,7 @@ export async function fetchHeroesData(): Promise<{
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/heroes?populate=*`;
 
-    const response = await fetchWithTimeout(url, { cache: 'no-store' });
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -3140,3 +3142,65 @@ export async function fetchHeroesData(): Promise<{
     };
   }
 }
+
+export async function fetchKittenAppData(): Promise<{
+  title: string;
+  description: string;
+  questions: Array<{
+    id: number;
+    question: string;
+    isElective: boolean;
+    options?: string[];
+  }>;
+}> {
+  try {
+    const apiBaseUrl = getApiBaseUrl();
+    const url = `${apiBaseUrl}/api/kitten-app?populate=*`;
+
+    const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
+    
+    if (!response.ok) {
+      console.warn(`⚠️ Kitten App API returned ${response.status}, using fallback data`);
+      return getFallbackKittenAppData();
+    }
+
+    const data = await response.json();
+    const kittenAppData = data.data;
+
+    return {
+      title: kittenAppData?.title || "KITTEN APPLICATION",
+      description: kittenAppData?.description || "Welcome to our kitten application form.",
+      questions: kittenAppData?.questions?.map((q: any, index: number) => ({
+        id: index + 1,
+        question: q.question || "",
+        isElective: q.isElective || false,
+        options: q.options || []
+      })) || []
+    };
+  } catch (error) {
+    console.error('❌ Error fetching kitten app data:', error);
+    return getFallbackKittenAppData();
+  }
+}
+
+function getFallbackKittenAppData() {
+  return {
+    title: "KITTEN APPLICATION",
+    description: "Welcome to our kitten application form. This is the first step towards adopting a beautiful, healthy, lifelong companion. The information marked with a star is a required field. Please allow 1-3 business days for us to get back to you. If you intend to place a deposit on a kitten please wait until you hear back from us unless you are sure you are the perfect match and your application will be approved. Remember that all deposits are nonrefundable.",
+    questions: [
+      {
+        id: 1,
+        question: "If you have other pets in your home, please briefly describe them (i.e. Age, Breed, Personality)",
+        isElective: false,
+        options: []
+      },
+      {
+        id: 2,
+        question: "Do children live in your home?",
+        isElective: true,
+        options: ["Yes", "No", "On the way"]
+      }
+    ]
+  };
+}
+
