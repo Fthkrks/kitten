@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 interface AdultsAvaibleProps {
@@ -29,7 +30,7 @@ function AdultsAvaible({ title, description, buttonText }: AdultsAvaibleProps) {
         {/* Call-to-Action Button */}
         <div className="text-center">
           <button className="px-8 md:px-12 py-3 md:py-4 bg-[#f9f1f1] text-[#3a2b28] font-lora  text-sm md:text-md uppercase tracking-wide rounded-3xl shadow-lg hover:bg-[#f5e8e8] transition-colors cursor-pointer">
-            {buttonText}
+            <Link href="/kittenapp">{buttonText}</Link>
           </button>
         </div>
       </div>

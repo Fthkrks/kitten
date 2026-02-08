@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Soon() {
   return (
     <section className="w-full py-16 md:py-24 bg-white">
@@ -21,7 +23,7 @@ export default function Soon() {
         {/* Call-to-Action Button */}
         <div className="text-center">
           <button className="px-8 md:px-12 py-3 md:py-4 bg-[#f9f1f1] text-[#3a2b28] font-lora  text-sm md:text-md uppercase tracking-wide rounded-3xl shadow-lg hover:bg-[#f5e8e8] transition-colors cursor-pointer">
-            SUBMIT A KITTEN APPLICATION
+            <Link href="/kittenapp">SUBMIT A KITTEN APPLICATION</Link>
           </button>
         </div>
       </div>

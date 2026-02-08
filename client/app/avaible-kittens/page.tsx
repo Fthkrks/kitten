@@ -66,7 +66,7 @@ async function page() {
                 <BottomHearts />
             </React.Fragment>
         ))}
-        
+        <AdultsAvaible {...adultsAvaibleData} />
         
         {/* Show last group with different background color */}
         {petGroups.length > 0 && (
