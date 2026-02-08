@@ -188,7 +188,7 @@ export default function Header({
                 <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isKittensDropdownOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <div className="pl-4">
                     <a href="avaible-kittens" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Available Kittens</a>
-                    <a href="#" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Kitten Application</a>
+                    <a href="kittenapp" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Kitten Application</a>
                     <a href="terms" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Terms of Sale</a>
                     <a href="faq" className="block text-gray-700 hover:text-gray-900 transition-colors py-2">FAQ</a>
                   </div>
