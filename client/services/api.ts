@@ -1253,6 +1253,9 @@ export async function fetchPetById(id: string): Promise<TransformedPetCardData |
     const apiBaseUrl = getApiBaseUrl();
     const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*&populate[cardImageSection][populate][heroImage][fields][0]=url`;
 
+    console.log(`🔍 fetchPetById - Looking for pet ID: ${id}`);
+    console.log(`🔵 fetchPetById - Fetching from: ${url}`);
+
     const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
 
     if (!response.ok) {
@@ -1271,14 +1274,22 @@ export async function fetchPetById(id: string): Promise<TransformedPetCardData |
 
     const data: AvailableKittenPageApiResponse = await response.json();
 
+    console.log(`📦 fetchPetById - PetCards count: ${data.data.PetCards?.length || 0}`);
+
     // Transform all pets and find the one with matching ID
     const allPets = transformAvailableKittenPetCards(data);
+    
+    console.log(`📋 fetchPetById - Available pet IDs: ${allPets.map(p => p.id).join(', ')}`);
+    
     const pet = allPets.find(p => p.id === id);
     
     if (!pet) {
       console.warn(`⚠️ Pet with ID ${id} not found in API data`);
+      console.warn(`💡 Available IDs are: ${allPets.map(p => p.id).join(', ')}`);
       return null;
     }
+    
+    console.log(`✅ fetchPetById - Found pet: ${pet.name}`);
     
     return pet;
   } catch (error) {
@@ -1668,28 +1679,18 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
     backgroundColor: "#f9f1f1",
   };
   
-  const fallbackQueens: TransformedQueensCardData[] = [
-    {
-      id: "3",
-      name: "QUEEN | CRYSTAL",
-      description: "Meet our magnificent Persian queens - the elegant mothers of our bloodline. These distinguished ladies showcase exceptional breeding, graceful presence, and the noble characteristics that define our royal lineage.",
-      imageSrc: "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800",
-      cardBackgroundColor: "#E0F2F7",
-      buttonText: "MEET CRYSTAL",
-      imageOverlayText: "EP ETHEREAL Persians CRYSTAL",
-      imagePosition: "right",
-      titleColor: "#7DD3FC",
-      buttonBackgroundColor: "#E0F2F7",
-      buttonTextColor: "#3a2b28",
-      descriptionTextColor: "#5A5A5A",
-    },
-  ];
+  const fallbackQueens: TransformedQueensCardData[] = [];
   
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/queens-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[QueensSection][populate][image][fields][0]=url`;
+    // Fetch from avaible-kitten-page to get PetCards with matching IDs
+    const url = `${apiBaseUrl}/api/avaible-kitten-page?populate[PetCards][populate][image][fields][0]=url&populate[PetCards][populate][albumImages][populate][src][fields][0]=url&populate[AdultsAvaible][populate]=*&populate[cardImageSection][populate][heroImage][fields][0]=url`;
+
+    console.log('🔵 fetchQueensPageData - Fetching from:', url);
 
     const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
+
+    console.log('📡 fetchQueensPageData - Response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -1706,61 +1707,58 @@ export async function fetchQueensPageData(): Promise<{ cardImage: TransformedCar
       return { cardImage: fallbackCardImage, queens: fallbackQueens };
     }
 
-    const data: QueensPageApiResponse = await response.json();
+    const data: AvailableKittenPageApiResponse = await response.json();
 
-    // Transform cardImageSection
+    console.log(`📦 fetchQueensPageData - PetCards count: ${data.data.PetCards?.length || 0}`);
+
+    // Use cardImageSection for hero image
     let cardImage = fallbackCardImage;
     if (data.data.cardImageSection && data.data.cardImageSection.heroImage) {
       cardImage = {
         heroImage: getImageUrl(data.data.cardImageSection.heroImage.url),
-        heading: data.data.cardImageSection.heading,
-        cardTitle: data.data.cardImageSection.cardTitle,
-        cardText: data.data.cardImageSection.cardText,
-        overlayColor: data.data.cardImageSection.overlayColor,
-        parallaxSpeed: parseFloat(data.data.cardImageSection.parallaxSpeed),
-        backgroundColor: data.data.cardImageSection.backgroundColor,
+        heading: "QUEENS",
+        cardTitle: "OUR QUEENS",
+        cardText: "Meet our magnificent Persian queens - the regal mothers of our bloodline. These distinguished ladies showcase exceptional breeding, majestic presence, and the noble characteristics that define our royal lineage.",
+        overlayColor: "rgba(0,0,0,0.15)",
+        parallaxSpeed: 0.3,
+        backgroundColor: "#f9f1f1",
       };
-    } else {
-      console.warn('⚠️ cardImageSection not found in API, using fallback card image');
     }
     
-    // Transform QueensSection
+    // Transform PetCards to queens format
     let queens = fallbackQueens;
-    if (data.data.QueensSection && data.data.QueensSection.length > 0) {
-      queens = data.data.QueensSection.map((queen, index) => {
-        // Normalize imagePosition to lowercase, handle null by alternating left/right
-        let imagePosition: "left" | "right" = "right";
-        if (queen.imagePosition) {
-          imagePosition = queen.imagePosition.toLowerCase() as "left" | "right";
-        } else {
-          // Alternate between right and left if imagePosition is null
-          imagePosition = index % 2 === 0 ? "right" : "left";
+    if (data.data.PetCards && data.data.PetCards.length > 0) {
+      queens = data.data.PetCards.map((petCard, index) => {
+        // Alternate image position
+        const imagePosition: "left" | "right" = index % 2 === 0 ? "right" : "left";
+        
+        // Get image URL
+        let imageSrc = "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800";
+        if (petCard.image && Array.isArray(petCard.image) && petCard.image.length > 0) {
+          imageSrc = getImageUrl(petCard.image[0].url);
         }
         
-        // Use image from API if available, otherwise use a default
-        // Handle both array format and null
-        let imageSrc = "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?auto=format&fit=crop&q=80&w=800";
-        if (queen.image && Array.isArray(queen.image) && queen.image.length > 0) {
-          imageSrc = getImageUrl(queen.image[0].url);
-        }
+        console.log(`👑 Processing queen from PetCard: ${petCard.name}, ID: ${petCard.id}`);
         
         return {
-          id: queen.id.toString(),
-          name: queen.name,
-          description: queen.description,
+          id: petCard.id.toString(),
+          name: `QUEEN | ${petCard.name.toUpperCase()}`,
+          description: petCard.breed ? `${petCard.breed} • ${petCard.coatColor || ''} ${petCard.eyeColor || ''}`.trim() : "Our magnificent queen",
           imageSrc: imageSrc,
-          cardBackgroundColor: queen.detailBg,
-          buttonText: queen.buttonText,
-          imageOverlayText: `EP ETHEREAL Persians ${queen.name.split('|')[0].trim()}`,
+          cardBackgroundColor: "#E0F2F7",
+          buttonText: `MEET ${petCard.name.toUpperCase()}`,
+          imageOverlayText: `EP ETHEREAL Persians ${petCard.name.toUpperCase()}`,
           imagePosition: imagePosition,
-          titleColor: queen.titleColor,
-          buttonBackgroundColor: queen.detailBg,
+          titleColor: "#7DD3FC",
+          buttonBackgroundColor: "#E0F2F7",
           buttonTextColor: "#3a2b28",
           descriptionTextColor: "#5A5A5A",
         };
       });
+      
+      console.log(`✅ fetchQueensPageData - Transformed ${queens.length} queens with IDs: ${queens.map(q => q.id).join(', ')}`);
     } else {
-      console.warn('⚠️ QueensSection not found in API, using fallback queens');
+      console.warn('⚠️ PetCards not found in API, using fallback queens');
     }
     
     return { cardImage, queens };

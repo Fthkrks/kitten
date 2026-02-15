@@ -152,8 +152,7 @@ export default function Footer({
                 </li>
                 <li>
                   <a className="hover:text-[#b1868e] transition-colors" href="/terms">
-                    Terms of Sale
-                  </a>
+                  Terms of Conditions                  </a>
                 </li>
                 <li>
                   <a className="hover:text-[#b1868e] transition-colors" href="/recipe">
@@ -175,7 +174,7 @@ export default function Footer({
       <div className="bg-[#efd1d1] w-full text-[#b1868e] text-xs flex flex-col md:flex-row justify-between items-center px-6 py-4 mt-12 gap-3 md:gap-0">
         <div className="text-center md:text-left">
           © 2025 {siteTitle} | 
-          <a href="#" className="underline hover:text-[#9a868d] ml-1">Terms Of Use</a> | 
+          <a href="#" className="underline hover:text-[#9a868d] ml-1">Terms of Conditions</a>
           <a href="#" className="underline hover:text-[#9a868d] ml-1">Privacy Policy</a>
         </div>
         
