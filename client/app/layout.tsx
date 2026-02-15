@@ -3,6 +3,7 @@ import { Poppins, Lora } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
+import Newsletter from "./_components/Newsletter";
 import { fetchHeroesData, fetchMediaData } from "@/services/api";
 
 const poppins = Poppins({
@@ -37,6 +38,7 @@ export default async function RootLayout({
       >
         <Header siteTitle={heroesData.siteTitle} phoneNumber={heroesData.phoneNumber} />
         {children}
+        <Newsletter />
         <Footer 
           siteTitle={heroesData.siteTitle} 
           phoneNumber={heroesData.phoneNumber}
