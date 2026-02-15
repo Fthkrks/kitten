@@ -308,7 +308,7 @@ export default function Header({
                 </div>
               </div>
             )}
-          </div>T
+          </div>
           
           <div className="relative">
             <a 
