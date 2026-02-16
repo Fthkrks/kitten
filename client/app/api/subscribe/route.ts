@@ -14,16 +14,16 @@ export async function POST(request: Request) {
     
     console.log('📧 Subscribing email to Kit:', email);
     
-    // Kit API'ye subscriber ekleme
-    const response = await fetch('https://api.kit.com/v4/subscribers', {
+    // Kit API v3'e tag ile subscriber ekleme
+    const tagId = process.env.KIT_TAG_ID;
+    const response = await fetch(`https://api.convertkit.com/v3/tags/${tagId}/subscribe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Kit-Api-Key': process.env.KIT_API_KEY!,
       },
       body: JSON.stringify({
-        email_address: email,
-        state: 'active',
+        api_secret: process.env.KIT_API_SECRET,
+        email: email,
       }),
     });
     
