@@ -189,6 +189,7 @@ export default function Header({
                   <div className="pl-4">
                     <a href="avaible-kittens" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Available Kittens</a>
                     <a href="kittenapp" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Kitten Application</a>
+                    <a href="adoption-process" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Adoption Process</a>
                     <a href="faq" className="block text-gray-700 hover:text-gray-900 transition-colors py-2">FAQ</a>
                   </div>
                 </div>
@@ -247,7 +248,7 @@ export default function Header({
                 <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isInformationDropdownOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                   <div className="pl-4">
                     <a href="/history" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">History</a>
-                    <a href="/health" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Adaption Process</a>
+                    <a href="/adoption-process" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Adoption Process</a>
                     <a href="/wait-list" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Wait List</a>
                     <a href="/recipe" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Homemade Feline Raw Recipe</a>
                     <a href="/diet" className="block text-gray-700 hover:text-gray-900 transition-colors py-2 border-b border-gray-200">Diet</a>
@@ -304,6 +305,7 @@ export default function Header({
                 <div className="bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2">
                   <a href="avaible-kittens" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Available Kittens</a>
                   <a href="kittenapp" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Kitten Application</a>
+                  <a href="adoption-process" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Adoption Process</a>
                   <a href="faq" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors">FAQ</a>
                 </div>
               </div>
@@ -358,7 +360,7 @@ export default function Header({
               >
                 <div className="bg-white rounded-lg shadow-lg border border-gray-100 min-w-[200px] transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-top-2">
                   <a href="/history" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">History</a>
-                  <a href="/health" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Adaption Process</a>
+                  <a href="/adoption-process" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Adoption Process</a>
                   <a href="/wait-list" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Wait List</a>
                   <a href="/recipe" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Homemade Feline Raw Recipe</a>
                   <a href="/diet" className="block px-4 py-2 text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100">Diet</a>
