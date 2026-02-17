@@ -59,9 +59,11 @@ export default function CardImage({
           <Image
             src={heroImage}
             alt="Cat Family"
-            fill
+            width={1920}
+            height={1080}
             priority
-            className="object-cover w-full h-full select-none pointer-events-none"
+            className="object-cover object-center w-full h-full select-none pointer-events-none"
+            style={{ objectFit: 'cover' }}
           />
         </div>
       )}

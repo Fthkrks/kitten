@@ -27,7 +27,10 @@ export default function Parag({
               src={image}
               alt={imageAlt}
               fill
-              className="object-cover w-full h-full rounded-lg"
+              quality={95}
+              sizes="(max-width: 768px) 320px, 320px"
+              className="object-cover object-center w-full h-full rounded-lg"
+              style={{ objectFit: 'cover' }}
               priority
             />
           </div>

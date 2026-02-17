@@ -496,8 +496,6 @@ export interface BasicTextImageData extends Struct.ComponentSchema {
   };
   attributes: {
     leftImage: Schema.Attribute.Component<'basic.left-image', false>;
-    paragraphs: Schema.Attribute.RichText &
-      Schema.Attribute.DefaultTo<'Persian cats have dramatically transformed from traditional (mesocephalic) to extreme (brachycephalic) over the last century due to artificial selection, making them almost unrecognizable from their ancestors.",             "Persian cats are descendants of Angora cats crossed with British longhairs, founded in Persia (modern-day Iran). They were popular with royal families for their luxurious coats, personality, and affection, and were shipped to the United States between 1500-1800.",             "Breeders selectively bred traditional Persians into modern flat and peke-face types. The traditional ancestor was a short, broad cat with good bone structure and a protruding, well-rounded snout. The modern Persian retains the short, broad body but has a much rounder head and a \\"peke-face\\" look, with the nose break centered between the eyes and the snout flush with the face. Flat and peke-faced Persians are now more prevalent than \\"doll face\\" Persians.",             "\\"Ethereal Persians Cattery\\" aims to produce \\"doll face\\" Persians. These cats have midstream features between traditional and extreme Persians, characterized by a slightly protruding muzzle and a nose below the lower eyelid. Doll face snouts are shorter than traditional Persians but longer than extreme Persians. The cattery also breeds for the exaggerated extreme coat seen in modern Persians.'>;
     rightImage: Schema.Attribute.Component<'basic.left-image', false>;
   };
 }

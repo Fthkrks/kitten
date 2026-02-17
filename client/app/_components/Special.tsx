@@ -24,7 +24,10 @@ export default function Special({ title, features }: SpecialProps) {
                     src={feature.image.src}
                     alt={feature.image.alt}
                     fill
-                    className="object-cover"
+                    quality={95}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover object-center"
+                    style={{ objectFit: 'cover' }}
                     priority={index === 0}
                   />
                 </div>
@@ -67,7 +70,10 @@ export default function Special({ title, features }: SpecialProps) {
                     src={feature.image.src}
                     alt={feature.image.alt}
                     fill
-                    className="object-cover"
+                    quality={95}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover object-center"
+                    style={{ objectFit: 'cover' }}
                     priority={index === 0}
                   />
                 </div>

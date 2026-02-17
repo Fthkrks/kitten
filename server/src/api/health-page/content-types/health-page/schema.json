@@ -4,7 +4,7 @@
   "info": {
     "singularName": "health-page",
     "pluralName": "health-pages",
-    "displayName": "HealthPage"
+    "displayName": "AdoptionProcessPage"
   },
   "options": {
     "draftAndPublish": true
@@ -20,6 +20,11 @@
       "type": "component",
       "component": "basic.text-image-data",
       "repeatable": false
+    },
+    "ParaphData": {
+      "type": "component",
+      "component": "basic.vaccanies",
+      "repeatable": true
     }
   }
 }

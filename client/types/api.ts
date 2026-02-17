@@ -1105,12 +1105,19 @@ export interface HistoryPageApiResponse {
 }
 
 // Health Page API Types (same structure as History Page)
+interface HealthParagraphItem {
+  id: number;
+  title: string;
+  paragraphs: string;
+}
+
 export interface HealthPageApiResponse {
   data: {
     id: number;
     documentId: string;
     cardImageSection: AboutUsCardImageSection;
     textImageData: HistoryTextImageData;
+    ParaphData?: HealthParagraphItem[];
   };
 }
 

@@ -168,13 +168,15 @@ export default function PetCards({
               }}
             >
               {/* Pet Image */}
-              <div className={`relative w-full ${aspectRatioClass}`}>
+              <div className={`relative w-full ${aspectRatioClass} overflow-hidden`}>
                 <Image
                   src={pet.image}
                   alt={pet.name}
                   fill
-                  className="object-cover"
+                  quality={95}
+                  className="object-cover object-center"
                   sizes={`(max-width: 768px) ${100/mobileCols}vw, ${100/desktopCols}vw`}
+                  style={{ objectFit: 'cover' }}
                 />
 
                 {/* Reserved Badge */}

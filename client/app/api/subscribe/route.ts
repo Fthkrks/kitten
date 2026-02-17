@@ -14,9 +14,17 @@ export async function POST(request: Request) {
     
     console.log('📧 Subscribing email to Kit:', email);
     
-    // Kit API v3'e tag ile subscriber ekleme
-    const tagId = process.env.KIT_TAG_ID;
-    const response = await fetch(`https://api.convertkit.com/v3/tags/${tagId}/subscribe`, {
+    // Kit API v3'e form ile subscriber ekleme (email template otomatik çalışır)
+    const formId = process.env.KIT_FORM_ID;
+    
+    if (!formId) {
+      return NextResponse.json(
+        { error: 'Kit form configuration missing' },
+        { status: 500 }
+      );
+    }
+    
+    const response = await fetch(`https://api.convertkit.com/v3/forms/${formId}/subscribe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -24,6 +32,9 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         api_secret: process.env.KIT_API_SECRET,
         email: email,
+        // İsterseniz ek alanlar ekleyebilirsiniz:
+        // first_name: firstName,
+        // fields: { custom_field: 'value' }
       }),
     });
     

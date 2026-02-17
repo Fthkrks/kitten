@@ -3,8 +3,9 @@ import { Poppins, Lora } from "next/font/google";
 import "./globals.css";
 import Header from "./_components/Header";
 import Footer from "./_components/Footer";
-import Newsletter from "./_components/Newsletter";
+import KitTemplate from "./_components/KitTemplate"; // ConvertKit form template
 import { fetchHeroesData, fetchMediaData } from "@/services/api";
+import Newsletter from "./_components/Newsletter";
 
 const poppins = Poppins({
   variable: "--font-poppins",

@@ -14,14 +14,17 @@ export default function Cards({ title, text, img, reverse = false, bg = "#f4fcfd
       <div className={`max-w-5xl mx-auto flex flex-col ${reverse ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-8 md:gap-16`}>
         {/* FOTOĞRAF */}
         <div className="w-full md:w-[340px] flex justify-center md:justify-start mb-6 md:mb-0">
-          <div className="relative  rounded-lg  object-contain">
+          <div className="relative rounded-lg overflow-hidden">
             <Image
               src={img}
               alt={title}
-              width={300}
-              height={200}
-              className="object-contain w-full h-full rounded-lg"
+              width={340}
+              height={227}
+              quality={95}
+              sizes="(max-width: 768px) 100vw, 340px"
+              className="object-cover w-full h-full rounded-lg"
               priority
+              style={{ objectFit: 'cover', maxWidth: '100%', height: 'auto' }}
             />
           </div>
         </div>

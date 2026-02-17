@@ -24,7 +24,15 @@ export default function Popular({ title, items, decorativeSquares = 20 }: Popula
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <div key={item.id} className="relative w-full aspect-square overflow-hidden bg-[#F7F7F7]">
-              <Image src={item.src} alt={item.alt} fill className="object-cover" />
+              <Image 
+                src={item.src} 
+                alt={item.alt} 
+                fill 
+                quality={95}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover object-center" 
+                style={{ objectFit: 'cover' }}
+              />
             </div>
           ))}
         </div>

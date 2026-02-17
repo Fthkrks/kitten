@@ -96,7 +96,7 @@ export default function Header({
       <div>
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
           {/* Site Title */}
-          <h1 className="text-2xl md:text-4xl font-serif text-rose-400 tracking-wide">
+          <h1 className="text-2xl md:text-4xl font-serif tracking-wide" style={{ color: '#F7D9C4' }}>
             {siteTitle}
           </h1>
           
@@ -105,7 +105,8 @@ export default function Header({
             {/* Phone Number - Hidden on mobile */}
             <div className="hidden md:flex items-center gap-2 cursor-pointer">
               <svg
-                className="w-5 h-5 text-cyan-700"
+                className="w-5 h-5"
+                style={{ color: '#C6DEF1' }}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -118,7 +119,7 @@ export default function Header({
                   d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                 />
               </svg>
-              <span className="text-3xl font-lora text-cyan-700">
+              <span className="text-3xl font-lora" style={{ color: '#C6DEF1' }}>
                 {phoneNumber}
               </span>
             </div>

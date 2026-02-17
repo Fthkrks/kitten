@@ -2470,10 +2470,14 @@ export async function fetchHealthPageData(): Promise<{
     };
     paragraphs: string[];
   };
+  paragraphSections?: Array<{
+    title: string;
+    paragraphs: string[];
+  }>;
 }> {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const url = `${apiBaseUrl}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url`;
+    const url = `${apiBaseUrl}/api/health-page?populate[cardImageSection][populate][heroImage][fields][0]=url&populate[textImageData][populate][leftImage][populate][src][fields][0]=url&populate[textImageData][populate][rightImage][populate][src][fields][0]=url&populate[ParaphData][populate]=*`;
 
     const response = await fetchWithTimeout(url, { next: { revalidate: 60 } });
     
@@ -2532,7 +2536,15 @@ export async function fetchHealthPageData(): Promise<{
       paragraphs: paragraphsArray
     };
 
-    return { cardImage, textImageData };
+    // Transform ParaphData
+    const paragraphSections = data.data.ParaphData?.map(item => ({
+      title: item.title || "",
+      paragraphs: item.paragraphs 
+        ? item.paragraphs.split('",').map(p => p.trim().replace(/^"|"$/g, '').replace(/\\"/g, '"'))
+        : []
+    })) || [];
+
+    return { cardImage, textImageData, paragraphSections };
   } catch (error) {
     console.error('❌ Error fetching health page data:', error);
     console.warn('⚠️ Using fallback data');
@@ -2564,7 +2576,7 @@ export async function fetchHealthPageData(): Promise<{
       paragraphs: []
     };
 
-    return { cardImage, textImageData };
+    return { cardImage, textImageData, paragraphSections: [] };
   }
 }
 

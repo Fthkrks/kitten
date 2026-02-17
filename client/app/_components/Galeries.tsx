@@ -43,7 +43,10 @@ export default function Galeries({ title, description, buttonText, images }: Gal
                   src={images[0].src}
                   alt={images[0].alt}
                   fill
-                  className="object-cover"
+                  quality={95}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover object-center"
+                  style={{ objectFit: 'cover' }}
                   priority
                 />
               </div>
@@ -56,7 +59,10 @@ export default function Galeries({ title, description, buttonText, images }: Gal
                   src={images[1].src}
                   alt={images[1].alt}
                   fill
-                  className="object-cover"
+                  quality={95}
+                  sizes="(max-width: 768px) 100vw, 25vw"
+                  className="object-cover object-center"
+                  style={{ objectFit: 'cover' }}
                 />
               </div>
             )}
@@ -68,7 +74,10 @@ export default function Galeries({ title, description, buttonText, images }: Gal
                   src={images[2].src}
                   alt={images[2].alt}
                   fill
-                  className="object-cover"
+                  quality={95}
+                  sizes="(max-width: 768px) 100vw, 25vw"
+                  className="object-cover object-center"
+                  style={{ objectFit: 'cover' }}
                 />
               </div>
             )}

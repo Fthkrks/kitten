@@ -660,7 +660,7 @@ export interface ApiGalleriesPageGalleriesPage extends Struct.SingleTypeSchema {
 export interface ApiHealthPageHealthPage extends Struct.SingleTypeSchema {
   collectionName: 'health_pages';
   info: {
-    displayName: 'HealthPage';
+    displayName: 'AdoptionProcessPage';
     pluralName: 'health-pages';
     singularName: 'health-page';
   };
@@ -678,6 +678,7 @@ export interface ApiHealthPageHealthPage extends Struct.SingleTypeSchema {
       'api::health-page.health-page'
     > &
       Schema.Attribute.Private;
+    ParaphData: Schema.Attribute.Component<'basic.vaccanies', true>;
     publishedAt: Schema.Attribute.DateTime;
     textImageData: Schema.Attribute.Component<'basic.text-image-data', false>;
     updatedAt: Schema.Attribute.DateTime;
