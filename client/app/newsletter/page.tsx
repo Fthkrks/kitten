@@ -3,7 +3,7 @@
 import { useState, FormEvent } from "react";
 import { SubscribeResponse } from "@/types/newsletter";
 
-export default function Newsletter() {
+export default function NewsletterPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{
@@ -18,11 +18,9 @@ export default function Newsletter() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Clear previous messages
+
     setMessage(null);
 
-    // Validate email
     if (!email.trim()) {
       setMessage({
         type: "error",
@@ -64,7 +62,7 @@ export default function Newsletter() {
           text: data.error || "Something went wrong. Please try again.",
         });
       }
-    } catch (error) {
+    } catch {
       setMessage({
         type: "error",
         text: "Connection error. Please try again later.",
@@ -83,7 +81,6 @@ export default function Newsletter() {
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Decorative paw print icon */}
           <div className="flex justify-center mb-6">
             <svg
               className="w-12 h-12 md:w-16 md:h-16 opacity-60"
@@ -96,7 +93,6 @@ export default function Newsletter() {
             </svg>
           </div>
 
-          {/* Heading */}
           <h2
             className="font-lora text-3xl md:text-4xl lg:text-5xl mb-4 tracking-wide"
             style={{ color: "#b1868e" }}
@@ -104,7 +100,6 @@ export default function Newsletter() {
             JOIN OUR CATTERY FAMILY
           </h2>
 
-          {/* Subtext */}
           <p
             className="text-base md:text-lg mb-8 leading-relaxed"
             style={{ color: "#7c7175" }}
@@ -114,7 +109,6 @@ export default function Newsletter() {
             tips — straight to your inbox.
           </p>
 
-          {/* Form */}
           <form
             onSubmit={handleSubmit}
             className="flex flex-col sm:flex-row gap-3 justify-center items-stretch sm:items-center"
@@ -187,7 +181,6 @@ export default function Newsletter() {
             </button>
           </form>
 
-          {/* Success/Error Messages */}
           {message && (
             <div
               className={`mt-6 p-4 rounded-lg flex items-center justify-center gap-3 animate-slideUp ${
@@ -238,7 +231,6 @@ export default function Newsletter() {
             </div>
           )}
 
-          {/* Privacy note */}
           <p
             className="text-xs md:text-sm mt-6 opacity-75"
             style={{ color: "#9a868d" }}

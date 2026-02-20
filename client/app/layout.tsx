@@ -5,7 +5,7 @@ import Header from "./_components/Header";
 import Footer from "./_components/Footer";
 import KitTemplate from "./_components/KitTemplate"; // ConvertKit form template
 import { fetchHeroesData, fetchMediaData } from "@/services/api";
-import Newsletter from "./_components/Newsletter";
+import NewsletterFloatingButton from "./_components/NewsletterFloatingButton";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -39,7 +39,7 @@ export default async function RootLayout({
       >
         <Header siteTitle={heroesData.siteTitle} phoneNumber={heroesData.phoneNumber} />
         {children}
-        <Newsletter />
+        <NewsletterFloatingButton />
         <Footer 
           siteTitle={heroesData.siteTitle} 
           phoneNumber={heroesData.phoneNumber}
