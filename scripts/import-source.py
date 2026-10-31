@@ -13,7 +13,7 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path('D:/projeler/_kar_src')
 ORIGIN = 'https://kittenaroundragdolls.com'
-ROUTES = {'/', '/available-kittens', '/our-cats', '/adoption-process', '/faq', '/blog'}
+ROUTES = {'/', '/available-kittens', '/our-cats', '/adoption-process', '/faq', '/blog', '/kitten-application'}
 NAV = [dict(label=l, href=h) for l, h in [
     ('Home', '/'), ('Available Kittens', '/available-kittens'),
     ('Our Cats', '/our-cats'), ('Adoption Process', '/adoption-process'),
@@ -39,7 +39,9 @@ def local_href(href):
         return path
     if path == '/kings-and-queens':
         return '/our-cats'
-    if path in ('/adoption-application', '/waitlist', '/about-us', '/sample-contract', '/contact-us'):
+    if path in ('/adoption-application', '/waitlist'):
+        return '/kitten-application'
+    if path in ('/about-us', '/sample-contract', '/contact-us'):
         return '/adoption-process'
     if path.startswith('/available-kittens/'):
         return '/available-kittens'
@@ -168,7 +170,7 @@ def wire(node):
         label = button.get('aria-label', '')
         if 'Apply for' in text:
             button.name = 'a'
-            button['href'] = '/adoption-process'
+            button['href'] = '/kitten-application'
             button.attrs.pop('type', None)
         elif text in ('All', 'Available', 'Reserved', 'Upcoming'):
             button['data-filter'] = text.lower()

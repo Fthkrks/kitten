@@ -59,7 +59,7 @@ export function SourcePage({ data }: { data: SourceData }) {
         {content.text && <p className="full-review">{content.text}</p>}
         {content.html && <div className="profile-copy" dangerouslySetInnerHTML={{ __html: content.html }} />}
         {content.video && <video key={content.video} className="profile-video" controls playsInline preload="none" poster={content.photos?.[0]}><source src={content.video} type="video/mp4" /></video>}
-        {content.apply && <a className="primary-button profile-apply" href="/adoption-process">{site.applyLabel}</a>}
+        {content.apply && <a className="primary-button profile-apply" href="/kitten-application">{site.applyLabel}</a>}
       </div>}
     </dialog>
   </div>;

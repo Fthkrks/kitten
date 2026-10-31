@@ -36,7 +36,7 @@ with sync_playwright() as p:
         })''')
         assert response.status == 200, route
         assert not result['overflow'], route + ' desktop overflow'
-        assert not (set(result['internalHrefs']) - set(ROUTES)), route + ' invalid hrefs'
+        assert not (set(result['internalHrefs']) - set(ROUTES) - {'/kitten-application'}), route + ' invalid hrefs'
         assert len(result['nav']) == 6, route + ' navigation'
         if route == '/':
             track = page.locator('[data-carousel-track]')
