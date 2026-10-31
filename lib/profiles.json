@@ -1,0 +1,19 @@
+{
+  "sokka": {
+    "photos": [
+      "https://5nmhbu2mgy8iddof.public.blob.vercel-storage.com/kittens/sokka-uOdhurmEhQOOZsutlkR3oKRbSdhz9l.webp",
+      "https://5nmhbu2mgy8iddof.public.blob.vercel-storage.com/kittens/sokka-1025-cover-IFdPbwZjZiKjn0sx1gECkySRTd6Xtc.webp"
+    ],
+    "video": "https://backend.kittenaroundragdolls.com/wp-content/uploads/2026/10/SOKKA-1025.mp4",
+    "details": "<dl class=\"mt-6\"><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Sex</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">Male</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Color &amp; pattern</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">Seal Bicolor</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Born</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">May 19, 2026</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Litter</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">Avatar Litter</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Price</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">$4,500 companion kitten</dd></div></dl>",
+    "description": "Sokka is the lovable little rapscallion of the litter, always looking for his next adventure—or his next bit of mischief. Confident, playful, and endlessly entertaining, he's the first to chase a toy, investigate a new sound, or convince his siblings to join in the fun. Underneath his goofy antics is the affectionate, people-loving nature Ragdolls are famous for. Once he's finished making everyone laugh, he'll happily curl up beside you for a well-earned cuddle. Sokka brings the perfect balance of playful energy and sweet companionship to every day."
+  },
+  "mystery": {
+    "photos": [
+      "https://5nmhbu2mgy8iddof.public.blob.vercel-storage.com/kittens/mystery-5-huA17n0JyBet78VuWMkBA7Q5joCh9q.webp"
+    ],
+    "video": "https://backend.kittenaroundragdolls.com/wp-content/uploads/2026/10/MYSTERY-1024.mp4",
+    "details": "<dl class=\"mt-6\"><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Sex</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">Male</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Color &amp; pattern</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">Seal Mitted</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Born</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">August 24, 2026</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Estimated go-home</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">Mid-to-late November 2026</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Litter</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">K-pop Demon Hunters</dd></div><div class=\"border-t border-kar-champagne py-3\"><dt class=\"text-[11px] font-semibold uppercase tracking-[0.12em] text-kar-gold-text\">Price</dt><dd class=\"mt-1 text-sm text-kar-chocolate\">$4,500 companion kitten</dd></div></dl>",
+    "description": "Mystery is still too young for a reliable personality description. We will add individual observations as personality begins to emerge."
+  }
+}

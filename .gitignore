@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
+/.*.log
 /node_modules
 /.pnp
 .pnp.*
@@ -39,3 +40,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Read-only source extraction cache and verification artifacts
+/tmp/
+
+.vercel

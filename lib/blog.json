@@ -1,0 +1,11 @@
+{
+  "source": "https://kittenaroundragdolls.com/blog",
+  "title": "Astrid Moon Cattery",
+  "description": "Guides on Ragdoll care, health testing, choosing a breeder and what to expect as a new owner — written from inside a working cattery.",
+  "sections": [
+    {
+      "key": "blog-heading",
+      "html": "<section aria-labelledby=\"blog-heading\" class=\"relative overflow-hidden py-14 sm:py-16 lg:py-20 bg-kar-cream\"><div aria-hidden=\"true\" class=\"pointer-events-none absolute inset-x-0 top-0 [aspect-ratio:1717/916]\"></div><div aria-hidden=\"true\" class=\"pointer-events-none absolute inset-x-0 bottom-0 [aspect-ratio:1717/916]\"></div><div aria-hidden=\"true\" class=\"pointer-events-none absolute inset-0\" style=\"background-image:linear-gradient(to right, rgba(252,250,247,0) 0%, rgba(252,250,247,0.62) 24%, rgba(252,250,247,0.62) 76%, rgba(252,250,247,0) 100%)\"></div><div class=\"container relative\"><div class=\"mx-auto max-w-3xl text-center\"><p class=\"text-xs+ font-semibold uppercase tracking-[0.22em] text-kar-gold-text\">From the Astrid Moon Blog</p><h1 class=\"mt-4 font-serif text-3xl font-normal leading-tight tracking-normal text-kar-chocolate sm:text-4xl lg:text-5xl\" id=\"blog-heading\">Care, Stories &amp; Ragdoll Expertise</h1><p class=\"mx-auto mt-6 max-w-2xl text-base+ leading-relaxed text-kar-chocolate-soft\">Practical care guidance, breeding transparency, behind-the-scenes stories, and what we’ve learned from life with Ragdolls.</p></div></div></section>"
+    }
+  ]
+}

@@ -1,36 +1,13 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kitten Around Ragdolls
 
-## Getting Started
+Six-page Next.js 16.4.3 App Router clone of [Kitten Around Ragdolls](https://kittenaroundragdolls.com/), using TypeScript, Tailwind v4, Open Sans and Playfair Display through `next/font/google`.
 
-First, run the development server:
+Run `npm run dev -- --port 3000`. Validate with `npm run build` and `npm run lint`.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The only application routes are `/`, `/available-kittens`, `/our-cats`, `/adoption-process`, `/faq`, and `/blog`. Blog cards consistently open original external posts. The adoption page is informational and has no application form, backend, or submission endpoint. Newsletter Subscribe opens an email to the cattery; it does not claim to save a subscription.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+All source copy, original absolute image URLs, and sanitized section markup live in `lib/*.json`. The read-only HTML inputs are in `D:/projeler/_kar_src`. `scripts/import-source.py` JSON-decodes RSC data and sanitizes the reference markup without executing any downloaded JavaScript. The verified original CSS is in `app/source.css`; local responsive chrome and interaction styles are in `app/globals.css`. Images use native `<img>` elements and their original absolute URLs.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Source mapping: home → `/`; available-kittens → `/available-kittens`; kings-and-queens → `/our-cats`; home adoption steps plus adoption-application explanatory copy → `/adoption-process`; FAQ → `/faq` (all 21 entries); blog listing → `/blog` (nine post cards from RSC data). Original kitten detail pages supplement the two local profile dialogs with photos and videos. All five full testimonials come from the public home page bundle.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Unsupported regional, community, dashboard and policy destinations are removed; relevant application/about/contact CTAs lead to `/adoption-process`. No deployment configuration or new runtime dependencies were added.
