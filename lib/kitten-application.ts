@@ -49,7 +49,7 @@ export function validateContactDetails(input: Record<string, unknown>) {
 export function validateAnswers(input: unknown, questions: KittenQuestion[]) {
   const answers: Record<string, string> = {};
   const errors: FieldErrors = {};
-  if (input === undefined) return { answers, errors };
+  if (input === undefined) input = {};
   if (!input || typeof input !== "object" || Array.isArray(input)) {
     return { answers, errors: { questions: "Please check your answers and try again." } };
   }
@@ -60,8 +60,11 @@ export function validateAnswers(input: unknown, questions: KittenQuestion[]) {
   }
   for (const q of questions) {
     const raw = (input as Record<string, unknown>)[q.id];
-    if (raw === undefined) continue;
     const key = `question-${q.id}`;
+    if (raw === undefined || (typeof raw === "string" && !raw.trim())) {
+      if (q.question.includes("*")) errors[key] = "Please answer this required question.";
+      continue;
+    }
     if (typeof raw !== "string") {
       errors[key] = "Enter a valid answer.";
       continue;

@@ -40,7 +40,6 @@ export function Header() {
         if (icon) icon.textContent = next ? '▶' : 'Ⅱ';
       }
     }} dangerouslySetInnerHTML={{ __html: site.announcement }} />
-    {site.seasonal && <div dangerouslySetInnerHTML={{ __html: site.seasonal }} />}
     <dialog ref={drawer} id="mobile-navigation" className="mobile-drawer" aria-label="Navigation menu" onCancel={() => setOpen(false)} onClick={event => { if (event.target === drawer.current) setOpen(false); }}>
       <div className="drawer-panel"><div className="drawer-head"><img src={site.logo} alt={site.brand} width={355} height={376} /><button className="close-button" aria-label="Close navigation menu" onClick={() => setOpen(false)}>×</button></div>
         <Link href="/kitten-application" className="primary-button" onClick={() => setOpen(false)}>{site.applyLabel}</Link>

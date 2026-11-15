@@ -79,7 +79,7 @@ export function KittenApplicationForm({ questions }: { questions: KittenQuestion
     }}>
       <fieldset disabled={submitting} className="application-fields">
         <legend className="application-section-title">A little about you</legend>
-        <p className="application-form-note">All contact and address fields are required. Please share as much as you can in the questions below.</p>
+        <p className="application-form-note">All contact and address fields and questions marked with * are required. Please share as much as you can in the questions below.</p>
         <div className="application-contact-grid">
           {contactFields.map(field => <div key={field.name} className={`application-field application-field-${field.name}`}>
             <label htmlFor={`application-${field.name}`}>{field.label} <span aria-hidden="true">*</span></label>
@@ -96,12 +96,13 @@ export function KittenApplicationForm({ questions }: { questions: KittenQuestion
           {questions.map((q, index) => {
             const name = `question-${q.id}`;
             const error = errors[name];
+            const required = q.question.includes("*");
             return <fieldset key={q.id} className="application-question" data-question-id={q.id} aria-describedby={error ? `${name}-error` : undefined}>
               <legend><span className="application-question-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{q.isElective ? q.question : <label htmlFor={name}>{q.question}</label>}</legend>
               {q.isElective ? <div className="application-options">{q.options.map((option, optionIndex) => <label key={`${q.id}-${optionIndex}`} className="application-option" htmlFor={`${name}-${optionIndex}`}>
-                <input id={`${name}-${optionIndex}`} name={name} type="radio" value={option} />
+                <input id={`${name}-${optionIndex}`} name={name} type="radio" value={option} required={required} />
                 <span>{option}</span>
-              </label>)}</div> : <textarea id={name} name={name} rows={4} maxLength={answerMaxLength} aria-invalid={!!error} aria-describedby={error ? `${name}-error` : undefined} />}
+              </label>)}</div> : <textarea id={name} name={name} rows={4} required={required} maxLength={answerMaxLength} aria-invalid={!!error} aria-describedby={error ? `${name}-error` : undefined} />}
               {error && <p id={`${name}-error`} className="application-field-error">{error}</p>}
             </fieldset>;
           })}

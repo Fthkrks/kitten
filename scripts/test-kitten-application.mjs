@@ -6,8 +6,8 @@ import ts from "typescript";
 
 // Run the actual TypeScript handler and email helpers with isolated SMTP/Strapi
 // transports. These tests cannot send email or read the developer's secrets.
-function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayload } = {}) {
-  const sent = [], logs = [], fetches = [], transports = [];
+function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayload, apiError } = {}) {
+  const sent = [], logs = [], fetches = [], transports = [], timeouts = [];
   const env = configured ? { EMAIL_USER: "sender@example.com", EMAIL_PASSWORD: "test-only", ADMIN_EMAIL: "admin@example.com" } : {};
   const questions = [
     { id: 11, Question: "Tell us about your home <&>", isElective: false, Options: {} },
@@ -19,7 +19,7 @@ function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayloa
       compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
     }).outputText;
     vm.runInNewContext(source, {
-      exports, Buffer, Response, AbortSignal, process: { env },
+      exports, Buffer, Response, AbortSignal: { timeout: ms => { timeouts.push(ms); return AbortSignal.timeout(ms); } }, process: { env },
       console: { warn: (...args) => logs.push(args), error: (...args) => logs.push(args) },
       require: name => {
         assert.ok(name in modules, `Unexpected import ${name}`);
@@ -27,6 +27,7 @@ function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayloa
       },
       fetch: async (url, options) => {
         fetches.push({ url, options });
+        if (apiError) throw apiError;
         return Response.json(apiPayload ?? { data: { label: "Application", Desc: "Description", KittenQuestion: questions } }, { status: apiStatus });
       },
     }, { filename: file });
@@ -54,7 +55,7 @@ function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayloa
     "@/lib/kitten-application-data": data,
   });
   const post = body => POST(new Request("http://localhost/api/kitten-app-submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }));
-  return { post, POST, data, email, env, sent, logs, fetches, transports };
+  return { post, POST, data, email, env, sent, logs, fetches, transports, timeouts };
 }
 
 const valid = { firstName: " Test ", lastName: "Applicant", email: "test@example.com", phone: "555-0100", streetAddress: "123 Test Street", city: "Austin", state: "TX", zip: "78701" };
@@ -142,23 +143,59 @@ test("malformed JSON and oversized request bodies are rejected", async () => {
   assert.equal(app.sent.length, 0);
 });
 
-test("Strapi reads use the configured base and 60-second revalidation", async () => {
+test("Strapi reads use the configured base, 60-second revalidation, and a five-second timeout", async () => {
   const app = setup();
   app.env.API_BASE_URL = "https://server.example/";
   await app.data.fetchKittenAppData();
   assert.equal(app.fetches[0].url, "https://server.example/api/kitten-app?populate=*");
   assert.equal(app.fetches[0].options.next.revalidate, 60);
+  assert.equal(app.timeouts[0], 5000);
   app.env.NEXT_PUBLIC_API_BASE_URL = "https://public.example/";
   await app.data.fetchKittenAppData();
   assert.equal(app.fetches[1].url, "https://public.example/api/kitten-app?populate=*");
 });
 
-test("failed or malformed Strapi data retains the exact two legacy fallback questions", async () => {
-  for (const options of [{ apiStatus: 503 }, { apiPayload: { data: null } }, { apiPayload: { data: { KittenQuestion: [] } } }]) {
+test("failed, timed-out, or malformed Strapi data retains all 18 cached legacy questions", async () => {
+  for (const options of [{ apiStatus: 503 }, { apiError: new DOMException("Timed out", "TimeoutError") }, { apiPayload: { data: null } }, { apiPayload: { data: { KittenQuestion: [] } } }]) {
     const app = setup(options);
     const data = await app.data.fetchKittenAppData();
-    assert.equal(data.questions.length, 2);
-    assert.equal(data.questions[0].question, "If you have other pets in your home, please briefly describe them (i.e. Age, Breed, Personality)");
-    assert.equal(JSON.stringify(data.questions[1].options), JSON.stringify(["Yes", "No", "On the way"]));
+    assert.equal(data.questions.length, 18);
+    assert.deepEqual(Array.from(data.questions, q => q.id), Array.from({ length: 18 }, (_, i) => 532 + i));
+    assert.equal(data.title, "Kitten Application");
+    assert.match(data.description, /towards acquiring a beautiful, healthy, lifelong companion/);
+    assert.equal(data.questions[0].question, "Which coat length are you interested in?");
+    assert.deepEqual(Array.from(data.questions[0].options), ["British Longhair", "British Shorthair", "No preference"]);
+    assert.equal(data.questions[1].options.length, 4); // Legacy Object.values includes the note option.
+    assert.match(data.questions[1].options[3], /^Please note:/);
+    assert.equal(data.questions.filter(q => q.isElective).length, 11);
+    assert.deepEqual(Array.from(data.questions.filter(q => q.question.includes("*")), q => q.id), [535, 538, 543, 546]);
+    assert.match(data.questions[12].question, /isn’t/);
+    assert.equal(data.questions[13].options[2], "I’m currently researching");
+    assert.equal(data.questions[16].question, "Is there anything else you’d like us to know or any questions you’d like us to answer?");
+    assert.equal(data.questions[17].question, "How did you find us?");
+    assert.ok(!JSON.stringify(data).includes("\uFFFD"));
   }
+});
+
+test("live Strapi copy repairs replacement characters in titles, descriptions, questions, and options", async () => {
+  const app = setup({ apiPayload: { data: { attributes: { label: "I\uFFFDm applying", Desc: "You\uFFFDd like a kitten", KittenQuestion: [{ id: 1, Question: "Kitten isn\uFFFDt available?", isElective: true, Options: { 1: "I\uFFFDm researching" } }] } } } });
+  const data = await app.data.fetchKittenAppData();
+  assert.equal(data.title, "I’m applying");
+  assert.equal(data.description, "You’d like a kitten");
+  assert.equal(data.questions[0].question, "Kitten isn’t available?");
+  assert.equal(data.questions[0].options[0], "I’m researching");
+});
+
+test("only starred questions require answers, for both radio choices and textareas", async () => {
+  const app = setup({ apiPayload: { data: { KittenQuestion: [
+    { id: 1, Question: "Pick one *", isElective: true, Options: { 1: "Yes", 2: "No" } },
+    { id: 2, Question: "Tell us more *", isElective: false, Options: {} },
+    { id: 3, Question: "Optional", isElective: true, Options: { 1: "Yes" } },
+  ] } } });
+  for (const dynamicAnswers of [undefined, {}, { 1: " ", 2: " " }, { 1: "Yes" }, { 2: "Answer" }]) {
+    const response = await app.post({ ...valid, dynamicAnswers });
+    assert.equal(response.status, 400);
+  }
+  assert.equal(app.sent.length, 0);
+  assert.equal((await app.post({ ...valid, dynamicAnswers: { 1: "Yes", 2: "Answer" } })).status, 200);
 });
