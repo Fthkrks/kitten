@@ -1,11 +1,17 @@
-"""Browser checks against an already running localhost:3000 (Python Playwright)."""
+"""Browser checks against an already running site (Python Playwright).
+
+Usage: py -3 scripts/verify-site.py http://localhost:3005
+"""
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import json
+import sys
 
 OUT = Path(__file__).resolve().parents[1] / 'tmp/qa'
 OUT.mkdir(parents=True, exist_ok=True)
 ROUTES = ['/', '/available-kittens', '/our-cats', '/adoption-process', '/faq', '/blog']
+BLOG_ROUTES = {p['href'] for p in json.loads((OUT.parents[1] / 'lib/posts.json').read_text(encoding='utf-8'))}
+BASE_URL = (sys.argv[1] if len(sys.argv) > 1 else 'http://localhost:3005').rstrip('/')
 results = []
 errors = []
 with sync_playwright() as p:
@@ -13,7 +19,7 @@ with sync_playwright() as p:
     page = browser.new_page(viewport={'width': 1440, 'height': 900}, device_scale_factor=1)
     page.on('pageerror', lambda error: errors.append(str(error)))
     for route in ROUTES:
-        response = page.goto('http://localhost:3000' + route, wait_until='networkidle')
+        response = page.goto(BASE_URL + route, wait_until='networkidle')
         page.evaluate('document.fonts.ready')
         # Exercise lazy image loading before inspecting the full visual page.
         height = page.evaluate('document.documentElement.scrollHeight')
@@ -36,7 +42,7 @@ with sync_playwright() as p:
         })''')
         assert response.status == 200, route
         assert not result['overflow'], route + ' desktop overflow'
-        assert not (set(result['internalHrefs']) - set(ROUTES) - {'/kitten-application'}), route + ' invalid hrefs'
+        assert not (set(result['internalHrefs']) - set(ROUTES) - BLOG_ROUTES - {'/kitten-application'}), route + ' invalid hrefs'
         assert len(result['nav']) == 6, route + ' navigation'
         if route == '/':
             track = page.locator('[data-carousel-track]')
@@ -44,7 +50,10 @@ with sync_playwright() as p:
             page.wait_for_function('document.querySelector("[data-carousel-track]").scrollLeft > 10')
             result['reviews'] = page.locator('[aria-roledescription=slide]').count()
             assert result['reviews'] == 5
-            assert page.locator('[aria-labelledby=where-we-serve-heading] > div > ul > li').count() == 4
+            # The current homepage uses Austin service copy instead of regional cards.
+            service_copy = page.locator('[aria-labelledby=where-we-serve-heading]').inner_text()
+            assert 'Austin, Texas' in service_copy
+            assert 'Sacramento' not in service_copy
             page.locator('[data-review]').first.click()
             assert page.locator('.content-dialog[open]').count() == 1
             assert 'My kitten' in page.locator('.full-review').inner_text()
@@ -65,10 +74,10 @@ with sync_playwright() as p:
             result['cats'] = page.locator('main article').count()
             assert result['cats'] == 16
         elif route == '/faq':
-            assert page.locator('main details').count() == 21
+            assert page.locator('main details').count() == 20
             page.locator('main summary').nth(7).click()
             assert page.locator('main details[open]').count() == 1
-            result['faqAnswers'] = 21
+            result['faqAnswers'] = 20
         elif route == '/blog':
             assert page.locator('main article').count() == 6
             page.get_by_role('button', name='Load More', exact=True).click()

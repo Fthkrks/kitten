@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path('D:/projeler/_kar_src')
 ORIGIN = 'https://kittenaroundragdolls.com'
 ROUTES = {'/', '/available-kittens', '/our-cats', '/adoption-process', '/faq', '/blog', '/kitten-application'}
+BLOG_ROUTES = {p['href'] for p in json.loads((ROOT / 'lib/posts.json').read_text(encoding='utf-8'))}
 NAV = [dict(label=l, href=h) for l, h in [
     ('Home', '/'), ('Available Kittens', '/available-kittens'),
     ('Our Cats', '/our-cats'), ('Adoption Process', '/adoption-process'),
@@ -34,7 +35,7 @@ def local_href(href):
         return href if url.scheme == 'https' else None
     path = url.path.rstrip('/') or '/'
     if path.startswith('/blog/'):
-        return ORIGIN + path  # Consistently external original articles.
+        return path if path in BLOG_ROUTES else None
     if path in ROUTES:
         return path
     if path == '/kings-and-queens':
@@ -277,7 +278,7 @@ for source_name, name in [('home', 'home'), ('available-kittens', 'available-kit
 # Decode all nine blog cards from the Flight data, including cards after the initial six.
 posts = find_props(flight_records('blog'), 'posts')
 save('posts', [dict(title=p['title'], excerpt=BeautifulSoup(p['excerpt'], 'html.parser').get_text(' ', strip=True),
-    date=p['date'], image=p['featuredImgSourceUrl'], href=ORIGIN + '/blog/' + p['slug']) for p in posts])
+    date=p['date'], image=p['featuredImgSourceUrl'], slug=p['slug'], href='/blog/' + p['slug']) for p in posts])
 
 # The adoption route combines the home process with explanatory application copy.
 intro = deepcopy(sections('adoption-application')[0])
