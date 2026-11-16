@@ -10,9 +10,7 @@ export function Socials() {
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [paused, setPaused] = useState(false);
   const drawer = useRef<HTMLDialogElement>(null);
-  const announcement = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (open) drawer.current?.showModal();
     else drawer.current?.close();
@@ -27,19 +25,6 @@ export function Header() {
       <Link href="/kitten-application" className="primary-button nav-apply">{site.applyLabel}</Link>
       <button type="button" className="drawer-toggle" aria-label="Open navigation menu" aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(true)}><span /><span /><span /></button>
     </nav></header>
-    <div ref={announcement} className="announcement" data-paused={paused} onClick={event => {
-      const button = (event.target as HTMLElement).closest('[data-marquee-toggle]');
-      if (button) {
-        const next = !paused;
-        setPaused(next);
-        announcement.current?.querySelector('aside')?.setAttribute('data-paused', String(next));
-        button.setAttribute('aria-label', next ? 'Play scrolling announcement' : 'Pause scrolling announcement');
-        const label = button.querySelector('[class*=motionLabel]');
-        const icon = button.querySelector('[class*=motionIcon]');
-        if (label) label.textContent = next ? site.ui.play : site.ui.pause;
-        if (icon) icon.textContent = next ? '▶' : 'Ⅱ';
-      }
-    }} dangerouslySetInnerHTML={{ __html: site.announcement }} />
     <dialog ref={drawer} id="mobile-navigation" className="mobile-drawer" aria-label="Navigation menu" onCancel={() => setOpen(false)} onClick={event => { if (event.target === drawer.current) setOpen(false); }}>
       <div className="drawer-panel"><div className="drawer-head"><img src={site.logo} alt={site.brand} width={355} height={376} /><button className="close-button" aria-label="Close navigation menu" onClick={() => setOpen(false)}>×</button></div>
         <Link href="/kitten-application" className="primary-button" onClick={() => setOpen(false)}>{site.applyLabel}</Link>

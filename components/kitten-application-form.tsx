@@ -102,7 +102,7 @@ export function KittenApplicationForm({ questions }: { questions: KittenQuestion
               {q.isElective ? <div className="application-options">{q.options.map((option, optionIndex) => <label key={`${q.id}-${optionIndex}`} className="application-option" htmlFor={`${name}-${optionIndex}`}>
                 <input id={`${name}-${optionIndex}`} name={name} type="radio" value={option} required={required} />
                 <span>{option}</span>
-              </label>)}</div> : <textarea id={name} name={name} rows={4} required={required} maxLength={answerMaxLength} aria-invalid={!!error} aria-describedby={error ? `${name}-error` : undefined} />}
+              </label>)}{q.note && <p className="application-note">{q.note}</p>}</div> : <textarea id={name} name={name} rows={4} required={required} maxLength={answerMaxLength} aria-invalid={!!error} aria-describedby={error ? `${name}-error` : undefined} />}
               {error && <p id={`${name}-error`} className="application-field-error">{error}</p>}
             </fieldset>;
           })}

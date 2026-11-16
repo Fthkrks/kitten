@@ -58,8 +58,7 @@ with sync_playwright() as p:
             assert page.locator('.content-dialog[open]').count() == 1
             assert 'My kitten' in page.locator('.full-review').inner_text()
             page.get_by_role('button', name='Close dialog', exact=True).click()
-            page.get_by_role('button', name='Pause scrolling announcement').click()
-            assert page.locator('.announcement aside').get_attribute('data-paused') == 'true'
+            assert page.locator('.announcement').count() == 0
         elif route == '/available-kittens':
             page.locator('[data-profile]').first.click()
             assert page.locator('.content-dialog[open] video source').get_attribute('src').endswith('.mp4')

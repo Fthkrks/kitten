@@ -185,6 +185,14 @@ function normalizeCopy(value: string): string {
   return value.replace(/\uFFFD/g, "\u2019");
 }
 
+// The panel stores the colour disclaimer as a radio option; show it as a note instead.
+function withNotes(data: KittenApplicationData): KittenApplicationData {
+  return { ...data, questions: data.questions.map(q => {
+    const notes = q.options.filter(option => /^please note\b/i.test(option.trim()));
+    return notes.length ? { ...q, options: q.options.filter(option => !notes.includes(option)), note: notes.join(" ") } : q;
+  }) };
+}
+
 export async function fetchKittenAppData(): Promise<KittenApplicationData> {
   try {
     const base = (process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL || "https://astridmoonadminpanel.store").replace(/\/+$/, "");
@@ -207,13 +215,13 @@ export async function fetchKittenAppData(): Promise<KittenApplicationData> {
       return { id: q.id, question: normalizeCopy(q.Question), isElective: q.isElective === true, options: (options as string[]).map(normalizeCopy) };
     });
     if (new Set(questions.map(q => q.id)).size !== questions.length) throw new Error("Duplicate application questions");
-    return {
+    return withNotes({
       title: typeof data.label === "string" && data.label.trim() ? normalizeCopy(data.label) : fallbackKittenApplication.title,
       description: typeof data.Desc === "string" && data.Desc.trim() ? normalizeCopy(data.Desc) : fallbackKittenApplication.description,
       questions,
-    };
+    });
   } catch {
     console.warn("Kitten application questions unavailable; using the legacy fallback.");
-    return fallbackKittenApplication;
+    return withNotes(fallbackKittenApplication);
   }
 }

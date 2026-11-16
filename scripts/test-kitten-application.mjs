@@ -165,8 +165,8 @@ test("failed, timed-out, or malformed Strapi data retains all 18 cached legacy q
     assert.match(data.description, /towards acquiring a beautiful, healthy, lifelong companion/);
     assert.equal(data.questions[0].question, "Which coat length are you interested in?");
     assert.deepEqual(Array.from(data.questions[0].options), ["British Longhair", "British Shorthair", "No preference"]);
-    assert.equal(data.questions[1].options.length, 4); // Legacy Object.values includes the note option.
-    assert.match(data.questions[1].options[3], /^Please note:/);
+    assert.deepEqual(Array.from(data.questions[1].options), ["Black Golden", "Blue Golden", "No preference"]);
+    assert.match(data.questions[1].note, /^Please note:/); // The legacy note option is shown as a note.
     assert.equal(data.questions.filter(q => q.isElective).length, 11);
     assert.deepEqual(Array.from(data.questions.filter(q => q.question.includes("*")), q => q.id), [535, 538, 543, 546]);
     assert.match(data.questions[12].question, /isn’t/);
@@ -198,4 +198,13 @@ test("only starred questions require answers, for both radio choices and textare
   }
   assert.equal(app.sent.length, 0);
   assert.equal((await app.post({ ...valid, dynamicAnswers: { 1: "Yes", 2: "Answer" } })).status, 200);
+});
+
+test("a 'Please note' option is shown as a note, not as a choice", async () => {
+  const app = setup({ apiPayload: { data: { KittenQuestion: [{ id: 1, Question: "Colour?", isElective: true, Options: { 1: "Blue", 2: "Please note: shades vary." } }] } } });
+  const data = await app.data.fetchKittenAppData();
+  assert.deepEqual(Array.from(data.questions[0].options), ["Blue"]);
+  assert.equal(data.questions[0].note, "Please note: shades vary.");
+  const fallback = await setup({ apiStatus: 503 }).data.fetchKittenAppData();
+  assert.ok(fallback.questions.some(q => q.note?.startsWith("Please note") && !q.options.some(o => o.startsWith("Please note"))));
 });

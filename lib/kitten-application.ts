@@ -4,6 +4,7 @@ export type KittenQuestion = {
   // In the legacy form, elective means a radio choice, not a required answer.
   isElective: boolean;
   options: string[];
+  note?: string;
 };
 
 export type KittenApplicationData = {
