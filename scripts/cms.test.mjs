@@ -23,3 +23,25 @@ test('service-role insert is optional and is never configured with a public key'
  assert.equal(await setup().saveApplication({},[]),false);
  assert.equal(await setup({NEXT_PUBLIC_SUPABASE_URL:'http://local',SUPABASE_SERVICE_ROLE_KEY:'private-test'}).saveApplication({},[]),true);
 });
+
+test('visible review photos and their lightbox destinations share one image value',async()=>{
+ const {createRequire}=await import('node:module');const {renderToStaticMarkup}=await import('react-dom/server');const {createElement}=await import('react');
+ const require=createRequire(import.meta.url),exports={};
+ const source=ts.transpileModule(readFileSync(new URL('../components/generated-content.tsx',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+ vm.runInNewContext(source,{exports,require});
+ const lists=structuredClone(fallback),review=lists.reviews.find(row=>row.group_key==='carousel');
+ review.data.image='https://example.com/replaced-family-photo.webp';
+ const html=renderToStaticMarkup(createElement(exports.PageContent,{page:'home',content:Object.fromEntries(fallback.site_content.map(row=>[row.key,row.data])),lists}));
+ assert.ok(html.includes('data-photo="https://example.com/replaced-family-photo.webp"'));
+});
+test('kitten badges and accessible profile names derive from the structured status and name',async()=>{
+ const {createRequire}=await import('node:module');const {renderToStaticMarkup}=await import('react-dom/server');const {createElement}=await import('react');
+ const require=createRequire(import.meta.url),exports={};
+ const source=ts.transpileModule(readFileSync(new URL('../components/generated-content.tsx',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+ vm.runInNewContext(source,{exports,require});
+ const lists=structuredClone(fallback);lists.kittens[0].name='Renamed';lists.kittens[0].status='reserved';
+ const html=renderToStaticMarkup(createElement(exports.PageContent,{page:'available-kittens',content:Object.fromEntries(fallback.site_content.map(row=>[row.key,row.data])),lists}));
+ const card=html.match(/<article\b[^>]*data-kitten-status="reserved"[\s\S]*?<\/article>/)?.[0];
+ assert.ok(card);assert.equal((card.match(/>Reserved</g)||[]).length,2);
+ assert.ok(card.includes('Read Renamed&#x27;s full profile and watch Renamed&#x27;s video'));
+});
