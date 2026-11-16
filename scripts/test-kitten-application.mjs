@@ -208,3 +208,16 @@ test("a 'Please note' option is shown as a note, not as a choice", async () => {
   const fallback = await setup({ apiStatus: 503 }).data.fetchKittenAppData();
   assert.ok(fallback.questions.some(q => q.note?.startsWith("Please note") && !q.options.some(o => o.startsWith("Please note"))));
 });
+
+test("the applicant's note under a 'Please note' question is optional and reaches the admin email", async () => {
+  const payload = { data: { KittenQuestion: [
+    { id: 1, Question: "Colour?", isElective: true, Options: { 1: "Blue", 2: "Please note: shades vary." } },
+    { id: 2, Question: "Plain?", isElective: true, Options: { 1: "Yes" } },
+  ] } };
+  const app = setup({ apiPayload: payload });
+  assert.equal((await app.post({ ...valid, dynamicAnswers: { 1: "Blue" } })).status, 200);
+  assert.equal((await app.post({ ...valid, dynamicAnswers: { 1: "Blue", "1-note": "Lighter shade <please>" } })).status, 200);
+  assert.ok(app.sent.some(m => m.html.includes("Colour? (note)") && m.html.includes("Lighter shade &lt;please&gt;")));
+  assert.equal((await app.post({ ...valid, dynamicAnswers: { 2: "Yes", "2-note": "x" } })).status, 400);
+  assert.equal((await app.post({ ...valid, dynamicAnswers: { "1-note": "x".repeat(5001) } })).status, 400);
+});

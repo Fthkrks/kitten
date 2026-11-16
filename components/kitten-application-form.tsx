@@ -26,7 +26,7 @@ export function KittenApplicationForm({ questions }: { questions: KittenQuestion
     const form = event.currentTarget;
     const values = new FormData(form);
     const contact = validateContactDetails(Object.fromEntries(values));
-    const dynamicAnswers = Object.fromEntries(questions.map(q => [q.id, values.get(`question-${q.id}`) || ""]));
+    const dynamicAnswers = Object.fromEntries(questions.flatMap(q => [[q.id, values.get(`question-${q.id}`) || ""], ...(q.note ? [[`${q.id}-note`, values.get(`question-${q.id}-note`) || ""]] : [])]));
     const checkedAnswers = validateAnswers(dynamicAnswers, questions);
     const nextErrors = { ...contact.errors, ...checkedAnswers.errors };
     setSubmitError("");
@@ -99,10 +99,15 @@ export function KittenApplicationForm({ questions }: { questions: KittenQuestion
             const required = q.question.includes("*");
             return <fieldset key={q.id} className="application-question" data-question-id={q.id} aria-describedby={error ? `${name}-error` : undefined}>
               <legend><span className="application-question-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{q.isElective ? q.question : <label htmlFor={name}>{q.question}</label>}</legend>
-              {q.isElective ? <div className="application-options">{q.options.map((option, optionIndex) => <label key={`${q.id}-${optionIndex}`} className="application-option" htmlFor={`${name}-${optionIndex}`}>
+              {q.isElective ? <><div className="application-options">{q.options.map((option, optionIndex) => <label key={`${q.id}-${optionIndex}`} className="application-option" htmlFor={`${name}-${optionIndex}`}>
                 <input id={`${name}-${optionIndex}`} name={name} type="radio" value={option} required={required} />
                 <span>{option}</span>
-              </label>)}{q.note && <p className="application-note">{q.note}</p>}</div> : <textarea id={name} name={name} rows={4} required={required} maxLength={answerMaxLength} aria-invalid={!!error} aria-describedby={error ? `${name}-error` : undefined} />}
+              </label>)}</div>{q.note && <div className="application-note-field">
+                <p className="application-note" id={`${name}-note-text`}>{q.note}</p>
+                <label htmlFor={`${name}-note`}>Your note (optional)</label>
+                <textarea id={`${name}-note`} name={`${name}-note`} rows={3} maxLength={answerMaxLength} placeholder="Anything you'd like us to know about your color preference" aria-invalid={!!errors[`${name}-note`]} aria-describedby={[`${name}-note-text`, errors[`${name}-note`] && `${name}-note-error`].filter(Boolean).join(" ")} />
+                {errors[`${name}-note`] && <p id={`${name}-note-error`} className="application-field-error">{errors[`${name}-note`]}</p>}
+              </div>}</> : <textarea id={name} name={name} rows={4} required={required} maxLength={answerMaxLength} aria-invalid={!!error} aria-describedby={error ? `${name}-error` : undefined} />}
               {error && <p id={`${name}-error`} className="application-field-error">{error}</p>}
             </fieldset>;
           })}

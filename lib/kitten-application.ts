@@ -55,7 +55,7 @@ export function validateAnswers(input: unknown, questions: KittenQuestion[]) {
     return { answers, errors: { questions: "Please check your answers and try again." } };
   }
   const entries = Object.entries(input);
-  const knownIds = new Set(questions.map(q => String(q.id)));
+  const knownIds = new Set(questions.flatMap(q => q.note ? [String(q.id), `${q.id}-note`] : [String(q.id)]));
   if (entries.some(([id]) => !knownIds.has(id))) {
     errors.questions = "The questions have changed. Please reload the form before submitting.";
   }
@@ -74,6 +74,15 @@ export function validateAnswers(input: unknown, questions: KittenQuestion[]) {
     if (value.length > answerMaxLength) errors[key] = `Use ${answerMaxLength} characters or fewer.`;
     else if (value && q.isElective && !q.options.some(option => option.trim() === value)) errors[key] = "Choose one of the listed options.";
     else answers[q.id] = value;
+  }
+  // Questions with a note also take an optional free-text note from the applicant.
+  for (const q of questions) {
+    const raw = q.note ? (input as Record<string, unknown>)[`${q.id}-note`] : undefined;
+    const key = `question-${q.id}-note`;
+    if (raw === undefined) continue;
+    if (typeof raw !== "string") errors[key] = "Enter a valid note.";
+    else if (raw.trim().length > answerMaxLength) errors[key] = `Use ${answerMaxLength} characters or fewer.`;
+    else if (raw.trim()) answers[`${q.id}-note`] = raw.trim();
   }
   return { answers, errors };
 }

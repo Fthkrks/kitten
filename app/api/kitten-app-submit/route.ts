@@ -54,7 +54,7 @@ export async function POST(request: Request) {
 
   // The admin notification is the receipt. Never confirm before it is accepted.
   try {
-    const content = getAdminNotificationEmail(details, questions.map(q => ({ question: q.question, answer: answers[q.id] || "" })));
+    const content = getAdminNotificationEmail(details, questions.flatMap(q => [{ question: q.question, answer: answers[q.id] || "" }, ...(q.note ? [{ question: `${q.question} (note)`, answer: answers[`${q.id}-note`] || "" }] : [])]));
     await sendEmail(config, config.admin, content, details.email);
   } catch {
     // SMTP errors can contain recipient details; do not log them or the application.
