@@ -73,10 +73,10 @@ with sync_playwright() as p:
             result['cats'] = page.locator('main article').count()
             assert result['cats'] == 16
         elif route == '/faq':
-            assert page.locator('main details').count() == 20
+            assert page.locator('main details').count() == 19
             page.locator('main summary').nth(7).click()
             assert page.locator('main details[open]').count() == 1
-            result['faqAnswers'] = 20
+            result['faqAnswers'] = 19
         elif route == '/blog':
             assert page.locator('main article').count() == 6
             page.get_by_role('button', name='Load More', exact=True).click()

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { SourcePage } from "@/components/source-page";
+import { CmsPage } from "@/components/cms-page";
 import data from "@/lib/home.json";
 export const metadata: Metadata = { title: data.title, description: data.description };
-export default function Home() { return <SourcePage data={data} />; }
+export default function Page() {return <CmsPage page="home"/>}
+export const revalidate=60;

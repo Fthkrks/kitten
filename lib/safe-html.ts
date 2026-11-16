@@ -1,0 +1,2 @@
+import sanitize from 'sanitize-html';
+export function safeHtml(html:string){return sanitize(html,{allowedTags:[...sanitize.defaults.allowedTags,'img','iframe'],allowedAttributes:{...sanitize.defaults.allowedAttributes,'*':['class','id','aria-label'],img:['src','alt','width','height','loading','decoding'],iframe:['src','title','width','height','allow','allowfullscreen','loading']},allowedIframeHostnames:['www.youtube-nocookie.com','www.youtube.com'],allowedSchemes:['http','https','mailto']})}

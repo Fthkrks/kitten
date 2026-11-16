@@ -1,3 +1,4 @@
+import {saveApplication} from "@/lib/cms";
 import { getAdminNotificationEmail, getEmailConfig, getUserConfirmationEmail, sendEmail } from "@/lib/email";
 import { fetchKittenAppData } from "@/lib/kitten-application-data";
 import { submissionUnavailableMessage, validateAnswers, validateContactDetails } from "@/lib/kitten-application";
@@ -49,8 +50,10 @@ export async function POST(request: Request) {
     return Response.json({ error: "Please check your answers.", fieldErrors: answerErrors }, { status: 400 });
   }
 
+  const snapshots = questions.map(q=>({question:q.question,answer:answers[q.id]||"",...(q.note?{note:answers[`${q.id}-note`]||"",questionNote:q.note}:{})}));
+  const saved = await saveApplication(details,snapshots);
   const config = getEmailConfig();
-  if (!config) return Response.json({ error: submissionUnavailableMessage }, { status: 503 });
+  if (!config) return saved ? Response.json({success:true,message:"Application received.",confirmationSent:false}) : Response.json({ error: submissionUnavailableMessage }, { status: 503 });
 
   // The admin notification is the receipt. Never confirm before it is accepted.
   try {
@@ -59,7 +62,7 @@ export async function POST(request: Request) {
   } catch {
     // SMTP errors can contain recipient details; do not log them or the application.
     console.error("Kitten application admin notification failed.");
-    return Response.json({ error: submissionUnavailableMessage }, { status: 503 });
+    return saved ? Response.json({success:true,message:"Application received.",confirmationSent:false}) : Response.json({ error: submissionUnavailableMessage }, { status: 503 });
   }
 
   let confirmationSent = false;

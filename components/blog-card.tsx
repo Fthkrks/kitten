@@ -1,9 +1,9 @@
 import Link from "next/link";
-import type posts from "@/lib/posts.json";
 
-type BlogPost = (typeof posts)[number];
 
-export function BlogCard({ post }: { post: BlogPost }) {
+export type BlogPost = {slug:string;href:string;title:string;date:string;image:string;excerpt:string};
+
+export function BlogCard({ post, readMore="Read More" }: { post: BlogPost; readMore?:string }) {
   return (
     <article className="blog-card">
       <div className="blog-card-image">
@@ -15,7 +15,7 @@ export function BlogCard({ post }: { post: BlogPost }) {
         </time>
         <h2><Link href={post.href}>{post.title}</Link></h2>
         <p>{post.excerpt}</p>
-        <span aria-hidden="true" className="blog-card-read-more">Read More <span>→</span></span>
+        <span aria-hidden="true" className="blog-card-read-more">{readMore} <span>→</span></span>
       </div>
     </article>
   );

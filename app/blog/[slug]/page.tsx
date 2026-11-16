@@ -2,23 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogCard } from "@/components/blog-card";
-import posts from "@/lib/posts.json";
-import content from "@/lib/posts/content.json";
+import fallbackPosts from "@/lib/posts.json";
+import {getCms} from "@/lib/cms";
+import {safeHtml} from "@/lib/safe-html";
+
 
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return posts.map(({ slug }) => ({ slug }));
+  return fallbackPosts.map(({ slug }) => ({ slug }));
 }
 
-function getPost(slug: string) {
-  const post = posts.find((post) => post.slug === slug);
-  if (!post) notFound();
-  return { ...post, ...content[post.slug as keyof typeof content] };
-}
+async function getPosts(){const {lists}=await getCms();return lists.posts.map(row=>({...row.data,title:row.name,slug:row.slug!,href:'/blog/'+row.slug,publishedAt:row.data.publishedAt,category:row.data.category,notice:row.data.notice,html:row.data.html,date:row.data.date,image:row.data.image,excerpt:row.data.excerpt}));}
+async function getPost(slug:string){const posts=await getPosts();const post=posts.find(p=>p.slug===slug);if(!post)notFound();return post;}
+export const revalidate=60;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = getPost((await params).slug);
+  const post = await getPost((await params).slug);
   const title = `${post.title} | Astrid Moon Cattery`;
   return {
     title,
@@ -41,11 +41,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPost({ params }: Props) {
-  const post = getPost((await params).slug);
+  const post = await getPost((await params).slug);
+  const {content,settings}=await getCms();
+  const copy=content["post-detail.copy"];
+  const posts = await getPosts();
   const otherPosts = posts.filter((candidate) => candidate.slug !== post.slug);
   const relatedPosts = otherPosts
-    .filter((candidate) => content[candidate.slug as keyof typeof content].category === post.category)
-    .concat(otherPosts.filter((candidate) => content[candidate.slug as keyof typeof content].category !== post.category))
+    .filter((candidate) => candidate.category === post.category)
+    .concat(otherPosts.filter((candidate) => candidate.category !== post.category))
     .slice(0, 3);
 
   return (
@@ -53,7 +56,7 @@ export default async function BlogPost({ params }: Props) {
       <article className="blog-post" aria-labelledby="post-title">
         <header className="post-hero">
           <div className="container">
-            <Link href="/blog" className="post-back"><span aria-hidden="true">←</span> Back to the blog</Link>
+            <Link href="/blog" className="post-back"><span aria-hidden="true">←</span> {copy.back}</Link>
             <div className="post-heading">
               <p className="post-eyebrow">
                 <span>{post.category}</span><span aria-hidden="true">·</span>
@@ -69,27 +72,27 @@ export default async function BlogPost({ params }: Props) {
         </header>
         <div className="post-reading-area container">
           {post.notice && <aside className="post-notice" aria-label="Archived giveaway">{post.notice}</aside>}
-          <div className="post-body" dangerouslySetInnerHTML={{ __html: post.html }} />
-          <Link href="/blog" className="post-back post-bottom-back"><span aria-hidden="true">←</span> Back to all articles</Link>
+          <div className="post-body" dangerouslySetInnerHTML={{ __html: safeHtml(post.html) }} />
+          <Link href="/blog" className="post-back post-bottom-back"><span aria-hidden="true">←</span> {copy.back_all}</Link>
         </div>
       </article>
 
       <section className="post-related" aria-labelledby="related-posts-heading">
         <div className="container">
           <div className="post-section-heading">
-            <p className="post-eyebrow">From the blog</p>
-            <h2 id="related-posts-heading">A little more Ragdoll reading</h2>
+            <p className="post-eyebrow">{copy.eyebrow}</p>
+            <h2 id="related-posts-heading">{copy.related_heading}</h2>
           </div>
-          <div className="post-related-grid">{relatedPosts.map((post) => <BlogCard key={post.slug} post={post} />)}</div>
+          <div className="post-related-grid">{relatedPosts.map((post) => <BlogCard key={post.slug} post={post} readMore={settings.ui.readMore}/>)}</div>
         </div>
       </section>
 
       <section className="post-cta" aria-labelledby="post-cta-heading">
         <div className="container">
-          <p className="post-eyebrow">Astrid Moon Cattery · Austin, Texas</p>
-          <h2 id="post-cta-heading">Ready to welcome a Ragdoll?</h2>
-          <p>Tell us about your home and the companion you’re hoping to find.</p>
-          <Link href="/kitten-application" className="primary-button">Apply for a Kitten <span aria-hidden="true">→</span></Link>
+          <p className="post-eyebrow">{copy.cta_eyebrow}</p>
+          <h2 id="post-cta-heading">{copy.cta_heading}</h2>
+          <p>{copy.cta_paragraph}</p>
+          <Link href={copy.cta_link} className="primary-button">{copy.cta_label} <span aria-hidden="true">→</span></Link>
         </div>
       </section>
     </>

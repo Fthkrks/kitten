@@ -8,6 +8,7 @@ export type KittenQuestion = {
 };
 
 export type KittenApplicationData = {
+  eyebrow?: string;
   title: string;
   description: string;
   questions: KittenQuestion[];

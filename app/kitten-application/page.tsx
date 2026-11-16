@@ -14,7 +14,7 @@ export default async function KittenApplicationPage() {
   return <section className="kitten-application" aria-labelledby="kitten-application-heading">
     <div className="container">
       <header className="application-heading">
-        <p className="application-eyebrow">A loving home starts here</p>
+        <p className="application-eyebrow">{data.eyebrow}</p>
         <h1 id="kitten-application-heading">{data.title}</h1>
         <div className="application-divider" aria-hidden="true"><span /><svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 0 12 6 6 12 0 6Z" fill="currentColor" /></svg><span /></div>
         <p className="application-description">{data.description}</p>

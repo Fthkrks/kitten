@@ -7,6 +7,7 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Original, absolute image URLs are an explicit requirement of this clone.
   { rules: { "@next/next/no-img-element": "off" } },
+  {files:["components/generated-content.tsx"],rules:{"@typescript-eslint/no-unused-vars":"off"}},
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

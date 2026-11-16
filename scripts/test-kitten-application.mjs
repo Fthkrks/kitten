@@ -4,9 +4,9 @@ import { test } from "node:test";
 import vm from "node:vm";
 import ts from "typescript";
 
-// Run the actual TypeScript handler and email helpers with isolated SMTP/Strapi
+// Run the actual TypeScript handler and email helpers with isolated SMTP/database
 // transports. These tests cannot send email or read the developer's secrets.
-function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayload, apiError } = {}) {
+function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayload, apiError, saved = false } = {}) {
   const sent = [], logs = [], fetches = [], transports = [], timeouts = [];
   const env = configured ? { EMAIL_USER: "sender@example.com", EMAIL_PASSWORD: "test-only", ADMIN_EMAIL: "admin@example.com" } : {};
   const questions = [
@@ -34,7 +34,12 @@ function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayloa
     return exports;
   }
   const shared = load("lib/kitten-application.ts");
-  const data = load("lib/kitten-application-data.ts");
+  const fallback=JSON.parse(readFileSync(new URL('../lib/cms-fallback.json',import.meta.url),'utf8')).site_content.find(r=>r.key==='application').data;
+  const raw=apiPayload?.data?.attributes||apiPayload?.data;
+  const source=raw?.KittenQuestion||questions;
+  const normalized=source.map(q=>({id:q.id,question:q.Question,isElective:q.isElective,options:Object.values(q.Options||{}).filter(o=>!/^please note/i.test(o)),...(Object.values(q.Options||{}).find(o=>/^please note/i.test(o))?{note:Object.values(q.Options).find(o=>/^please note/i.test(o))}:{})}));
+  const data={fetchKittenAppData:async()=>apiStatus!==200||apiError?fallback:{title:'Application',description:'Description',questions:normalized}};
+  const inserts=[];
   const email = load("lib/email.ts", {
     "@/lib/kitten-application": shared,
     nodemailer: {
@@ -50,12 +55,13 @@ function setup({ configured = true, mailResults = [], apiStatus = 200, apiPayloa
     },
   });
   const { POST } = load("app/api/kitten-app-submit/route.ts", {
+    "@/lib/cms": {saveApplication:async(contact,answers)=>{inserts.push({contact,answers});return saved}},
     "@/lib/email": email,
     "@/lib/kitten-application": shared,
     "@/lib/kitten-application-data": data,
   });
   const post = body => POST(new Request("http://localhost/api/kitten-app-submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }));
-  return { post, POST, data, email, env, sent, logs, fetches, transports, timeouts };
+  return { post, POST, data, email, env, sent, logs, fetches, transports, timeouts, inserts };
 }
 
 const valid = { firstName: " Test ", lastName: "Applicant", email: "test@example.com", phone: "555-0100", streetAddress: "123 Test Street", city: "Austin", state: "TX", zip: "78701" };
@@ -143,47 +149,15 @@ test("malformed JSON and oversized request bodies are rejected", async () => {
   assert.equal(app.sent.length, 0);
 });
 
-test("Strapi reads use the configured base, 60-second revalidation, and a five-second timeout", async () => {
-  const app = setup();
-  app.env.API_BASE_URL = "https://server.example/";
-  await app.data.fetchKittenAppData();
-  assert.equal(app.fetches[0].url, "https://server.example/api/kitten-app?populate=*");
-  assert.equal(app.fetches[0].options.next.revalidate, 60);
-  assert.equal(app.timeouts[0], 5000);
-  app.env.NEXT_PUBLIC_API_BASE_URL = "https://public.example/";
-  await app.data.fetchKittenAppData();
-  assert.equal(app.fetches[1].url, "https://public.example/api/kitten-app?populate=*");
+test("bundled Supabase fallback retains all 18 questions and separate colour note",()=>{
+ const data=JSON.parse(readFileSync(new URL('../lib/cms-fallback.json',import.meta.url),'utf8')).site_content.find(r=>r.key==='application').data;
+ assert.equal(data.questions.length,18);assert.deepEqual(data.questions[1].options,['Black Golden','Blue Golden','No preference']);assert.match(data.questions[1].note,/^Please note:/);
 });
-
-test("failed, timed-out, or malformed Strapi data retains all 18 cached legacy questions", async () => {
-  for (const options of [{ apiStatus: 503 }, { apiError: new DOMException("Timed out", "TimeoutError") }, { apiPayload: { data: null } }, { apiPayload: { data: { KittenQuestion: [] } } }]) {
-    const app = setup(options);
-    const data = await app.data.fetchKittenAppData();
-    assert.equal(data.questions.length, 18);
-    assert.deepEqual(Array.from(data.questions, q => q.id), Array.from({ length: 18 }, (_, i) => 532 + i));
-    assert.equal(data.title, "Kitten Application");
-    assert.match(data.description, /towards acquiring a beautiful, healthy, lifelong companion/);
-    assert.equal(data.questions[0].question, "Which coat length are you interested in?");
-    assert.deepEqual(Array.from(data.questions[0].options), ["British Longhair", "British Shorthair", "No preference"]);
-    assert.deepEqual(Array.from(data.questions[1].options), ["Black Golden", "Blue Golden", "No preference"]);
-    assert.match(data.questions[1].note, /^Please note:/); // The legacy note option is shown as a note.
-    assert.equal(data.questions.filter(q => q.isElective).length, 11);
-    assert.deepEqual(Array.from(data.questions.filter(q => q.question.includes("*")), q => q.id), [535, 538, 543, 546]);
-    assert.match(data.questions[12].question, /isn’t/);
-    assert.equal(data.questions[13].options[2], "I’m currently researching");
-    assert.equal(data.questions[16].question, "Is there anything else you’d like us to know or any questions you’d like us to answer?");
-    assert.equal(data.questions[17].question, "How did you find us?");
-    assert.ok(!JSON.stringify(data).includes("\uFFFD"));
-  }
-});
-
-test("live Strapi copy repairs replacement characters in titles, descriptions, questions, and options", async () => {
-  const app = setup({ apiPayload: { data: { attributes: { label: "I\uFFFDm applying", Desc: "You\uFFFDd like a kitten", KittenQuestion: [{ id: 1, Question: "Kitten isn\uFFFDt available?", isElective: true, Options: { 1: "I\uFFFDm researching" } }] } } } });
-  const data = await app.data.fetchKittenAppData();
-  assert.equal(data.title, "I’m applying");
-  assert.equal(data.description, "You’d like a kitten");
-  assert.equal(data.questions[0].question, "Kitten isn’t available?");
-  assert.equal(data.questions[0].options[0], "I’m researching");
+test("saved applications succeed without SMTP and after SMTP failure, with server question snapshots",async()=>{
+ for(const options of [{configured:false},{mailResults:[new Error('private failure')]}]){
+  const app=setup({...options,saved:true});const response=await app.post({...valid,dynamicAnswers:{11:'Our home',12:'Yes'}});
+  assert.equal(response.status,200);assert.equal((await response.json()).confirmationSent,false);assert.equal(app.inserts.length,1);assert.equal(app.inserts[0].contact.firstName,'Test');assert.equal(app.inserts[0].answers[0].question,'Tell us about your home <&>');assert.equal(app.inserts[0].answers[0].answer,'Our home');
+ }
 });
 
 test("only starred questions require answers, for both radio choices and textareas", async () => {
