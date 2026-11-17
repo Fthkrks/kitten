@@ -93,12 +93,12 @@ export function KittenApplicationForm({ questions }: { questions: KittenQuestion
         </div>
         <h2 className="application-section-title application-questions-title">Your home &amp; your future kitten</h2>
         <div className="application-questions">
-          {questions.map((q, index) => {
+          {questions.map(q => {
             const name = `question-${q.id}`;
             const error = errors[name];
             const required = q.question.includes("*");
             return <fieldset key={q.id} className="application-question" data-question-id={q.id} aria-describedby={error ? `${name}-error` : undefined}>
-              <legend><span className="application-question-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{q.isElective ? q.question : <label htmlFor={name}>{q.question}</label>}</legend>
+              <legend>{q.isElective ? q.question : <label htmlFor={name}>{q.question}</label>}</legend>
               {q.isElective ? <><div className="application-options">{q.options.map((option, optionIndex) => <label key={`${q.id}-${optionIndex}`} className="application-option" htmlFor={`${name}-${optionIndex}`}>
                 <input id={`${name}-${optionIndex}`} name={name} type="radio" value={option} required={required} />
                 <span>{option}</span>

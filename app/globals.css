@@ -198,7 +198,6 @@ footer [data-newsletter] { min-width: 0; }
 .application-question:last-child { padding-bottom: 0; border: 0; }
 .application-question > legend { width: 100%; float: left; padding: 0; margin-bottom: 14px; color: #3B1A47; font-size: 15px; font-weight: 600; line-height: 1.75; }
 .application-question > legend + * { clear: both; }
-.application-question-number { display: inline-block; margin-right: 12px; color: #8E3FA8; font-size: 12px; letter-spacing: .06em; }
 .application-options { display: flex; flex-wrap: wrap; gap: 10px; }
 .application-option { display: flex; flex: 0 1 auto; align-items: flex-start; gap: 10px; min-width: 0; min-height: 48px; padding: 12px 16px; border: 1px solid #E9D5F0; border-radius: 10px; color: #4A2A57; background: #fff; font-size: 14px; line-height: 1.7; cursor: pointer; overflow-wrap: anywhere; }
 .application-option:hover { border-color: #8E3FA8; background: #F8EEFB; }
